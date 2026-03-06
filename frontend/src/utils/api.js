@@ -61,4 +61,21 @@ export const userAPI = {
   changePassword: (data) => api.post('/users/change-password', data),
 }
 
+export const recommendationAPI = {
+  // Trigger the AI agent (CF + CBF + Claude reasoning)
+  generate: () => api.post('/recommendations/generate'),
+  // Get current stored recommendations
+  getAll: () => api.get('/recommendations/'),
+  // Get last agent run log with thought steps
+  getAgentLog: () => api.get('/recommendations/agent-log'),
+  // Log an interaction (view, complete, like, etc.)
+  logInteraction: (data) => api.post('/recommendations/interact', data),
+  // Dismiss a recommendation
+  dismiss: (recId) => api.patch(`/recommendations/${recId}/dismiss`),
+  // Browse content catalog
+  listContent: (skip = 0, limit = 50) => api.get(`/recommendations/content?skip=${skip}&limit=${limit}`),
+  // Seed starter content (call once)
+  seedContent: () => api.post('/recommendations/content/seed'),
+}
+
 export default api

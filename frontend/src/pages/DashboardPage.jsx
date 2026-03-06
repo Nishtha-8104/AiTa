@@ -1,3 +1,45 @@
+// ============================================================
+// CHANGES TO: frontend/src/pages/DashboardPage.jsx
+// Make Content Recommendation AgentCard clickable with navigate
+// ============================================================
+
+// In the AgentCard component, add an onClick prop:
+// <AgentCard ... onClick={() => navigate('/recommendations')} />
+//
+// And update the AgentCard component to use it:
+// function AgentCard({ ..., onClick }) {
+//   return <div onClick={onClick} ...>
+
+// Updated sections only — apply these two changes:
+
+// 1. AgentCard component — add onClick prop:
+/*
+function AgentCard({ icon: Icon, title, desc, status, color, onClick }) {
+  return (
+    <div 
+      className={`glass-card p-5 hover:border-white/15 transition-all group ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
+      ...
+    </div>
+  )
+}
+*/
+
+// 2. Content Recommendation card — add onClick:
+/*
+  <AgentCard 
+    icon={BookOpen} 
+    title="Content Recommendation" 
+    status="active"               // ← change from "coming soon" to "active"
+    color="bg-purple-600/20 text-purple-400"
+    desc="Suggests personalized learning paths based on your skill gaps and interests."
+    onClick={() => navigate('/recommendations')}
+  />
+*/
+
+// ── Full updated DashboardPage.jsx for copy-paste ──────────────────────────────
+
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -7,7 +49,7 @@ import {
 import toast from 'react-hot-toast'
 
 const SKILL_COLORS = { beginner: 'text-green-400', intermediate: 'text-yellow-400', advanced: 'text-red-400' }
-const ROLE_LABELS = { student: 'Student', instructor: 'Instructor', ta: 'Teaching Assistant', admin: 'Admin' }
+const ROLE_LABELS  = { student: 'Student', instructor: 'Instructor', ta: 'Teaching Assistant', admin: 'Admin' }
 
 function StatCard({ icon: Icon, label, value, color = 'text-brand-400' }) {
   return (
@@ -23,22 +65,31 @@ function StatCard({ icon: Icon, label, value, color = 'text-brand-400' }) {
   )
 }
 
-function AgentCard({ icon: Icon, title, desc, status, color }) {
+function AgentCard({ icon: Icon, title, desc, status, color, onClick }) {
   return (
-    <div className="glass-card p-5 hover:border-white/15 transition-all cursor-pointer group">
+    <div
+      className={`glass-card p-5 hover:border-white/15 transition-all group ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
           <Icon size={20} />
         </div>
-        <span className={`text-xs font-mono px-2 py-1 rounded-lg ${status === 'active' ? 'bg-green-500/10 text-green-400' : 'bg-surface-600 text-white/30'}`}>
+        <span className={`text-xs font-mono px-2 py-1 rounded-lg ${
+          status === 'active'
+            ? 'bg-green-500/10 text-green-400'
+            : 'bg-surface-600 text-white/30'
+        }`}>
           {status}
         </span>
       </div>
       <h3 className="font-display font-600 text-white text-sm mb-1">{title}</h3>
       <p className="text-white/40 text-xs font-body leading-relaxed">{desc}</p>
-      <div className="flex items-center gap-1 mt-3 text-brand-400 text-xs font-display font-600 opacity-0 group-hover:opacity-100 transition-opacity">
-        Open <ChevronRight size={12} />
-      </div>
+      {onClick && (
+        <div className="flex items-center gap-1 mt-3 text-brand-400 text-xs font-display font-600 opacity-0 group-hover:opacity-100 transition-opacity">
+          Open <ChevronRight size={12} />
+        </div>
+      )}
     </div>
   )
 }
@@ -95,11 +146,11 @@ export default function DashboardPage() {
           <p className="text-white/40 font-body">
             {user?.learning_profile?.recommended_next?.length > 0
               ? `You have ${user.learning_profile.recommended_next.length} recommended topics waiting.`
-              : "Complete your profile to unlock personalized learning paths."}
+              : 'Your AI agents are ready. Click an agent card to get started.'}
           </p>
         </div>
 
-        {/* ── Profile completeness banner ── */}
+        {/* ── Profile completeness ── */}
         {completeness < 100 && (
           <div className="glass-card p-5 mb-8 flex items-center justify-between gap-4 border-brand-500/20">
             <div className="flex-1">
@@ -111,7 +162,7 @@ export default function DashboardPage() {
                 <div className="h-full bg-gradient-to-r from-brand-600 to-brand-400 rounded-full transition-all duration-700"
                   style={{ width: `${completeness}%` }} />
               </div>
-              <p className="text-white/30 text-xs mt-2">Complete your profile to help the AI personalize your experience</p>
+              <p className="text-white/30 text-xs mt-2">Complete your profile to help the AI personalise your experience</p>
             </div>
             <button onClick={() => navigate('/profile')}
               className="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-sm font-display font-600 rounded-xl transition-colors shrink-0">
@@ -122,10 +173,10 @@ export default function DashboardPage() {
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          <StatCard icon={Trophy} label="Points" value={user?.points ?? 0} color="text-yellow-400" />
-          <StatCard icon={TrendingUp} label="Level" value={`Lv. ${user?.level ?? 1}`} color="text-green-400" />
-          <StatCard icon={Clock} label="Sessions" value={user?.total_sessions ?? 0} color="text-brand-400" />
-          <StatCard icon={Target} label="Skill" value={
+          <StatCard icon={Trophy}   label="Points"   value={user?.points ?? 0} color="text-yellow-400" />
+          <StatCard icon={TrendingUp} label="Level"  value={`Lv. ${user?.level ?? 1}`} color="text-green-400" />
+          <StatCard icon={Clock}    label="Sessions" value={user?.total_sessions ?? 0} color="text-brand-400" />
+          <StatCard icon={Target}   label="Skill"    value={
             <span className={SKILL_COLORS[user?.skill_level] || 'text-white'}>
               {user?.skill_level?.charAt(0).toUpperCase() + user?.skill_level?.slice(1) || 'Beginner'}
             </span>
@@ -135,18 +186,20 @@ export default function DashboardPage() {
         {/* ── AI Agents ── */}
         <div className="mb-6">
           <h2 className="font-display font-700 text-xl text-white mb-1">AI Agents</h2>
-          <p className="text-white/30 text-sm">Your personalized learning toolkit</p>
+          <p className="text-white/30 text-sm">Click an active agent to get started</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
           <AgentCard icon={Brain} title="User Profiling Agent" status="active"
             color="bg-brand-600/20 text-brand-400"
-            desc="Continuously builds your learning model and tracks your progress across all topics." />
-          <AgentCard icon={BookOpen} title="Content Recommendation" status="coming soon"
+            desc="Continuously builds your learning model and tracks progress across topics."
+            onClick={() => navigate('/profile')} />
+          <AgentCard icon={BookOpen} title="Content Recommendation" status="active"
             color="bg-purple-600/20 text-purple-400"
-            desc="Suggests personalized learning paths based on your skill gaps and interests." />
+            desc="AI agent uses CF + CBF + Claude to suggest personalised learning paths."
+            onClick={() => navigate('/recommendations')} />
           <AgentCard icon={Code2} title="Code Evaluation Agent" status="coming soon"
             color="bg-green-600/20 text-green-400"
-            desc="Reviews your code for correctness, quality, and best practices with detailed analysis." />
+            desc="Reviews your code for correctness, quality, and best practices." />
         </div>
 
         {/* ── Quick info ── */}
