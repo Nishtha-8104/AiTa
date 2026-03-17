@@ -11,7 +11,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 import ProfilePage from './pages/ProfilePage'
-import RecommendationPage from './pages/RecommendationPage'    // ← NEW
+import RecommendationPage from './pages/RecommendationPage'    
+import ContentPlayerPage from './pages/ContentPlayerPage' 
 
 export default function App() {
   return (
@@ -38,7 +39,8 @@ export default function App() {
           <Route path="/register"       element={<RegisterPage />} />
           <Route path="/dashboard"      element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/profile"        element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/recommendations" element={<ProtectedRoute><RecommendationPage /></ProtectedRoute>} />   {/* ← NEW */}
+          <Route path="/recommendations" element={<ProtectedRoute><RecommendationPage /></ProtectedRoute>} /> 
+          <Route path="/learn"           element={<ProtectedRoute><ContentPlayerPage /></ProtectedRoute>} /> 
           <Route path="*"              element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </AuthProvider>

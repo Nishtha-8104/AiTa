@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.api import auth, users, recommendations   # ← ADDED recommendations
+from app.api import auth, users, recommendations,content_player
 
 
 @asynccontextmanager
@@ -45,7 +45,8 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
-app.include_router(recommendations.router, prefix="/api/v1")   # ← ADDED
+app.include_router(recommendations.router, prefix="/api/v1")   
+app.include_router(content_player.router, prefix="/api/v1")
 
 
 @app.get("/", tags=["Health"])

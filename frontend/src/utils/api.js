@@ -78,4 +78,19 @@ export const recommendationAPI = {
   seedContent: () => api.post('/recommendations/content/seed'),
 }
 
+export const contentPlayerAPI = {
+  // Session management
+  createSession:  (data)      => api.post('/content-player/sessions', data),
+  getSessions:    ()          => api.get('/content-player/sessions'),
+  getSession:     (id)        => api.get(`/content-player/sessions/${id}`),
+  archiveSession: (id)        => api.delete(`/content-player/sessions/${id}`),
+
+  // Chat — the main action
+  chat:           (id, data)  => api.post(`/content-player/sessions/${id}/chat`, data),
+
+  // Message feedback
+  rateMessage:    (msgId, wasHelpful) =>
+    api.patch(`/content-player/messages/${msgId}/feedback`, { was_helpful: wasHelpful }),
+}
+
 export default api
