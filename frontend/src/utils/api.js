@@ -48,7 +48,8 @@ api.interceptors.response.use(
 // ─── Auth API ─────────────────────────────────────────────────────────────────
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
+  login: (data) => api.post('/auth/login', data),           // returns otp_token
+  verifyOtp: (data) => api.post('/auth/verify-otp', data),  // returns access+refresh tokens
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
   refresh: (refreshToken) => api.post('/auth/refresh', { refresh_token: refreshToken }),
@@ -62,8 +63,8 @@ export const userAPI = {
 }
 
 export const recommendationAPI = {
-  // Trigger the AI agent (CF + CBF + Claude reasoning)
-  generate: () => api.post('/recommendations/generate'),
+  // Trigger the AI agent — long timeout since it fetches YouTube + calls Groq
+  generate: () => api.post('/recommendations/generate', {}, { timeout: 120000 }),
   // Get current stored recommendations
   getAll: () => api.get('/recommendations/'),
   // Get last agent run log with thought steps
@@ -78,19 +79,54 @@ export const recommendationAPI = {
   seedContent: () => api.post('/recommendations/content/seed'),
 }
 
+// export const contentPlayerAPI = {
+//   // Session management
+//   createSession:  (data)      => api.post('/content-player/sessions', data),
+//   getSessions:    ()          => api.get('/content-player/sessions'),
+//   getSession:     (id)        => api.get(`/content-player/sessions/${id}`),
+//   archiveSession: (id)        => api.delete(`/content-player/sessions/${id}`),
+
+//   // Chat — the main action
+//   chat:           (id, data)  => api.post(`/content-player/sessions/${id}/chat`, data),
+
+//   // Message feedback
+//   rateMessage:    (msgId, wasHelpful) =>
+//     api.patch(`/content-player/messages/${msgId}/feedback`, { was_helpful: wasHelpful }),
+// }
+
 export const contentPlayerAPI = {
-  // Session management
-  createSession:  (data)      => api.post('/content-player/sessions', data),
-  getSessions:    ()          => api.get('/content-player/sessions'),
-  getSession:     (id)        => api.get(`/content-player/sessions/${id}`),
-  archiveSession: (id)        => api.delete(`/content-player/sessions/${id}`),
+  createSession:  (data)             => api.post('/content-player/sessions', data),
+  getSessions:    ()                 => api.get('/content-player/sessions'),
+  getSession:     (id)               => api.get(`/content-player/sessions/${id}`),
+  archiveSession: (id)               => api.delete(`/content-player/sessions/${id}`),
+  chat:           (sessionId, data)  => api.post(`/content-player/sessions/${sessionId}/chat`, data),
+  rateMessage:    (msgId, helpful)   => api.patch(`/content-player/messages/${msgId}/feedback`, { was_helpful: helpful }),
+  generateProblem:(data)             => api.post('/content-player/generate-problem', data),
+};
 
-  // Chat — the main action
-  chat:           (id, data)  => api.post(`/content-player/sessions/${id}/chat`, data),
+// ─── Code Evaluation Agent API ────────────────────────────────────────────────
+export const codeEvalAPI = {
+  // Submit code (no eval yet)
+  submit:           (data) => api.post('/code-eval/submit', data),
+  // Evaluate an existing submission
+  evaluate:         (id)   => api.post(`/code-eval/submit/${id}/evaluate`),
+  // Submit + evaluate in one call  ← main action
+  submitAndEvaluate:(data) => api.post('/code-eval/evaluate', data),
+  // History
+  getSubmissions:   ()     => api.get('/code-eval/submissions'),
+  getSubmission:    (id)   => api.get(`/code-eval/submissions/${id}`),
+  deleteSubmission: (id)   => api.delete(`/code-eval/submissions/${id}`),
+  // Stats & progress
+  getStats:         ()     => api.get('/code-eval/stats'),
+}
 
-  // Message feedback
-  rateMessage:    (msgId, wasHelpful) =>
-    api.patch(`/content-player/messages/${msgId}/feedback`, { was_helpful: wasHelpful }),
+export const feedbackAPI = {
+  autoGenerate: ()       => api.post('/feedback/auto-generate'),
+  generate:    (data)    => api.post('/feedback/generate', data),
+  getAll:      ()        => api.get('/feedback/'),
+  unreadCount: ()        => api.get('/feedback/unread-count'),
+  getReport:   (id)      => api.get(`/feedback/${id}`),
+  markRead:    (id)      => api.patch(`/feedback/${id}/read`),
 }
 
 export default api

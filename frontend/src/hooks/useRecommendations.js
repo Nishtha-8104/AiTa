@@ -4,13 +4,12 @@ import toast from 'react-hot-toast'
 
 export function useRecommendations() {
   const [recommendations, setRecommendations] = useState([])
-  const [agentLog, setAgentLog]               = useState(null)
-  const [thoughtSteps, setThoughtSteps]       = useState([])
-  const [loading, setLoading]                 = useState(false)
-  const [generating, setGenerating]           = useState(false)
-  const [seeding, setSeeding]                 = useState(false)
+  const [agentLog,        setAgentLog]        = useState(null)
+  const [thoughtSteps,    setThoughtSteps]    = useState([])
+  const [loading,         setLoading]         = useState(false)
+  const [generating,      setGenerating]      = useState(false)
 
-  // ─── Fetch stored recommendations ──────────────────────────────────────
+  // ─── Fetch stored recommendations ──────────────────────────────────────────
   const fetchRecommendations = useCallback(async () => {
     setLoading(true)
     try {
@@ -18,6 +17,7 @@ export function useRecommendations() {
       setRecommendations(data)
     } catch (err) {
       if (err.response?.status !== 404) {
+        // silent on 404 (no recommendations yet)
         toast.error('Failed to load recommendations.')
       }
     } finally {
@@ -25,46 +25,35 @@ export function useRecommendations() {
     }
   }, [])
 
-  // ─── Fetch agent run log ────────────────────────────────────────────────
+  // ─── Fetch agent run log ────────────────────────────────────────────────────
   const fetchAgentLog = useCallback(async () => {
     try {
       const { data } = await recommendationAPI.getAgentLog()
       setAgentLog(data)
       setThoughtSteps(data.step_log || [])
     } catch {
-      // No log yet — that's fine
+      // No log yet — that's fine on first load
     }
   }, [])
 
-  // ─── Seed content catalog ───────────────────────────────────────────────
-  const seedContent = useCallback(async () => {
-    setSeeding(true)
-    try {
-      const { data } = await recommendationAPI.seedContent()
-      toast.success(`${data.message}`)
-    } catch {
-      toast.error('Failed to seed content.')
-    } finally {
-      setSeeding(false)
-    }
-  }, [])
-
-  // ─── Run the AI Agent ───────────────────────────────────────────────────
+  // ─── Run the AI Agent ───────────────────────────────────────────────────────
+  // Auto-seed is now handled by the backend agent itself.
+  // The frontend just shows animated progress steps while waiting.
   const runAgent = useCallback(async () => {
     setGenerating(true)
     setThoughtSteps([])
     setRecommendations([])
 
-    // Simulate progressive thought step display while waiting
     const progressSteps = [
-      '🔍 Connecting to Content Recommendation Agent...',
-      '👤 Extracting your learning profile...',
+      '📦 Checking content catalog (auto-seeding if empty)...',
+      '🔍 Extracting your learning profile & history...',
       '🤝 Running Collaborative Filtering across all learners...',
-      '📚 Analyzing content topics vs your interests...',
+      '📚 Matching content topics to your interests & weak areas...',
       '⚙️  Merging scores + applying RL exploration bonus...',
-      '🤖 Sending top candidates to Claude AI for reasoning...',
-      '🧠 Claude is analyzing and re-ranking for you...',
-      '💾 Persisting personalized recommendations...',
+      '🎬 Fetching real YouTube videos for content items...',
+      '🤖 Sending top candidates to Groq AI for reasoning...',
+      '🧠 Groq re-ranking and writing personalised explanations...',
+      '💾 Persisting your personalised recommendations...',
     ]
 
     let stepIdx = 0
@@ -73,42 +62,47 @@ export function useRecommendations() {
         setThoughtSteps(prev => [...prev, progressSteps[stepIdx]])
         stepIdx++
       }
-    }, 800)
+    }, 900)
 
     try {
       const { data } = await recommendationAPI.generate()
       clearInterval(interval)
 
-      // Replace progress steps with real agent steps
+      // Replace animated steps with real backend thought log
       setThoughtSteps(data.agent_thought_steps || progressSteps)
 
-      // Fetch the actual recommendations
+      // Fetch final recommendations (now with real YouTube URLs)
       const { data: recs } = await recommendationAPI.getAll()
       setRecommendations(recs)
 
-      // Fetch log
       await fetchAgentLog()
-
-      toast.success(`✅ Agent generated ${data.total} personalized recommendations!`)
+      toast.success(`✅ ${data.total} personalised recommendations ready!`)
     } catch (err) {
       clearInterval(interval)
-      setThoughtSteps(prev => [...prev, `❌ Error: ${err.response?.data?.detail || err.message}`])
-      toast.error('Agent run failed. Check your API key in .env')
+      setThoughtSteps(prev => [
+        ...prev,
+        `❌ Error: ${
+          Array.isArray(err.response?.data?.detail)
+            ? err.response.data.detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+            : err.response?.data?.detail || err.message
+        }`,
+      ])
+      toast.error('Agent run failed. Check GROQ_API_KEY in your .env')
     } finally {
       setGenerating(false)
     }
   }, [fetchAgentLog])
 
-  // ─── Log interaction ────────────────────────────────────────────────────
+  // ─── Log interaction ────────────────────────────────────────────────────────
   const logInteraction = useCallback(async (contentId, interaction, extra = {}) => {
     try {
       await recommendationAPI.logInteraction({ content_id: contentId, interaction, ...extra })
     } catch {
-      // silent
+      // silent — interaction logging should never block UI
     }
   }, [])
 
-  // ─── Dismiss ────────────────────────────────────────────────────────────
+  // ─── Dismiss ────────────────────────────────────────────────────────────────
   const dismiss = useCallback(async (recId) => {
     try {
       await recommendationAPI.dismiss(recId)
@@ -121,8 +115,8 @@ export function useRecommendations() {
 
   return {
     recommendations, agentLog, thoughtSteps,
-    loading, generating, seeding,
+    loading, generating,
     fetchRecommendations, fetchAgentLog, runAgent,
-    logInteraction, dismiss, seedContent,
+    logInteraction, dismiss,
   }
 }

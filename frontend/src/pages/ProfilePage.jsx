@@ -8,6 +8,13 @@ import toast from 'react-hot-toast'
 const LANGUAGES = ['Python', 'Java', 'JavaScript', 'C++', 'C', 'Go', 'Rust', 'TypeScript', 'Swift', 'Kotlin']
 const GOALS = ['Web Development', 'Machine Learning', 'Data Science', 'Mobile Apps', 'Competitive Programming', 'System Design', 'DevOps', 'Cybersecurity']
 const INTERESTS = ['Algorithms', 'AI/ML', 'Databases', 'Networking', 'Frontend', 'Backend', 'Open Source', 'Research']
+const TOPICS = [
+  'variables', 'loops', 'functions', 'recursion', 'OOP', 'data structures',
+  'algorithms', 'sorting', 'binary search', 'graphs', 'dynamic programming',
+  'trees', 'linked lists', 'stacks', 'queues', 'hashing', 'SQL', 'REST APIs',
+  'React', 'Node.js', 'machine learning', 'neural networks', 'pandas', 'numpy',
+  'system design', 'design patterns', 'concurrency', 'testing', 'git',
+]
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth()
@@ -25,6 +32,7 @@ export default function ProfilePage() {
     preferred_languages: user?.preferred_languages || [],
     learning_goals: user?.learning_goals || [],
     interests: user?.interests || [],
+    interested_topics: user?.interested_topics || [],
   })
 
   const [pwForm, setPwForm] = useState({ current_password: '', new_password: '' })
@@ -42,11 +50,23 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     setSaving(true)
     try {
-      const { data } = await userAPI.updateProfile(form)
+      const payload = {
+        ...form,
+        // coerce year_of_study: empty string → null, otherwise parse as int
+        year_of_study: form.year_of_study === '' || form.year_of_study === null
+          ? null
+          : parseInt(form.year_of_study, 10) || null,
+        years_of_experience: parseFloat(form.years_of_experience) || 0,
+      }
+      const { data } = await userAPI.updateProfile(payload)
       updateUser(data)
       toast.success('Profile updated! ✅')
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Update failed.')
+      const detail = err.response?.data?.detail
+      const msg = Array.isArray(detail)
+        ? detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+        : detail || 'Update failed.'
+      toast.error(msg)
     } finally {
       setSaving(false)
     }
@@ -211,6 +231,17 @@ export default function ProfilePage() {
                   <button key={lang} type="button" onClick={() => toggleArray('preferred_languages', lang)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-mono font-500 border transition-all ${form.preferred_languages.includes(lang) ? 'border-brand-500/60 bg-brand-600/10 text-brand-300' : 'border-white/10 bg-surface-700/30 text-white/40 hover:border-white/20'}`}>
                     {lang}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="label"><Sparkles size={12} className="inline mr-1" />Topics <span className="text-white/30 font-normal">(used by recommendation agent)</span></label>
+              <div className="flex flex-wrap gap-2">
+                {TOPICS.map(topic => (
+                  <button key={topic} type="button" onClick={() => toggleArray('interested_topics', topic)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-500 border transition-all ${form.interested_topics.includes(topic) ? 'border-teal-500/60 bg-teal-600/10 text-teal-300' : 'border-white/10 bg-surface-700/30 text-white/40 hover:border-white/20'}`}>
+                    {topic}
                   </button>
                 ))}
               </div>

@@ -126,19 +126,6 @@ def list_content(
 
 
 @router.post(
-    "/content/seed",
-    summary="Seed starter content catalog",
-)
-def seed_content(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user),
-):
-    """Seeds 20 starter content items if DB is empty. Safe to call multiple times."""
-    count = RecommendationService.bulk_seed_content(db)
-    return {"message": f"Content catalog has {count} items.", "count": count}
-
-
-@router.post(
     "/content",
     response_model=ContentResponse,
     status_code=status.HTTP_201_CREATED,

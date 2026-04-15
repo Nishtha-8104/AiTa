@@ -29,8 +29,10 @@ export function useContentPlayer() {
     setLoading(true)
     try {
       const { data } = await contentPlayerAPI.getSession(sessionId)
-      setActiveSession(data)
-      setMessages(data.messages || [])
+      const sessionData = data.session || data
+      const msgs = data.messages || []
+      setActiveSession(sessionData)
+      setMessages(msgs)
     } catch {
       toast.error('Failed to load session.')
     } finally {
@@ -62,7 +64,6 @@ export function useContentPlayer() {
     codeSnippet,
     codeLanguage,
     errorMessage,
-    mode,
   }) => {
     if (!message.trim()) return null
     setSending(true)
@@ -91,7 +92,6 @@ export function useContentPlayer() {
         code_snippet:  codeSnippet  || undefined,
         code_language: codeLanguage || undefined,
         error_message: errorMessage || undefined,
-        mode:          mode         || undefined,
       })
 
       // Replace typing indicator with real response
@@ -103,9 +103,9 @@ export function useContentPlayer() {
         latency_ms:     data.latency_ms,
         was_helpful:    null,
         created_at:     new Date().toISOString(),
-        _concepts:      data.detected_concepts,
-        _suggestions:   data.follow_up_suggestions,
-        _confusion:     data.confusion_detected,
+        _concepts:      data.concepts || data.detected_concepts || [],
+        _suggestions:   data.follow_up_suggestions || [],
+        _confusion:     data.comfort_signal === 'struggling' || data.confusion_detected,
       }
 
       setMessages(prev =>
@@ -118,9 +118,18 @@ export function useContentPlayer() {
       setActiveSession(prev => prev ? {
         ...prev,
         title:            data.session_title || prev.title,
+        difficulty:       data.difficulty || prev.difficulty,
         total_messages:   (prev.total_messages || 0) + 2,
         last_message_at:  new Date().toISOString(),
       } : prev)
+
+      // Notify user of mastery milestones
+      if (data.question_solved) {
+        toast.success('✅ Question marked as solved! Great work.')
+      }
+      if (data.difficulty_increased) {
+        toast.success(`🚀 Difficulty increased to ${data.difficulty}! You're on a roll.`)
+      }
 
       // Update session in the sidebar list
       setSessions(prev => prev.map(s =>
@@ -151,8 +160,6 @@ export function useContentPlayer() {
       // silent
     }
   }, [])
-
-  // ─── Archive session ──────────────────────────────────────────────────────
   const archiveSession = useCallback(async (sessionId) => {
     try {
       await contentPlayerAPI.archiveSession(sessionId)

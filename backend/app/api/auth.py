@@ -3,13 +3,17 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_active_user
-from app.core.security import decode_token
 from app.schemas.user import (
     RegisterRequest, LoginRequest, TokenResponse,
-    RefreshTokenRequest, MessageResponse, UserProfileResponse
+    RefreshTokenRequest, MessageResponse, UserProfileResponse,
+    OTPChallengeResponse, VerifyOTPRequest,
 )
 from app.services.auth_service import AuthService
 from app.models.user import User
+
+import logging
+
+logger=logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -21,27 +25,48 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
     summary="Register a new user",
 )
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    """
-    Register a new user account. Roles: student, instructor, ta, admin.
-    - Email and username must be unique.
-    - Password must be min 8 chars, with at least one uppercase and one digit.
-    """
-    user = AuthService.register(db, data)
-    return user
+    try:
+        return AuthService.register(db, data)
+    except Exception as e:
+        logger.error(f"Error in register: {str(e)}")
+        raise
 
 
 @router.post(
     "/login",
-    response_model=TokenResponse,
-    summary="Login and get access tokens",
+    response_model=OTPChallengeResponse,
+    summary="Step 1 — verify password, receive OTP via email",
 )
-def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
+def login(data: LoginRequest, db: Session = Depends(get_db)):
     """
-    Authenticate with email & password. Returns JWT access + refresh tokens.
+    Verifies email + password.
+    On success: generates a 6-digit OTP, bcrypt-hashes it, stores the hash,
+    emails the raw OTP to the user, and returns an otp_token (10-min JWT).
+    The client must call /auth/verify-otp with that token + the OTP to get
+    real access tokens.
+    """
+    return AuthService.login_step1(db, data)
+
+
+@router.post(
+    "/verify-otp",
+    response_model=TokenResponse,
+    summary="Step 2 — submit OTP, receive access + refresh tokens",
+)
+def verify_otp(data: VerifyOTPRequest, request: Request, db: Session = Depends(get_db)):
+    """
+    Verifies the 6-digit OTP against its bcrypt hash.
+    On success: marks OTP as used and returns real JWT access + refresh tokens.
     """
     ip_address = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
-    return AuthService.login(db, data, ip_address=ip_address, user_agent=user_agent)
+    return AuthService.login_step2(
+        db,
+        otp_token  = data.otp_token,
+        otp        = data.otp,
+        ip_address = ip_address,
+        user_agent = user_agent,
+    )
 
 
 @router.post(
@@ -50,7 +75,6 @@ def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
     summary="Refresh access token",
 )
 def refresh_token(data: RefreshTokenRequest, db: Session = Depends(get_db)):
-    """Use a valid refresh token to get a new access token."""
     return AuthService.refresh_tokens(db, data.refresh_token)
 
 
@@ -63,8 +87,6 @@ def logout(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
-    """Invalidate the current session token."""
-    # In a real app, extract jti from token - simplified here
     AuthService.logout(db, current_user.id, jti="")
     return MessageResponse(message="Successfully logged out.")
 
@@ -75,5 +97,4 @@ def logout(
     summary="Get current user profile",
 )
 def get_me(current_user: User = Depends(get_current_active_user)):
-    """Returns the profile of the currently authenticated user."""
     return current_user

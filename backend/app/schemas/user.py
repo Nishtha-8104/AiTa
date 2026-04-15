@@ -11,6 +11,9 @@ class RegisterRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, pattern=r"^[a-zA-Z0-9_]+$")
     password: str = Field(..., min_length=8, max_length=255)
     full_name: Optional[str] = Field(None, max_length=255)
+    skill_level: Optional[str] = "beginner"  # beginner / intermediate / advanced
+    preferred_languages: Optional[List[str]] = ["python"]
+    interested_topics: Optional[List[str]] = []
     role: UserRole = UserRole.STUDENT
 
     @validator("password")
@@ -75,6 +78,7 @@ class UserProfileResponse(BaseModel):
     skill_level: SkillLevel
     years_of_experience: float
     preferred_languages: List[str]
+    interested_topics: Optional[List[str]] = []
     learning_goals: List[str]
     interests: List[str]
     total_sessions: int
@@ -100,8 +104,27 @@ class UpdateProfileRequest(BaseModel):
     skill_level: Optional[SkillLevel] = None
     years_of_experience: Optional[float] = Field(None, ge=0.0, le=50.0)
     preferred_languages: Optional[List[str]] = None
+    interested_topics: Optional[List[str]] = None
     learning_goals: Optional[List[str]] = None
     interests: Optional[List[str]] = None
+
+    @validator("year_of_study", pre=True)
+    def coerce_year_of_study(cls, v):
+        if v == "" or v is None:
+            return None
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return None
+
+    @validator("years_of_experience", pre=True)
+    def coerce_years_of_experience(cls, v):
+        if v == "" or v is None:
+            return None
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return None
 
 
 class ChangePasswordRequest(BaseModel):
@@ -127,3 +150,17 @@ class MessageResponse(BaseModel):
 class ErrorResponse(BaseModel):
     detail: str
     error_code: Optional[str] = None
+
+
+# ─── 2FA / OTP Schemas ────────────────────────────────────────────────────────
+
+class OTPChallengeResponse(BaseModel):
+    """Returned after successful password check — frontend must now submit OTP."""
+    otp_token: str          # short-lived JWT (10 min), NOT an access token
+    message: str = "OTP sent to your registered email address."
+    email_hint: str         # e.g. "s***@gmail.com" — shows where OTP was sent
+
+
+class VerifyOTPRequest(BaseModel):
+    otp_token: str          # the otp_pending JWT from step 1
+    otp: str = Field(..., min_length=6, max_length=6, pattern=r"^\d{6}$")

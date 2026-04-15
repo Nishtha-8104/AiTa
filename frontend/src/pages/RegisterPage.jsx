@@ -1,286 +1,543 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, Mail, Lock, User, Building, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { useAuth } from '../hooks/useAuth'
-import toast from 'react-hot-toast'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-const ROLES = [
-  { value: 'student', label: 'Student', desc: 'I want to learn programming' },
-  { value: 'instructor', label: 'Instructor', desc: 'I teach programming courses' },
-  { value: 'ta', label: 'Teaching Assistant', desc: 'I assist in programming courses' },
-]
+const TOPIC_OPTIONS = [
+  { id: "arrays", label: "Arrays & Strings", icon: "⬡", color: "#00d4ff" },
+  { id: "linked_lists", label: "Linked Lists", icon: "⬢", color: "#7c3aed" },
+  { id: "trees", label: "Trees & Graphs", icon: "⬣", color: "#10b981" },
+  { id: "dynamic_programming", label: "Dynamic Programming", icon: "◈", color: "#f59e0b" },
+  { id: "sorting", label: "Sorting & Searching", icon: "◆", color: "#ef4444" },
+  { id: "recursion", label: "Recursion", icon: "⟳", color: "#8b5cf6" },
+  { id: "hashing", label: "Hashing", icon: "◉", color: "#06b6d4" },
+  { id: "stacks_queues", label: "Stacks & Queues", icon: "⊞", color: "#f97316" },
+  { id: "backtracking", label: "Backtracking", icon: "↩", color: "#84cc16" },
+  { id: "bit_manipulation", label: "Bit Manipulation", icon: "⊕", color: "#ec4899" },
+  { id: "greedy", label: "Greedy Algorithms", icon: "◎", color: "#14b8a6" },
+  { id: "math", label: "Math & Number Theory", icon: "∑", color: "#6366f1" },
+];
 
-const LANGUAGES = ['Python', 'Java', 'JavaScript', 'C++', 'C', 'Go', 'Rust', 'TypeScript']
-const GOALS = ['Web Development', 'Machine Learning', 'Data Science', 'Mobile Apps', 'Competitive Programming', 'System Design']
+const LANGUAGE_OPTIONS = ["Python", "JavaScript", "Java", "C++", "C", "Go", "Rust"];
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced"];
 
 export default function RegisterPage() {
-  const { register } = useAuth()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { register } = useAuth();
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [step, setStep] = useState(1)  // 2-step form
   const [form, setForm] = useState({
-    email: '', username: '', password: '', full_name: '',
-    role: 'student', institution: '',
-    preferred_languages: [], learning_goals: [],
-    skill_level: 'beginner',
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState({})
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    full_name: "",
+    skill_level: "Beginner",
+    preferred_languages: ["Python"],
+    interested_topics: [],
+  });
 
-  const toggleArray = (field, value) => {
-    setForm(f => ({
-      ...f,
-      [field]: f[field].includes(value)
-        ? f[field].filter(v => v !== value)
-        : [...f[field], value]
-    }))
-  }
+  const toggleTopic = (id) => {
+    setForm((prev) => ({
+      ...prev,
+      interested_topics: prev.interested_topics.includes(id)
+        ? prev.interested_topics.filter((t) => t !== id)
+        : [...prev.interested_topics, id],
+    }));
+  };
 
-  const validateStep1 = () => {
-    const e = {}
-    if (!form.email) e.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'Enter a valid email'
-    if (!form.username) e.username = 'Username is required'
-    else if (form.username.length < 3) e.username = 'Min 3 characters'
-    else if (!/^[a-zA-Z0-9_]+$/.test(form.username)) e.username = 'Only letters, numbers, underscores'
-    if (!form.password) e.password = 'Password is required'
-    else if (form.password.length < 8) e.password = 'Min 8 characters'
-    else if (!/[A-Z]/.test(form.password)) e.password = 'Need at least one uppercase letter'
-    else if (!/\d/.test(form.password)) e.password = 'Need at least one digit'
-    setErrors(e)
-    return Object.keys(e).length === 0
-  }
+  const toggleLanguage = (lang) => {
+    setForm((prev) => ({
+      ...prev,
+      preferred_languages: prev.preferred_languages.includes(lang)
+        ? prev.preferred_languages.filter((l) => l !== lang)
+        : [...prev.preferred_languages, lang],
+    }));
+  };
 
-  const handleNext = () => {
-    if (validateStep1()) setStep(2)
-  }
-
-  const handleSubmit = async () => {
-    setLoading(true)
-    try {
-      await register(form)
-      toast.success('Account created! Please sign in. 🎉')
-      navigate('/login')
-    } catch (err) {
-      const msg = err.response?.data?.detail || 'Registration failed.'
-      toast.error(msg)
-      setErrors({ general: msg })
-      setStep(1)
-    } finally {
-      setLoading(false)
+  const handleStep1 = (e) => {
+    e.preventDefault();
+    setError("");
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
     }
-  }
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+    setStep(2);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (form.interested_topics.length === 0) {
+      setError("Please select at least one topic");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await register({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        full_name: form.full_name,
+        skill_level: form.skill_level.toLowerCase(),
+        preferred_languages: form.preferred_languages.map((l) => l.toLowerCase()),
+        interested_topics: form.interested_topics,
+      });
+      // Redirect to onboarding for first-time users
+      navigate("/onboarding");
+    } catch (err) {
+      setError(err.response?.data?.detail || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="fixed inset-0 opacity-[0.03]"
-        style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+    <div style={styles.page}>
+      {/* Background grid */}
+      <div style={styles.grid} />
+      <div style={styles.glow1} />
+      <div style={styles.glow2} />
 
-      <div className="w-full max-w-md animate-slide-up">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center">
-              <Sparkles size={20} className="text-white" />
-            </div>
-            <span className="font-display font-800 text-2xl text-white">ai<span className="text-brand-400">TA</span></span>
+      <div style={styles.container}>
+        {/* Header */}
+        <div style={styles.header}>
+          <div style={styles.logo}>
+            <span style={styles.logoIcon}>⬡</span>
+            <span style={styles.logoText}>ai<span style={styles.logoAccent}>TA</span></span>
           </div>
-          <h1 className="font-display font-700 text-3xl text-white">Create account</h1>
-          <p className="text-white/40 text-sm mt-2">Join thousands of learners on aiTA</p>
+          <div style={styles.stepRow}>
+            {[1, 2].map((s) => (
+              <div key={s} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{
+                  ...styles.stepDot,
+                  background: step >= s ? "#00d4ff" : "rgba(255,255,255,0.1)",
+                  boxShadow: step >= s ? "0 0 12px #00d4ff80" : "none",
+                }} />
+                {s < 2 && <div style={styles.stepLine} />}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Step indicator */}
-        <div className="flex items-center gap-3 mb-6 px-2">
-          {[1, 2].map(s => (
-            <div key={s} className="flex items-center gap-2 flex-1">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-display font-700 transition-all ${step >= s ? 'bg-brand-600 text-white' : 'bg-surface-600 text-white/30'}`}>
-                {step > s ? <CheckCircle2 size={14} /> : s}
-              </div>
-              <span className={`text-xs font-display ${step >= s ? 'text-white/60' : 'text-white/20'}`}>
-                {s === 1 ? 'Credentials' : 'Profile'}
-              </span>
-              {s < 2 && <div className={`h-px flex-1 ${step > s ? 'bg-brand-600' : 'bg-surface-600'}`} />}
-            </div>
-          ))}
-        </div>
+        <div style={styles.card}>
+          {step === 1 ? (
+            <>
+              <h1 style={styles.title}>Create Account</h1>
+              <p style={styles.subtitle}>Step 1 of 2 — Your identity</p>
 
-        <div className="glass-card p-8">
-          {errors.general && (
-            <div className="mb-5 flex items-center gap-2.5 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm">
-              <AlertCircle size={16} className="shrink-0" />
-              {errors.general}
-            </div>
-          )}
+              {error && <div style={styles.errorBox}>{error}</div>}
 
-          {/* ── Step 1: Credentials ── */}
-          {step === 1 && (
-            <div className="space-y-5">
-              <div>
-                <label className="label">Full Name</label>
-                <div className="relative">
-                  <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-                  <input type="text" value={form.full_name}
-                    onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
-                    placeholder="Your full name" className="input-field pl-11" />
+              <form onSubmit={handleStep1} style={styles.form}>
+                <div style={styles.row}>
+                  <div style={styles.field}>
+                    <label style={styles.label}>Full Name</label>
+                    <input
+                      style={styles.input}
+                      placeholder="Arjun Sharma"
+                      value={form.full_name}
+                      onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div style={styles.field}>
+                    <label style={styles.label}>Username</label>
+                    <input
+                      style={styles.input}
+                      placeholder="arjun_dev"
+                      value={form.username}
+                      onChange={(e) => setForm({ ...form, username: e.target.value })}
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="label">Email Address <span className="text-red-400">*</span></label>
-                <div className="relative">
-                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-                  <input type="email" value={form.email}
-                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                    placeholder="you@example.com"
-                    className={`input-field pl-11 ${errors.email ? 'border-red-500/50' : ''}`} />
+                <div style={styles.field}>
+                  <label style={styles.label}>Email</label>
+                  <input
+                    style={styles.input}
+                    type="email"
+                    placeholder="arjun@college.edu"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    required
+                  />
                 </div>
-                {errors.email && <p className="error-text"><AlertCircle size={12} />{errors.email}</p>}
-              </div>
 
-              <div>
-                <label className="label">Username <span className="text-red-400">*</span></label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 font-mono text-sm">@</span>
-                  <input type="text" value={form.username}
-                    onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
-                    placeholder="your_username"
-                    className={`input-field pl-10 ${errors.username ? 'border-red-500/50' : ''}`} />
+                <div style={styles.row}>
+                  <div style={styles.field}>
+                    <label style={styles.label}>Password</label>
+                    <input
+                      style={styles.input}
+                      type="password"
+                      placeholder="Min 8 characters"
+                      value={form.password}
+                      onChange={(e) => setForm({ ...form, password: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div style={styles.field}>
+                    <label style={styles.label}>Confirm Password</label>
+                    <input
+                      style={styles.input}
+                      type="password"
+                      placeholder="Repeat password"
+                      value={form.confirmPassword}
+                      onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                      required
+                    />
+                  </div>
                 </div>
-                {errors.username && <p className="error-text"><AlertCircle size={12} />{errors.username}</p>}
-              </div>
 
-              <div>
-                <label className="label">Password <span className="text-red-400">*</span></label>
-                <div className="relative">
-                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-                  <input type={showPassword ? 'text' : 'password'} value={form.password}
-                    onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                    placeholder="Min 8 chars, 1 uppercase, 1 digit"
-                    className={`input-field pl-11 pr-12 ${errors.password ? 'border-red-500/50' : ''}`} />
-                  <button type="button" onClick={() => setShowPassword(v => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors">
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                <button type="submit" style={styles.btn}>
+                  Continue →
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <h1 style={styles.title}>Your Learning Profile</h1>
+              <p style={styles.subtitle}>Step 2 of 2 — These topics power every AI agent</p>
+
+              {error && <div style={styles.errorBox}>{error}</div>}
+
+              <form onSubmit={handleSubmit} style={styles.form}>
+                {/* Skill Level */}
+                <div style={styles.field}>
+                  <label style={styles.label}>Current Skill Level</label>
+                  <div style={styles.pillRow}>
+                    {SKILL_LEVELS.map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        onClick={() => setForm({ ...form, skill_level: level })}
+                        style={{
+                          ...styles.pill,
+                          background: form.skill_level === level ? "#00d4ff22" : "transparent",
+                          border: `1px solid ${form.skill_level === level ? "#00d4ff" : "rgba(255,255,255,0.15)"}`,
+                          color: form.skill_level === level ? "#00d4ff" : "rgba(255,255,255,0.6)",
+                        }}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Languages */}
+                <div style={styles.field}>
+                  <label style={styles.label}>Preferred Languages</label>
+                  <div style={styles.pillRow}>
+                    {LANGUAGE_OPTIONS.map((lang) => (
+                      <button
+                        key={lang}
+                        type="button"
+                        onClick={() => toggleLanguage(lang)}
+                        style={{
+                          ...styles.pill,
+                          background: form.preferred_languages.includes(lang) ? "#7c3aed22" : "transparent",
+                          border: `1px solid ${form.preferred_languages.includes(lang) ? "#7c3aed" : "rgba(255,255,255,0.15)"}`,
+                          color: form.preferred_languages.includes(lang) ? "#a78bfa" : "rgba(255,255,255,0.6)",
+                        }}
+                      >
+                        {lang}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Topics */}
+                <div style={styles.field}>
+                  <label style={styles.label}>
+                    Topics You Want to Master
+                    <span style={{ color: "rgba(255,255,255,0.4)", fontWeight: 400, marginLeft: 8 }}>
+                      ({form.interested_topics.length} selected — these are remembered by all agents)
+                    </span>
+                  </label>
+                  <div style={styles.topicGrid}>
+                    {TOPIC_OPTIONS.map((topic) => {
+                      const selected = form.interested_topics.includes(topic.id);
+                      return (
+                        <button
+                          key={topic.id}
+                          type="button"
+                          onClick={() => toggleTopic(topic.id)}
+                          style={{
+                            ...styles.topicCard,
+                            background: selected ? `${topic.color}15` : "rgba(255,255,255,0.03)",
+                            border: `1px solid ${selected ? topic.color : "rgba(255,255,255,0.08)"}`,
+                            boxShadow: selected ? `0 0 16px ${topic.color}30` : "none",
+                          }}
+                        >
+                          <span style={{ fontSize: 20, color: topic.color }}>{topic.icon}</span>
+                          <span style={{
+                            fontSize: 12,
+                            color: selected ? "#fff" : "rgba(255,255,255,0.55)",
+                            fontWeight: selected ? 600 : 400,
+                          }}>
+                            {topic.label}
+                          </span>
+                          {selected && (
+                            <div style={{
+                              position: "absolute",
+                              top: 6,
+                              right: 6,
+                              width: 8,
+                              height: 8,
+                              borderRadius: "50%",
+                              background: topic.color,
+                              boxShadow: `0 0 6px ${topic.color}`,
+                            }} />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div style={styles.btnRow}>
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    style={styles.btnGhost}
+                  >
+                    ← Back
+                  </button>
+                  <button type="submit" style={styles.btn} disabled={loading}>
+                    {loading ? "Creating account..." : "Start Learning →"}
                   </button>
                 </div>
-                {errors.password && <p className="error-text"><AlertCircle size={12} />{errors.password}</p>}
-              </div>
-
-              <button type="button" onClick={handleNext} className="btn-primary">
-                Continue →
-              </button>
-            </div>
+              </form>
+            </>
           )}
 
-          {/* ── Step 2: Profile ── */}
-          {step === 2 && (
-            <div className="space-y-5">
-              {/* Role */}
-              <div>
-                <label className="label">I am a...</label>
-                <div className="space-y-2">
-                  {ROLES.map(r => (
-                    <button key={r.value} type="button"
-                      onClick={() => setForm(f => ({ ...f, role: r.value }))}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${form.role === r.value
-                        ? 'border-brand-500/60 bg-brand-600/10 text-white'
-                        : 'border-white/10 bg-surface-700/30 text-white/50 hover:border-white/20'}`}>
-                      <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${form.role === r.value ? 'border-brand-400' : 'border-white/30'}`}>
-                        {form.role === r.value && <div className="w-2 h-2 rounded-full bg-brand-400" />}
-                      </div>
-                      <div>
-                        <div className="font-display text-sm font-600">{r.label}</div>
-                        <div className="text-xs opacity-60">{r.desc}</div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Skill level */}
-              <div>
-                <label className="label">Skill Level</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {['beginner', 'intermediate', 'advanced'].map(s => (
-                    <button key={s} type="button"
-                      onClick={() => setForm(f => ({ ...f, skill_level: s }))}
-                      className={`py-2 rounded-xl border text-xs font-display font-600 capitalize transition-all ${form.skill_level === s
-                        ? 'border-brand-500/60 bg-brand-600/10 text-brand-300'
-                        : 'border-white/10 bg-surface-700/30 text-white/40 hover:border-white/20'}`}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Institution */}
-              <div>
-                <label className="label">Institution</label>
-                <div className="relative">
-                  <Building size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-                  <input type="text" value={form.institution}
-                    onChange={e => setForm(f => ({ ...f, institution: e.target.value }))}
-                    placeholder="Your college or university"
-                    className="input-field pl-11" />
-                </div>
-              </div>
-
-              {/* Languages */}
-              <div>
-                <label className="label">Languages you know</label>
-                <div className="flex flex-wrap gap-2">
-                  {LANGUAGES.map(lang => (
-                    <button key={lang} type="button"
-                      onClick={() => toggleArray('preferred_languages', lang)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-mono font-500 border transition-all ${form.preferred_languages.includes(lang)
-                        ? 'border-brand-500/60 bg-brand-600/10 text-brand-300'
-                        : 'border-white/10 bg-surface-700/30 text-white/40 hover:border-white/20'}`}>
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Goals */}
-              <div>
-                <label className="label">Learning Goals</label>
-                <div className="flex flex-wrap gap-2">
-                  {GOALS.map(goal => (
-                    <button key={goal} type="button"
-                      onClick={() => toggleArray('learning_goals', goal)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-display font-500 border transition-all ${form.learning_goals.includes(goal)
-                        ? 'border-brand-500/60 bg-brand-600/10 text-brand-300'
-                        : 'border-white/10 bg-surface-700/30 text-white/40 hover:border-white/20'}`}>
-                      {goal}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-3 pt-1">
-                <button type="button" onClick={() => setStep(1)} className="btn-secondary">
-                  ← Back
-                </button>
-                <button type="button" onClick={handleSubmit} disabled={loading} className="btn-primary">
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                      Creating...
-                    </span>
-                  ) : 'Create Account 🚀'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          <p className="text-center text-white/30 text-sm mt-5">
-            Already have an account?{' '}
-            <Link to="/login" className="text-brand-400 hover:text-brand-300 font-500 transition-colors">
+          <p style={styles.loginLink}>
+            Already have an account?{" "}
+            <Link to="/login" style={{ color: "#00d4ff", textDecoration: "none" }}>
               Sign in
             </Link>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "#050810",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px 20px",
+    fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+    position: "relative",
+    overflow: "hidden",
+  },
+  grid: {
+    position: "fixed",
+    inset: 0,
+    backgroundImage: `
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px)
+    `,
+    backgroundSize: "48px 48px",
+    pointerEvents: "none",
+  },
+  glow1: {
+    position: "fixed",
+    top: "-20%",
+    right: "-10%",
+    width: 600,
+    height: 600,
+    borderRadius: "50%",
+    background: "radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%)",
+    pointerEvents: "none",
+  },
+  glow2: {
+    position: "fixed",
+    bottom: "-20%",
+    left: "-10%",
+    width: 500,
+    height: 500,
+    borderRadius: "50%",
+    background: "radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)",
+    pointerEvents: "none",
+  },
+  container: {
+    width: "100%",
+    maxWidth: 640,
+    position: "relative",
+    zIndex: 1,
+  },
+  header: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 32,
+  },
+  logo: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+  logoIcon: {
+    fontSize: 24,
+    color: "#00d4ff",
+    filter: "drop-shadow(0 0 8px #00d4ff80)",
+  },
+  logoText: {
+    fontSize: 22,
+    fontWeight: 700,
+    color: "#fff",
+    letterSpacing: "-0.5px",
+  },
+  logoAccent: {
+    color: "#00d4ff",
+  },
+  stepRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+  },
+  stepDot: {
+    width: 10,
+    height: 10,
+    borderRadius: "50%",
+    transition: "all 0.3s",
+  },
+  stepLine: {
+    width: 28,
+    height: 1,
+    background: "rgba(255,255,255,0.15)",
+  },
+  card: {
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 20,
+    padding: "40px",
+    backdropFilter: "blur(20px)",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 700,
+    color: "#fff",
+    margin: "0 0 6px",
+    letterSpacing: "-0.5px",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "rgba(255,255,255,0.4)",
+    margin: "0 0 32px",
+  },
+  errorBox: {
+    background: "rgba(239,68,68,0.1)",
+    border: "1px solid rgba(239,68,68,0.3)",
+    borderRadius: 10,
+    padding: "12px 16px",
+    color: "#fca5a5",
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+  },
+  row: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 16,
+  },
+  field: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: 500,
+    color: "rgba(255,255,255,0.6)",
+    letterSpacing: "0.3px",
+  },
+  input: {
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 10,
+    padding: "12px 16px",
+    color: "#fff",
+    fontSize: 14,
+    outline: "none",
+    transition: "border-color 0.2s",
+  },
+  pillRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  pill: {
+    padding: "8px 16px",
+    borderRadius: 20,
+    fontSize: 13,
+    fontWeight: 500,
+    cursor: "pointer",
+    transition: "all 0.2s",
+  },
+  topicGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gap: 10,
+    marginTop: 4,
+  },
+  topicCard: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 8,
+    padding: "14px 10px",
+    borderRadius: 12,
+    cursor: "pointer",
+    transition: "all 0.2s",
+    position: "relative",
+    textAlign: "center",
+  },
+  btn: {
+    background: "linear-gradient(135deg, #00d4ff, #0099cc)",
+    border: "none",
+    borderRadius: 12,
+    padding: "14px 28px",
+    color: "#000",
+    fontSize: 15,
+    fontWeight: 700,
+    cursor: "pointer",
+    letterSpacing: "0.3px",
+    transition: "opacity 0.2s",
+  },
+  btnGhost: {
+    background: "transparent",
+    border: "1px solid rgba(255,255,255,0.15)",
+    borderRadius: 12,
+    padding: "14px 24px",
+    color: "rgba(255,255,255,0.6)",
+    fontSize: 14,
+    cursor: "pointer",
+  },
+  btnRow: {
+    display: "flex",
+    gap: 12,
+    justifyContent: "space-between",
+  },
+  loginLink: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "rgba(255,255,255,0.4)",
+    marginTop: 24,
+    marginBottom: 0,
+  },
+};

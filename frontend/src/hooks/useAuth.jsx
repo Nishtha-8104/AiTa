@@ -26,12 +26,18 @@ export function AuthProvider({ children }) {
     return data  // returns user profile; then redirect to login
   }, [])
 
-  // ─── Login ────────────────────────────────────────────────────────────────
-  const login = useCallback(async (email, password) => {
+  // ─── Login step 1: password check → returns {otp_token, email_hint} ─────
+  const loginStep1 = useCallback(async (email, password) => {
     const { data } = await authAPI.login({ email, password })
+    // data = { otp_token, email_hint, message }
+    return data
+  }, [])
+
+  // ─── Login step 2: OTP verify → stores tokens, fetches profile ───────────
+  const loginStep2 = useCallback(async (otp_token, otp) => {
+    const { data } = await authAPI.verifyOtp({ otp_token, otp })
     localStorage.setItem('access_token', data.access_token)
     localStorage.setItem('refresh_token', data.refresh_token)
-    // Fetch full profile
     const { data: profile } = await authAPI.getMe()
     setUser(profile)
     return profile
@@ -50,7 +56,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, loginStep1, loginStep2, logout, register, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

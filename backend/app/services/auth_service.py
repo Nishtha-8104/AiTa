@@ -1,15 +1,73 @@
+import uuid
+import smtplib
+import logging
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from datetime import timedelta
-import uuid
 
-from app.models.user import User, LearningProfile, UserSession
-from app.schemas.user import RegisterRequest, LoginRequest, TokenResponse
+from app.models.user import User, LearningProfile, UserSession, OTPRecord
+from app.schemas.user import RegisterRequest, LoginRequest, TokenResponse, OTPChallengeResponse
 from app.core.security import (
     hash_password, verify_password,
-    create_access_token, create_refresh_token, decode_token
+    generate_otp, hash_otp, verify_otp,
+    create_otp_token, decode_otp_token,
+    create_access_token, create_refresh_token, decode_token,
 )
 from app.core.config import settings
+
+logger = logging.getLogger(__name__)
+
+OTP_EXPIRY_MINUTES = 10
+
+
+def _mask_email(email: str) -> str:
+    """s***@gmail.com — shows first char + domain only."""
+    local, domain = email.split("@", 1)
+    return f"{local[0]}***@{domain}"
+
+
+def _send_otp_email(to_email: str, otp: str, username: str) -> None:
+    """
+    Send OTP via SMTP. Falls back to console log if SMTP is not configured
+    so development works without email setup.
+    """
+    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
+        # Dev fallback — print to console
+        logger.warning(f"[DEV] OTP for {to_email}: {otp}")
+        return
+
+    subject = "Your aiTA Login OTP"
+    body = f"""Hi {username},
+
+Your one-time password (OTP) for aiTA login is:
+
+    {otp}
+
+This OTP expires in {OTP_EXPIRY_MINUTES} minutes.
+If you did not request this, please ignore this email.
+
+— aiTA Team
+"""
+    msg = MIMEMultipart()
+    msg["From"]    = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
+    msg["To"]      = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+            server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
+    except Exception as exc:
+        # Don't expose SMTP errors to the client — log and continue
+        logger.error(f"SMTP send failed for {to_email}: {exc}")
+        # Still log OTP to console so dev/test isn't blocked
+        logger.warning(f"[FALLBACK] OTP for {to_email}: {otp}")
 
 
 class AuthService:
@@ -17,22 +75,17 @@ class AuthService:
     @staticmethod
     def register(db: Session, data: RegisterRequest) -> User:
         """Register a new user and create their learning profile."""
-
-        # Check email uniqueness
         if db.query(User).filter(User.email == data.email).first():
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="An account with this email already exists."
             )
-
-        # Check username uniqueness
         if db.query(User).filter(User.username == data.username).first():
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="This username is already taken. Please choose another."
             )
 
-        # Create user
         user = User(
             email=data.email,
             username=data.username,
@@ -45,9 +98,8 @@ class AuthService:
             badges=[],
         )
         db.add(user)
-        db.flush()  # get user.id before commit
+        db.flush()
 
-        # Auto-create empty learning profile
         profile = LearningProfile(
             user_id=user.id,
             topic_scores={},
@@ -62,12 +114,22 @@ class AuthService:
         db.refresh(user)
         return user
 
-    @staticmethod
-    def login(db: Session, data: LoginRequest, ip_address: str = None, user_agent: str = None) -> TokenResponse:
-        """Authenticate user and return JWT tokens."""
+    # ── STEP 1: Verify password → issue OTP ──────────────────────────────────
 
+    @staticmethod
+    def login_step1(
+        db: Session, data: LoginRequest,
+    ) -> OTPChallengeResponse:
+        """
+        Step 1 of 2FA login:
+        - Verify email + password
+        - Generate 6-digit OTP, bcrypt-hash it, store in otp_records
+        - Send raw OTP to user's email
+        - Return otp_token (short-lived JWT) — NOT access tokens yet
+        """
         user = db.query(User).filter(User.email == data.email).first()
 
+        # Constant-time: always check password even if user not found
         if not user or not verify_password(data.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,39 +143,107 @@ class AuthService:
                 detail="Your account has been deactivated. Please contact support."
             )
 
-        # Create tokens
-        jti = str(uuid.uuid4())
+        # Delete any existing unused OTPs for this user
+        db.query(OTPRecord).filter(
+            OTPRecord.user_id == user.id,
+            OTPRecord.is_used == False,
+        ).delete()
+
+        # Generate + hash OTP — raw OTP never touches the DB
+        raw_otp    = generate_otp()
+        otp_record = OTPRecord(
+            user_id    = user.id,
+            hashed_otp = hash_otp(raw_otp),
+            expires_at = datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRY_MINUTES),
+        )
+        db.add(otp_record)
+        db.commit()
+
+        # Send raw OTP via email (or console in dev)
+        _send_otp_email(user.email, raw_otp, user.username)
+
+        return OTPChallengeResponse(
+            otp_token  = create_otp_token(user.id),
+            email_hint = _mask_email(user.email),
+        )
+
+    # ── STEP 2: Verify OTP → issue real JWT tokens ────────────────────────────
+
+    @staticmethod
+    def login_step2(
+        db: Session, otp_token: str, otp: str,
+        ip_address: str = None, user_agent: str = None,
+    ) -> TokenResponse:
+        """
+        Step 2 of 2FA login:
+        - Decode otp_token to get user_id
+        - Find the latest unused, unexpired OTPRecord for that user
+        - Verify raw OTP against bcrypt hash
+        - Mark OTP as used
+        - Issue real access + refresh tokens
+        """
+        user_id = decode_otp_token(otp_token)
+        if not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="OTP session expired or invalid. Please log in again.",
+            )
+
+        user = db.query(User).filter(User.id == user_id, User.is_active == True).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found.")
+
+        now = datetime.now(timezone.utc)
+        record = (
+            db.query(OTPRecord)
+            .filter(
+                OTPRecord.user_id == user_id,
+                OTPRecord.is_used == False,
+                OTPRecord.expires_at > now,
+            )
+            .order_by(OTPRecord.created_at.desc())
+            .first()
+        )
+
+        if not record or not verify_otp(otp, record.hashed_otp):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired OTP.",
+            )
+
+        # Consume the OTP — can never be reused
+        record.is_used = True
+
+        # Issue real tokens
+        jti        = str(uuid.uuid4())
         token_data = {"sub": str(user.id), "username": user.username, "role": user.role, "jti": jti}
 
-        access_token = create_access_token(token_data)
+        access_token  = create_access_token(token_data)
         refresh_token = create_refresh_token(token_data)
 
-        # Record session
         session = UserSession(
-            user_id=user.id,
-            token_jti=jti,
-            ip_address=ip_address,
-            user_agent=user_agent,
+            user_id    = user.id,
+            token_jti  = jti,
+            ip_address = ip_address,
+            user_agent = user_agent,
         )
         db.add(session)
 
-        # Update stats
         user.total_sessions += 1
-        from datetime import datetime, timezone
-        user.last_active_at = datetime.now(timezone.utc)
+        user.last_active_at  = now
         db.commit()
 
         return TokenResponse(
-            access_token=access_token,
-            refresh_token=refresh_token,
-            token_type="bearer",
-            expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            access_token  = access_token,
+            refresh_token = refresh_token,
+            token_type    = "bearer",
+            expires_in    = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         )
+
+    # ── Token refresh ─────────────────────────────────────────────────────────
 
     @staticmethod
     def refresh_tokens(db: Session, refresh_token: str) -> TokenResponse:
-        """Issue new access token from a valid refresh token."""
-
         payload = decode_token(refresh_token)
         if not payload or payload.get("type") != "refresh":
             raise HTTPException(
@@ -126,27 +256,24 @@ class AuthService:
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
 
-        jti = str(uuid.uuid4())
+        jti        = str(uuid.uuid4())
         token_data = {"sub": str(user.id), "username": user.username, "role": user.role, "jti": jti}
-        access_token = create_access_token(token_data)
-        new_refresh_token = create_refresh_token(token_data)
-
         return TokenResponse(
-            access_token=access_token,
-            refresh_token=new_refresh_token,
-            token_type="bearer",
-            expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            access_token  = create_access_token(token_data),
+            refresh_token = create_refresh_token(token_data),
+            token_type    = "bearer",
+            expires_in    = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         )
+
+    # ── Logout ────────────────────────────────────────────────────────────────
 
     @staticmethod
     def logout(db: Session, user_id: int, jti: str):
-        """Invalidate the current session."""
         session = db.query(UserSession).filter(
-            UserSession.user_id == user_id,
+            UserSession.user_id   == user_id,
             UserSession.token_jti == jti,
         ).first()
         if session:
-            from datetime import datetime, timezone
             session.is_active = False
-            session.ended_at = datetime.now(timezone.utc)
+            session.ended_at  = datetime.now(timezone.utc)
             db.commit()

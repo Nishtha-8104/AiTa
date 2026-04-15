@@ -2,8 +2,19 @@ import { useEffect, useRef } from 'react'
 import { Brain, Cpu, CheckCircle2, XCircle, Loader2 } from 'lucide-react'
 
 function ThoughtStep({ text, index, isLast, generating }) {
-  const isError   = text.startsWith('❌')
-  const isDone    = text.startsWith('✅') || text.includes('Done!')
+  // Safely coerce any value to a display string
+  let str
+  if (typeof text === 'string') {
+    str = text
+  } else if (Array.isArray(text)) {
+    str = text.map(e => (typeof e === 'object' ? (e.msg || JSON.stringify(e)) : String(e))).join(', ')
+  } else if (text && typeof text === 'object') {
+    str = text.msg || text.message || JSON.stringify(text)
+  } else {
+    str = String(text ?? '')
+  }
+  const isError   = str.startsWith('❌')
+  const isDone    = str.startsWith('✅') || str.includes('Done!')
   const isThinking= isLast && generating
 
   return (
@@ -27,7 +38,7 @@ function ThoughtStep({ text, index, isLast, generating }) {
       <p className={`text-xs font-mono leading-relaxed ${
         isError ? 'text-red-300' : isDone ? 'text-green-300' : 'text-white/60'
       }`}>
-        {text}
+        {str}
       </p>
     </div>
   )
@@ -69,7 +80,7 @@ export default function AgentThinkingPanel({ steps = [], generating }) {
 
       {/* Steps */}
       <div className="p-5 space-y-3 max-h-72 overflow-y-auto">
-        {steps.map((step, i) => (
+        {steps.filter(s => s != null).map((step, i) => (
           <ThoughtStep
             key={i}
             text={step}

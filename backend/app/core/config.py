@@ -1,15 +1,10 @@
-# ============================================================
-# CHANGES TO: backend/app/core/config.py
-# ADD the ANTHROPIC_API_KEY field to the Settings class
-# ============================================================
-
-# Replace the entire Settings class body with this:
-
 from pydantic_settings import BaseSettings
 from typing import List
 from dotenv import load_dotenv
 import os
-load_dotenv()   
+
+# Load .env from backend/ directory (one level up from app/)
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 
 class Settings(BaseSettings):
     # Database
@@ -29,12 +24,20 @@ class Settings(BaseSettings):
 
     # ── Groq API Key for LLM agent reasoning ─────────────────────────────
     GROQ_API_KEY: str=""
+    YOUTUBE_API_KEY: str=""
+
+    # ── Email (SMTP) for OTP delivery ─────────────────────────────────────
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_NAME: str = "aiTA"
     @property
     def allowed_origins_list(self) -> List[str]:
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
 
     class Config:
-        env_file = ".env"
+        env_file = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
         extra = "ignore"
     
 
