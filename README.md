@@ -337,7 +337,3 @@ ALTER TABLE users
 5. Open a Pull Request
 
 ---
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
