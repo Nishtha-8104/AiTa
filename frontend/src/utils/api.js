@@ -48,8 +48,10 @@ api.interceptors.response.use(
 // ─── Auth API ─────────────────────────────────────────────────────────────────
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),           // returns otp_token
-  verifyOtp: (data) => api.post('/auth/verify-otp', data),  // returns access+refresh tokens
+  login: (data) => api.post('/auth/login', data),
+  verifyOtp: (data) => api.post('/auth/verify-otp', data),
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
   refresh: (refreshToken) => api.post('/auth/refresh', { refresh_token: refreshToken }),
@@ -60,6 +62,8 @@ export const userAPI = {
   getProfile: () => api.get('/users/profile'),
   updateProfile: (data) => api.patch('/users/profile', data),
   changePassword: (data) => api.post('/users/change-password', data),
+  updateConsent: (consent) => api.patch(`/users/consent?consent=${consent}`),
+  getPeerComparison: () => api.get('/users/peer-comparison'),
 }
 
 export const recommendationAPI = {

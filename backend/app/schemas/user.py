@@ -164,3 +164,23 @@ class OTPChallengeResponse(BaseModel):
 class VerifyOTPRequest(BaseModel):
     otp_token: str          # the otp_pending JWT from step 1
     otp: str = Field(..., min_length=6, max_length=6, pattern=r"^\d{6}$")
+
+
+# ─── Forgot Password Schemas ──────────────────────────────────────────────────
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    otp_token: str
+    otp: str = Field(..., min_length=6, max_length=6, pattern=r"^\d{6}$")
+    new_password: str = Field(..., min_length=8, max_length=128)
+
+    @validator("new_password")
+    def password_strength(cls, v):
+        if not any(c.isupper() for c in v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not any(c.isdigit() for c in v):
+            raise ValueError("Password must contain at least one digit")
+        return v

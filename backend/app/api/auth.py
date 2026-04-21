@@ -7,6 +7,7 @@ from app.schemas.user import (
     RegisterRequest, LoginRequest, TokenResponse,
     RefreshTokenRequest, MessageResponse, UserProfileResponse,
     OTPChallengeResponse, VerifyOTPRequest,
+    ForgotPasswordRequest, ResetPasswordRequest,
 )
 from app.services.auth_service import AuthService
 from app.models.user import User
@@ -67,6 +68,30 @@ def verify_otp(data: VerifyOTPRequest, request: Request, db: Session = Depends(g
         ip_address = ip_address,
         user_agent = user_agent,
     )
+
+
+@router.post(
+    "/forgot-password",
+    response_model=OTPChallengeResponse,
+    summary="Request a password reset OTP",
+)
+def forgot_password(data: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Sends a 6-digit OTP to the email if it exists.
+    Always returns 200 — never reveals whether the email is registered.
+    """
+    return AuthService.forgot_password(db, data.email)
+
+
+@router.post(
+    "/reset-password",
+    response_model=MessageResponse,
+    summary="Verify OTP and set new password",
+)
+def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)):
+    """Verifies the reset OTP and updates the password."""
+    AuthService.reset_password(db, data.otp_token, data.otp, data.new_password)
+    return MessageResponse(message="Password reset successfully. You can now log in.")
 
 
 @router.post(

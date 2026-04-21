@@ -6,11 +6,14 @@ An AI-powered personalized learning platform for programming students. aiTA comb
 
 ## Features
 
-- **Content Player Agent** — Interactive AI tutor with 5 modes: Walkthrough, Q&A, Quiz, Code Help, Brainstorm. Adaptive difficulty that adjusts based on your comfort level.
+- **Content Player Agent** — Interactive AI tutor with 5 modes: Walkthrough, Q&A, Quiz, Code Help, Brainstorm. Adaptive difficulty adjusts automatically based on comfort signals.
 - **Code Evaluation Agent** — Paste a problem statement + your solution and get multi-dimensional analysis: correctness, efficiency, security, style, documentation, and corrected code.
 - **Feedback Agent** — Synthesizes findings from code evaluations and learning sessions into personalized narrative feedback. Updates your learning profile in real time.
-- **Content Recommendation Agent** — Hybrid CF + CBF + RL + Groq LLM pipeline. Fetches real YouTube videos per your topics and ranks them for you.
+- **Content Recommendation Agent** — Hybrid CF + CBF + RL + Groq LLM pipeline. Fetches real YouTube videos per your topics and ranks them with personalized explanations.
 - **2-Step Login (OTP)** — Password check → bcrypt-hashed OTP sent to email → real JWT tokens issued only after OTP verification.
+- **Forgot Password** — Email OTP → verify → set new password. OTP bcrypt-hashed before storage, single-use, 10-minute expiry.
+- **Peer Comparison** — Anonymized rank, percentile ring, and metric benchmarks vs all consenting users. Opt-in via Privacy Settings.
+- **Data Privacy Controls** — ChatGPT-style data consent toggle. Choose exactly what data is shared for comparison. Name and email are never shared.
 - **Dynamic Learner Profile** — Every agent reads from and writes to your profile. More activity = better personalization.
 - **Gamification** — Points, levels, badges.
 
@@ -23,9 +26,9 @@ An AI-powered personalized learning platform for programming students. aiTA comb
 | Frontend | React 18 + Vite + Tailwind CSS |
 | Backend | FastAPI (Python) |
 | Database | PostgreSQL + SQLAlchemy ORM |
-| LLM | Groq API (`llama-3.3-70b-versatile`) |
+| LLM | Groq API (`llama-3.3-70b-versatile`, fallback `llama3-8b-8192`) |
 | Video | YouTube Data API v3 |
-| Auth | JWT (access + refresh) + bcrypt |
+| Auth | JWT (access + refresh) + bcrypt + OTP |
 | HTTP Client | Axios (frontend), httpx (backend) |
 
 ---
@@ -39,14 +42,22 @@ aiTA/
 │   └── app/
 │       ├── main.py                 # FastAPI app entry point
 │       ├── core/
-│       │   ├── config.py           # Settings
-│       │   ├── database.py         # SQLAlchemy engine
-│       │   ├── security.py         # JWT, bcrypt, OTP helpers
-│       │   └── dependencies.py     # Auth dependencies
+│       │   ├── config.py           # Settings (DB, JWT, SMTP, API keys)
+│       │   ├── database.py         # SQLAlchemy engine + session
+│       │   ├── security.py         # JWT, bcrypt, OTP generate/hash/verify
+│       │   └── dependencies.py     # Auth dependencies + role checks
 │       ├── models/                 # SQLAlchemy ORM models
+│       │   ├── user.py             # User, LearningProfile, OTPRecord, UserSession
+│       │   ├── content_player.py
+│       │   ├── code_eval.py
+│       │   ├── feedback.py
+│       │   └── recommendation.py
 │       ├── schemas/                # Pydantic request/response schemas
 │       ├── api/                    # FastAPI routers
-│       ├── services/               # Business logic
+│       │   ├── auth.py             # login, verify-otp, forgot-password, reset-password
+│       │   ├── users.py            # profile, consent, peer-comparison
+│       │   └── ...
+│       ├── services/               # Business logic layer
 │       └── agents/                 # AI agent logic
 │           ├── content_player_agent.py
 │           ├── code_eval_agent.py
@@ -57,9 +68,14 @@ aiTA/
     └── src/
         ├── App.jsx
         ├── pages/                  # Route-level pages
+        │   ├── LoginPage.jsx       # 2-step login + forgot password (inline)
+        │   ├── RegisterPage.jsx    # 2-step registration with topic selection
+        │   ├── DashboardPage.jsx   # Stats, agents, peer comparison
+        │   ├── ProfilePage.jsx     # Profile, Learning, Security, Privacy tabs
+        │   └── ...
         ├── components/             # UI components per feature
         ├── hooks/                  # Custom React hooks
-        └── utils/api.js            # Axios API client
+        └── utils/api.js            # Axios API client with auto token refresh
 ```
 
 ---
@@ -72,7 +88,7 @@ aiTA/
 - Node.js 18+
 - PostgreSQL 14+
 - A [Groq API key](https://console.groq.com)
-- A [YouTube Data API v3 key](https://console.cloud.google.com) *(optional — recommendations still work without it, just no real video URLs)*
+- A [YouTube Data API v3 key](https://console.cloud.google.com) *(optional — recommendations still work without it)*
 - A Gmail account with an [App Password](https://myaccount.google.com/apppasswords) for OTP emails *(optional — OTP prints to console in dev mode)*
 
 ---
@@ -102,12 +118,6 @@ pip install -r app/requirements.txt
 ```
 
 #### Configure environment variables
-
-Copy the example and fill in your values:
-
-```bash
-cp .env.example .env
-```
 
 Edit `backend/.env`:
 
@@ -141,25 +151,31 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
 #### Create the database
 
-```bash
-# In psql or pgAdmin
+```sql
+-- In psql or pgAdmin
 CREATE DATABASE aita_db;
 ```
 
-Then run the OTP migration (tables are auto-created on startup except this one):
+Then run the required migrations:
 
 ```bash
-psql -U postgres -d aita_db -f app/migration_otp.sql
+psql -U postgres -d aita_db -f backend/app/migration_otp.sql
 ```
+
+> Other tables are auto-created on startup via SQLAlchemy. Also run this to add the data consent columns:
+> ```sql
+> ALTER TABLE users
+>   ADD COLUMN IF NOT EXISTS data_sharing_consent BOOLEAN DEFAULT FALSE,
+>   ADD COLUMN IF NOT EXISTS consent_updated_at TIMESTAMPTZ;
+> ```
 
 #### Start the backend
 
 ```bash
-cd backend
 uvicorn app.main:app --reload --port 8000
 ```
 
-API docs available at: `http://localhost:8000/docs`
+API docs: `http://localhost:8000/docs`
 
 ---
 
@@ -191,29 +207,72 @@ App runs at: `http://localhost:5173`
 
 ## API Overview
 
-| Group | Base Path | Description |
+| Group | Base Path | Key Endpoints |
 |---|---|---|
-| Auth | `/api/v1/auth` | Register, login (2-step OTP), refresh, logout |
-| Users | `/api/v1/users` | Profile read/update, change password |
+| Auth | `/api/v1/auth` | `POST /login`, `POST /verify-otp`, `POST /forgot-password`, `POST /reset-password`, `POST /register`, `POST /refresh`, `POST /logout` |
+| Users | `/api/v1/users` | `GET/PATCH /profile`, `PATCH /consent`, `GET /peer-comparison`, `POST /change-password` |
 | Content Player | `/api/v1/content-player` | Sessions, chat, problem generation |
-| Code Evaluation | `/api/v1/code-eval` | Submit code, evaluate, history, stats |
-| Feedback | `/api/v1/feedback` | Generate, list, mark read |
-| Recommendations | `/api/v1/recommendations` | Run agent, get recs, log interactions |
+| Code Evaluation | `/api/v1/code-eval` | Submit, evaluate, history, stats |
+| Feedback | `/api/v1/feedback` | Generate, auto-generate, list, mark read |
+| Recommendations | `/api/v1/recommendations` | Run agent, get recs, log interactions, dismiss |
 
 Full interactive docs: `http://localhost:8000/docs`
 
 ---
 
-## Login Flow (2-Step OTP)
+## Auth Flows
+
+### Login (2-Step OTP)
 
 ```
-1. POST /auth/login        → verify password → OTP bcrypt-hashed → stored in DB
-                           → raw OTP emailed → returns otp_token (10-min JWT)
+POST /auth/login
+  → verify password
+  → generate 6-digit OTP
+  → bcrypt-hash OTP → store hash in otp_records (raw OTP never saved)
+  → email raw OTP to user
+  → return otp_token (10-min JWT, type: otp_pending)
 
-2. POST /auth/verify-otp   → verify OTP hash → mark used → return access + refresh tokens
+POST /auth/verify-otp  { otp_token, otp }
+  → decode otp_token → get user_id
+  → verify OTP against bcrypt hash
+  → mark OTP as used (single-use)
+  → return access_token + refresh_token
 ```
 
-In development without SMTP configured, the OTP is printed to the backend console.
+### Forgot Password
+
+```
+POST /auth/forgot-password  { email }
+  → always returns 200 (never reveals if email exists)
+  → if email found: generate OTP → bcrypt-hash → store → email raw OTP
+  → return otp_token
+
+POST /auth/reset-password  { otp_token, otp, new_password }
+  → verify OTP hash
+  → mark OTP as used
+  → bcrypt-hash new password → save
+```
+
+In development without SMTP, all OTPs print to the backend console as:
+```
+[DEV] OTP for email@example.com: 123456
+```
+
+---
+
+## Peer Comparison & Privacy
+
+Users can opt in to anonymous data sharing from **Profile → Privacy tab**.
+
+- When enabled: points, sessions, code scores, and accuracy are included in platform-wide comparisons
+- Name, email, code submissions, and chat messages are **never** shared
+- The dashboard shows a percentile ring, rank, and metric benchmarks vs all consenting users
+- Consent can be toggled off at any time — data is excluded immediately
+
+```
+PATCH /users/consent?consent=true   → enable data sharing
+GET  /users/peer-comparison         → returns rank, percentile, metric comparisons
+```
 
 ---
 
@@ -223,10 +282,10 @@ In development without SMTP configured, the OTP is printed to the backend consol
 User Activity
      │
      ▼
-[1] Content Player Agent   → learns topic, detects mastery/confusion
+[1] Content Player Agent   → learns topic, detects mastery/confusion, adaptive difficulty
      │
      ▼
-[2] Code Evaluation Agent  → static analysis + Groq LLM → 6-dimension scores
+[2] Code Evaluation Agent  → problem statement + code → static analysis + Groq LLM → 6-dimension scores
      │
      ▼
 [3] Feedback Agent         → synthesizes eval + session → updates LearningProfile
@@ -241,29 +300,31 @@ Each agent writes signals back to the shared `LearningProfile`, making every sub
 
 ## Database Migrations
 
-Tables are auto-created on startup via SQLAlchemy. For schema changes, SQL migration files are in `backend/app/`:
-
 | File | Description |
 |---|---|
-| `migration_otp.sql` | OTP records table for 2-step login |
-| `migration_content_player.sql` | Content player sessions/messages |
+| `migration_otp.sql` | `otp_records` table for 2-step login and password reset |
+| `migration_content_player.sql` | Content player sessions and messages |
 | `migration_code_eval.sql` | Code submissions and evaluations |
 | `migration_feedback.sql` | Feedback reports |
 | `migration_recommendation.sql` | Content catalog and recommendations |
 
-Run any migration manually:
-```bash
-psql -U postgres -d aita_db -f backend/app/migration_name.sql
+Manual columns (not in migration files):
+```sql
+-- Data consent (peer comparison)
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS data_sharing_consent BOOLEAN DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS consent_updated_at TIMESTAMPTZ;
 ```
 
 ---
 
 ## Development Notes
 
-- **OTP in dev** — If `SMTP_USER` is not set, OTPs are logged to the backend console as `[DEV] OTP for email@example.com: 123456`
-- **YouTube fallback** — If `YOUTUBE_API_KEY` is not set, recommendations still work but content items will have `url: null`
-- **Groq fallback** — If the primary model (`llama-3.3-70b-versatile`) fails, agents retry with `llama3-8b-8192` before falling back to static/score-based results
-- **Profile topics** — Set topics in your profile (Profile → Learning tab) before running the Recommendation Agent
+- **OTP in dev** — OTPs print to console if SMTP is not configured: `[DEV] OTP for ...: 123456`
+- **YouTube fallback** — Recommendations work without a YouTube key; content items will have `url: null`
+- **Groq fallback** — Primary model → `llama3-8b-8192` fallback → score-based ranking if both fail
+- **Profile topics** — Set topics in Profile → Learning tab before running the Recommendation Agent
+- **Peer comparison** — Requires at least one other user with data sharing enabled to show meaningful data
 
 ---
 
@@ -271,8 +332,8 @@ psql -U postgres -d aita_db -f backend/app/migration_name.sql
 
 1. Fork the repo
 2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'Add your feature'`
-4. Push to the branch: `git push origin feature/your-feature`
+3. Commit: `git commit -m 'Add your feature'`
+4. Push: `git push origin feature/your-feature`
 5. Open a Pull Request
 
 ---

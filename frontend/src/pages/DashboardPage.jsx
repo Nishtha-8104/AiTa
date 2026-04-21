@@ -5,9 +5,9 @@ import {
   Sparkles, LogOut, User, BookOpen, Code2,
   Brain, TrendingUp, Clock, Star, ArrowRight,
   MessageSquare, Trophy, Activity, Layers, Zap,
-  Target, BarChart2, CheckCircle2
+  Target, BarChart2, CheckCircle2, Users, Shield
 } from 'lucide-react'
-import { feedbackAPI, codeEvalAPI } from '../utils/api'
+import { feedbackAPI, codeEvalAPI, userAPI } from '../utils/api'
 import toast from 'react-hot-toast'
 import ThemeToggle from '../components/ui/ThemeToggle'
 import { SkeletonStatCard, SkeletonCard } from '../components/ui/Skeleton'
@@ -103,15 +103,22 @@ export default function DashboardPage() {
   const [codeStats, setCodeStats]           = useState(null)
   const [statsLoading, setStatsLoading]     = useState(true)
   const [showFeedback, setShowFeedback]     = useState(false)
+  const [peerData, setPeerData]             = useState(null)
+  const [peerLoading, setPeerLoading]       = useState(true)
 
   useEffect(() => {
     Promise.all([
       feedbackAPI.unreadCount().catch(() => ({ data: { unread: 0 } })),
       codeEvalAPI.getStats().catch(() => ({ data: null })),
-    ]).then(([fb, stats]) => {
+      userAPI.getPeerComparison().catch(() => ({ data: null })),
+    ]).then(([fb, stats, peer]) => {
       setFeedbackUnread(fb.data.unread ?? 0)
       setCodeStats(stats.data)
-    }).finally(() => setStatsLoading(false))
+      setPeerData(peer.data)
+    }).finally(() => {
+      setStatsLoading(false)
+      setPeerLoading(false)
+    })
   }, [])
 
   // Show feedback prompt after 30s if user has sessions
@@ -282,6 +289,203 @@ export default function DashboardPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* ── Peer Comparison ── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Users size={14} className="text-violet-400" />
+            <p className="text-white/40 text-xs font-mono uppercase tracking-wider">Your Standing Among Peers</p>
+          </div>
+
+          {peerLoading ? (
+            <div className="h-48 glass-card animate-pulse" />
+          ) : peerData?.consent_required ? (
+            /* ── Consent locked state ── */
+            <div className="glass-card p-8 flex flex-col sm:flex-row items-center gap-6 border-violet-500/15">
+              <div className="w-16 h-16 rounded-2xl bg-violet-600/15 border border-violet-500/20 flex items-center justify-center shrink-0">
+                <Shield size={28} className="text-violet-400" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="font-display font-700 text-white text-lg mb-1">See how you rank against other learners</h3>
+                <p className="text-white/40 text-sm leading-relaxed max-w-lg">
+                  Enable anonymous data sharing to unlock your percentile rank, score benchmarks,
+                  and insights on where you stand. Your name and email are <span className="text-white/60">never</span> shared.
+                </p>
+                <button
+                  onClick={() => navigate('/profile')}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-sm font-display font-600 rounded-xl transition-colors"
+                >
+                  <Shield size={13} /> Enable in Privacy Settings
+                </button>
+              </div>
+            </div>
+          ) : !peerData || peerData.total_peers === 0 ? (
+            <div className="glass-card p-8 text-center border-violet-500/10">
+              <p className="text-white/30 text-sm">No peers yet — you're the first learner with data sharing on!</p>
+            </div>
+          ) : (
+            /* ── Full comparison card ── */
+            <div className="glass-card overflow-hidden border-violet-500/15">
+
+              {/* Top banner — rank + percentile */}
+              <div className="bg-gradient-to-r from-violet-600/15 via-violet-500/8 to-transparent px-6 py-5 flex flex-col sm:flex-row items-center gap-6 border-b border-white/[0.06]">
+
+                {/* Percentile ring */}
+                <div className="relative shrink-0 w-24 h-24">
+                  <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#7c3aed" strokeWidth="10"
+                      strokeDasharray={`${2 * Math.PI * 40}`}
+                      strokeDashoffset={`${2 * Math.PI * 40 * (1 - (peerData.your_rank?.top_percentile ?? 0) / 100)}`}
+                      strokeLinecap="round"
+                      style={{ transition: 'stroke-dashoffset 1s ease' }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="font-display font-800 text-xl text-white leading-none">
+                      {peerData.your_rank?.top_percentile ?? 0}%
+                    </span>
+                    <span className="text-white/30 text-xs font-mono">top</span>
+                  </div>
+                </div>
+
+                {/* Rank text */}
+                <div>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="font-display font-800 text-3xl text-white">
+                      #{peerData.your_rank?.points_rank}
+                    </span>
+                    <span className="text-white/30 text-sm font-body">
+                      out of {peerData.your_rank?.out_of} learners
+                    </span>
+                  </div>
+                  <p className="text-violet-300 text-sm font-body leading-relaxed max-w-sm">
+                    {peerData.your_rank?.top_percentile >= 75
+                      ? `You're in the top ${100 - peerData.your_rank.top_percentile}% — outstanding performance. Keep pushing.`
+                      : peerData.your_rank?.top_percentile >= 50
+                      ? `You're above average. A few more sessions and you'll break into the top 25%.`
+                      : `You're building momentum. Consistent practice will move you up fast.`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Metric insights */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
+                {(() => {
+                  const metrics = [
+                    {
+                      icon: '🎯',
+                      label: 'Code Score',
+                      yours: peerData.your_stats?.avg_code_score ?? 0,
+                      avg:   peerData.platform_averages?.avg_code_score ?? 0,
+                      unit:  '/100',
+                      insight: (y, a) => y >= a
+                        ? `Your avg score is ${(y - a).toFixed(1)} pts above the platform average.`
+                        : `You're ${(a - y).toFixed(1)} pts below average — more evaluations will close this gap.`,
+                    },
+                    {
+                      icon: '⚡',
+                      label: 'Learning Sessions',
+                      yours: peerData.your_stats?.sessions ?? 0,
+                      avg:   peerData.platform_averages?.sessions ?? 0,
+                      unit:  '',
+                      insight: (y, a) => y >= a
+                        ? `You've done ${y - Math.round(a)} more sessions than the average learner.`
+                        : `Average learner has ${Math.round(a) - y} more sessions — consistency is key.`,
+                    },
+                    {
+                      icon: '📊',
+                      label: 'Accuracy Rate',
+                      yours: peerData.your_stats?.accuracy_pct ?? 0,
+                      avg:   peerData.platform_averages?.accuracy_pct ?? 0,
+                      unit:  '%',
+                      insight: (y, a) => y >= a
+                        ? `Your accuracy is ${(y - a).toFixed(1)}% higher than peers at your level.`
+                        : `Focus on weak areas to bring your accuracy up by ${(a - y).toFixed(1)}%.`,
+                    },
+                  ]
+                  return metrics.map(m => {
+                    const better = m.yours >= m.avg
+                    const pct    = m.avg > 0 ? Math.min(Math.round((m.yours / m.avg) * 100), 200) : 0
+                    return (
+                      <div key={m.label} className="p-5">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-lg">{m.icon}</span>
+                          <span className="text-white/40 text-xs font-mono uppercase tracking-wider">{m.label}</span>
+                        </div>
+                        <div className="flex items-baseline gap-1.5 mb-1">
+                          <span className={`font-display font-800 text-2xl ${better ? 'text-white' : 'text-white/70'}`}>
+                            {m.yours}{m.unit}
+                          </span>
+                          <span className={`text-xs font-mono px-1.5 py-0.5 rounded-full ${
+                            better
+                              ? 'bg-green-500/15 text-green-400'
+                              : 'bg-yellow-500/15 text-yellow-400'
+                          }`}>
+                            {better ? `+${(m.yours - m.avg).toFixed(1)}` : `${(m.yours - m.avg).toFixed(1)}`} vs avg
+                          </span>
+                        </div>
+                        <p className="text-white/30 text-xs leading-relaxed mb-3">
+                          {m.insight(m.yours, m.avg)}
+                        </p>
+                        {/* You vs avg mini bar */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/30 text-xs w-6">You</span>
+                            <div className="flex-1 h-1.5 bg-surface-600 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full bg-violet-500 transition-all duration-700"
+                                style={{ width: `${Math.min(pct, 100)}%` }} />
+                            </div>
+                            <span className="text-white/50 text-xs font-mono w-10 text-right">{m.yours}{m.unit}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white/20 text-xs w-6">Avg</span>
+                            <div className="flex-1 h-1.5 bg-surface-600 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full bg-white/20 transition-all duration-700" style={{ width: '100%' }} />
+                            </div>
+                            <span className="text-white/30 text-xs font-mono w-10 text-right">{m.avg}{m.unit}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                })()}
+              </div>
+
+              {/* Skill distribution footer */}
+              {peerData.skill_distribution && (
+                <div className="px-6 py-4 border-t border-white/[0.06] bg-surface-800/30">
+                  <div className="flex items-center gap-4">
+                    <span className="text-white/25 text-xs font-mono shrink-0">Skill mix</span>
+                    <div className="flex-1 flex h-2 rounded-full overflow-hidden gap-px">
+                      {Object.entries(peerData.skill_distribution).map(([level, count]) => {
+                        const pct = Math.round((count / peerData.total_peers) * 100)
+                        const bg  = { beginner: 'bg-green-500', intermediate: 'bg-yellow-500', advanced: 'bg-red-500' }[level] || 'bg-brand-500'
+                        const isYou = user?.skill_level === level
+                        return (
+                          <div key={level} className={`${bg} ${isYou ? 'ring-1 ring-white/40' : ''} transition-all`}
+                            style={{ width: `${pct}%` }} title={`${level}: ${pct}%${isYou ? ' (you)' : ''}`} />
+                        )
+                      })}
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      {Object.entries(peerData.skill_distribution).map(([level, count]) => {
+                        const pct   = Math.round((count / peerData.total_peers) * 100)
+                        const color = { beginner: 'text-green-400', intermediate: 'text-yellow-400', advanced: 'text-red-400' }[level] || 'text-brand-400'
+                        const isYou = user?.skill_level === level
+                        return (
+                          <span key={level} className={`text-xs font-mono capitalize ${color} ${isYou ? 'font-700' : ''}`}>
+                            {level} {pct}%{isYou ? ' ←' : ''}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Quick info ── */}

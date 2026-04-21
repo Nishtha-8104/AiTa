@@ -63,6 +63,10 @@ class User(Base):
     level = Column(Integer, default=1)
     badges = Column(JSON, default=list)
 
+    # Data sharing consent (like ChatGPT's data controls)
+    data_sharing_consent = Column(Boolean, default=False)  # allow anonymous data in CF/comparison
+    consent_updated_at   = Column(DateTime(timezone=True), nullable=True)
+
     # Timestamps
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

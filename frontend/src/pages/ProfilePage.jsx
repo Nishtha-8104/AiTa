@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Save, User, Building, MapPin, Code2, Target, Sparkles, Lock } from 'lucide-react'
+import { ArrowLeft, Save, User, Building, MapPin, Code2, Target, Sparkles, Lock, Shield } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { userAPI } from '../utils/api'
 import toast from 'react-hot-toast'
@@ -38,6 +38,8 @@ export default function ProfilePage() {
   const [pwForm, setPwForm] = useState({ current_password: '', new_password: '' })
   const [saving, setSaving] = useState(false)
   const [savingPw, setSavingPw] = useState(false)
+  const [savingConsent, setSavingConsent] = useState(false)
+  const [consent, setConsent] = useState(user?.data_sharing_consent ?? false)
   const [activeTab, setActiveTab] = useState('profile')
 
   const toggleArray = (field, value) => {
@@ -89,10 +91,25 @@ export default function ProfilePage() {
     }
   }
 
+  const handleConsentToggle = async (value) => {
+    setSavingConsent(true)
+    try {
+      await userAPI.updateConsent(value)
+      setConsent(value)
+      updateUser({ data_sharing_consent: value })
+      toast.success(value ? 'Data sharing enabled.' : 'Data sharing disabled.')
+    } catch {
+      toast.error('Failed to update consent.')
+    } finally {
+      setSavingConsent(false)
+    }
+  }
+
   const TABS = [
     { id: 'profile', label: 'Profile Info', icon: User },
     { id: 'learning', label: 'Learning', icon: Target },
     { id: 'security', label: 'Security', icon: Lock },
+    { id: 'privacy', label: 'Privacy', icon: Shield },
   ]
 
   return (
@@ -299,6 +316,80 @@ export default function ProfilePage() {
                     : <span className="flex items-center justify-center gap-2"><Lock size={16} /> Update Password</span>}
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Privacy Tab ── */}
+        {activeTab === 'privacy' && (
+          <div className="glass-card p-6 space-y-6 animate-fade-in">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Shield size={16} className="text-brand-400" />
+                <h3 className="font-display font-600 text-white">Data Controls</h3>
+              </div>
+              <p className="text-white/30 text-sm mb-6">
+                Control how your data is used. These settings affect peer comparison and collaborative filtering.
+              </p>
+
+              {/* Main consent toggle */}
+              <div className="flex items-start justify-between gap-4 p-4 rounded-xl bg-surface-700/30 border border-white/[0.06] mb-4">
+                <div className="flex-1">
+                  <p className="font-display font-600 text-sm text-white mb-1">
+                    Allow anonymized data for peer comparison
+                  </p>
+                  <p className="text-white/40 text-xs leading-relaxed">
+                    Your scores, sessions, and accuracy are anonymized and included in platform-wide
+                    comparisons. No personal info (name, email) is ever shared. You can turn this off
+                    at any time and your data is immediately excluded.
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleConsentToggle(!consent)}
+                  disabled={savingConsent}
+                  className={`shrink-0 w-12 h-6 rounded-full transition-all duration-300 relative ${
+                    consent ? 'bg-brand-600' : 'bg-surface-600'
+                  } ${savingConsent ? 'opacity-50' : ''}`}
+                >
+                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-300 ${
+                    consent ? 'left-6' : 'left-0.5'
+                  }`} />
+                </button>
+              </div>
+
+              {/* What's collected */}
+              <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+                <div className="px-4 py-3 bg-surface-700/20 border-b border-white/[0.06]">
+                  <p className="text-white/40 text-xs font-mono uppercase tracking-wider">What data is used</p>
+                </div>
+                {[
+                  { label: 'Points & Level',        desc: 'Used for leaderboard ranking',              shared: true  },
+                  { label: 'Session count',          desc: 'Used for activity comparison',              shared: true  },
+                  { label: 'Code evaluation scores', desc: 'Used for score benchmarking',               shared: true  },
+                  { label: 'Accuracy rate',          desc: 'Used for skill-level comparison',           shared: true  },
+                  { label: 'Name & Email',           desc: 'Never shared — always private',             shared: false },
+                  { label: 'Code submissions',       desc: 'Never shared — always private',             shared: false },
+                  { label: 'Chat messages',          desc: 'Never shared — always private',             shared: false },
+                ].map(item => (
+                  <div key={item.label} className="flex items-center justify-between px-4 py-3 border-b border-white/[0.04] last:border-0">
+                    <div>
+                      <p className="text-white/70 text-sm font-display font-500">{item.label}</p>
+                      <p className="text-white/30 text-xs">{item.desc}</p>
+                    </div>
+                    <span className={`text-xs font-mono px-2 py-0.5 rounded-full ${
+                      item.shared
+                        ? consent ? 'bg-brand-600/15 text-brand-400' : 'bg-surface-600 text-white/20'
+                        : 'bg-red-500/10 text-red-400'
+                    }`}>
+                      {item.shared ? (consent ? 'Shared' : 'Off') : 'Private'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-white/20 text-xs mt-4">
+                Changing this setting takes effect immediately. Your data is never sold to third parties.
+              </p>
             </div>
           </div>
         )}

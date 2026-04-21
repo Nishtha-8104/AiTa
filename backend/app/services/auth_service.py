@@ -70,6 +70,41 @@ If you did not request this, please ignore this email.
         logger.warning(f"[FALLBACK] OTP for {to_email}: {otp}")
 
 
+def _send_otp_email_reset(to_email: str, otp: str, username: str) -> None:
+    """Send password-reset OTP email."""
+    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
+        logger.warning(f"[DEV] Password reset OTP for {to_email}: {otp}")
+        return
+
+    subject = "Reset your aiTA password"
+    body = f"""Hi {username},
+
+You requested a password reset for your aiTA account.
+Your one-time password (OTP) is:
+
+    {otp}
+
+This OTP expires in {OTP_EXPIRY_MINUTES} minutes.
+If you did not request this, you can safely ignore this email.
+
+— aiTA Team
+"""
+    msg = MIMEMultipart()
+    msg["From"]    = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
+    msg["To"]      = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    try:
+        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+            server.ehlo(); server.starttls()
+            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+            server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
+    except Exception as exc:
+        logger.error(f"SMTP reset send failed for {to_email}: {exc}")
+        logger.warning(f"[FALLBACK] Reset OTP for {to_email}: {otp}")
+
+
 class AuthService:
 
     @staticmethod
@@ -239,6 +274,85 @@ class AuthService:
             token_type    = "bearer",
             expires_in    = settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         )
+
+    # ── Forgot Password: send OTP ─────────────────────────────────────────────
+
+    @staticmethod
+    def forgot_password(db: Session, email: str) -> OTPChallengeResponse:
+        """
+        Sends a password-reset OTP to the given email.
+        Always returns success — never reveals whether the email exists.
+        """
+        user = db.query(User).filter(User.email == email).first()
+
+        if user and user.is_active:
+            # Delete any existing unused OTPs
+            db.query(OTPRecord).filter(
+                OTPRecord.user_id == user.id,
+                OTPRecord.is_used == False,
+            ).delete()
+
+            raw_otp = generate_otp()
+            db.add(OTPRecord(
+                user_id    = user.id,
+                hashed_otp = hash_otp(raw_otp),
+                expires_at = datetime.now(timezone.utc) + timedelta(minutes=OTP_EXPIRY_MINUTES),
+            ))
+            db.commit()
+
+            _send_otp_email_reset(user.email, raw_otp, user.username)
+            otp_token  = create_otp_token(user.id)
+            email_hint = _mask_email(user.email)
+        else:
+            # Return a dummy response — don't leak whether email exists
+            otp_token  = "invalid"
+            email_hint = _mask_email(email) if "@" in email else "***"
+
+        return OTPChallengeResponse(
+            otp_token  = otp_token,
+            message    = "If this email is registered, an OTP has been sent.",
+            email_hint = email_hint,
+        )
+
+    # ── Forgot Password: verify OTP + set new password ────────────────────────
+
+    @staticmethod
+    def reset_password(db: Session, otp_token: str, otp: str, new_password: str) -> None:
+        """
+        Verifies the reset OTP and sets the new password.
+        """
+        user_id = decode_otp_token(otp_token)
+        if not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Reset session expired or invalid. Please request a new OTP.",
+            )
+
+        user = db.query(User).filter(User.id == user_id, User.is_active == True).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+
+        now    = datetime.now(timezone.utc)
+        record = (
+            db.query(OTPRecord)
+            .filter(
+                OTPRecord.user_id  == user_id,
+                OTPRecord.is_used  == False,
+                OTPRecord.expires_at > now,
+            )
+            .order_by(OTPRecord.created_at.desc())
+            .first()
+        )
+
+        if not record or not verify_otp(otp, record.hashed_otp):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired OTP.",
+            )
+
+        record.is_used       = True
+        user.hashed_password = hash_password(new_password)
+        db.commit()
 
     # ── Token refresh ─────────────────────────────────────────────────────────
 
