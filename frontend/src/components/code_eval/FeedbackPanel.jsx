@@ -81,12 +81,18 @@ function TagList({ items, color = 'text-brand-300 bg-brand-600/10 border-brand-5
   if (!items?.length) return <p className="text-white/20 text-xs italic">None identified.</p>
   return (
     <div className="flex flex-col gap-2">
-      {items.map((item, i) => (
-        <div key={i} className="flex items-start gap-2">
-          <span className="text-brand-400 shrink-0 mt-0.5 text-sm">•</span>
-          <p className="text-white/65 text-sm">{item}</p>
-        </div>
-      ))}
+      {items.map((item, i) => {
+        // Safely coerce any value to string — guards against Pydantic error objects
+        const text = typeof item === 'string' ? item
+          : typeof item === 'object' && item !== null ? (item.msg || item.message || JSON.stringify(item))
+          : String(item ?? '')
+        return (
+          <div key={i} className="flex items-start gap-2">
+            <span className="text-brand-400 shrink-0 mt-0.5 text-sm">•</span>
+            <p className="text-white/65 text-sm">{text}</p>
+          </div>
+        )
+      })}
     </div>
   )
 }

@@ -32,8 +32,11 @@ export default function AgentSteps({ steps = [], evaluating }) {
       </div>
       <div className="px-5 py-4 space-y-2.5 max-h-52 overflow-y-auto">
         {displaySteps.map((step, i) => {
-          const isDone  = step.startsWith('✅')
-          const isError = step.startsWith('❌')
+          const str = typeof step === 'string' ? step
+            : typeof step === 'object' && step !== null ? (step.msg || step.message || JSON.stringify(step))
+            : String(step ?? '')
+          const isDone  = str.startsWith('✅')
+          const isError = str.startsWith('❌')
           const isLast  = i === displaySteps.length - 1 && evaluating
           return (
             <div key={i} className="flex items-start gap-2.5 animate-slide-up"
@@ -49,7 +52,7 @@ export default function AgentSteps({ steps = [], evaluating }) {
               </div>
               <p className={`text-xs font-mono leading-relaxed ${
                 isError ? 'text-red-300' : isDone ? 'text-green-300' : 'text-white/50'
-              }`}>{step}</p>
+              }`}>{str}</p>
             </div>
           )
         })}
