@@ -37,8 +37,8 @@ Use `/auth/login` to get a Bearer token, then click **Authorize**.
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins_list,
-    allow_credentials=True,
+    allow_origins=["*"],          # open during deployment — tighten after it works
+    allow_credentials=False,      # must be False when allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
