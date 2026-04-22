@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { getErrorMessage } from "../utils/api";
 
 const TOPIC_OPTIONS = [
   { id: "arrays", label: "Arrays & Strings", icon: "⬡", color: "#00d4ff" },
@@ -91,7 +92,7 @@ export default function RegisterPage() {
       // Redirect to onboarding for first-time users
       navigate("/onboarding");
     } catch (err) {
-      setError(err.response?.data?.detail || "Registration failed");
+      setError(getErrorMessage(err, "Registration failed"));
     } finally {
       setLoading(false);
     }

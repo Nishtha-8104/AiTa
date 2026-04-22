@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { codeEvalAPI } from '../utils/api'
+import { codeEvalAPI, getErrorMessage } from '../utils/api'
 import toast from 'react-hot-toast'
 
 export function useCodeEval() {
@@ -57,7 +57,7 @@ export function useCodeEval() {
       setSubmissions(subs)
       return data
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Evaluation failed. Check your Groq API key.')
+      toast.error(getErrorMessage(err, 'Evaluation failed. Check your Groq API key.'))
       return null
     } finally {
       setEvaluating(false)
@@ -73,7 +73,7 @@ export function useCodeEval() {
       toast.success(`Re-evaluation complete — Score: ${data.scores.overall.toFixed(1)}/100`)
       return data
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Re-evaluation failed.')
+      toast.error(getErrorMessage(err, 'Re-evaluation failed.'))
       return null
     } finally {
       setEvaluating(false)

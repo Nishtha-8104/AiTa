@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { feedbackAPI } from '../utils/api'
+import { feedbackAPI, getErrorMessage } from '../utils/api'
 import toast from 'react-hot-toast'
 
 export function useFeedback() {
@@ -39,7 +39,7 @@ export function useFeedback() {
       toast.success('Feedback report ready!')
       return data
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Generation failed.'
+      const msg = getErrorMessage(err, 'Generation failed.')
       toast.error(msg)
       return null
     } finally {

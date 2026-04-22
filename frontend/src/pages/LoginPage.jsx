@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Eye, EyeOff, Mail, Lock, Sparkles, AlertCircle, ShieldCheck, RefreshCw, KeyRound } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { authAPI } from '../utils/api'
+import { getErrorMessage } from '../utils/api'
 import toast from 'react-hot-toast'
 
 // ── Single-input OTP component — one invisible input, 6 visual boxes ─────────
@@ -119,7 +120,7 @@ export default function LoginPage() {
       setStep(2); setCountdown(30); setOtp('')
       toast.success('OTP sent to your email!')
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Login failed.'
+      const msg = getErrorMessage(err, 'Login failed.')
       toast.error(msg); setErrors({ general: msg })
     } finally { setLoading(false) }
   }
@@ -133,7 +134,7 @@ export default function LoginPage() {
       toast.success(`Welcome back, ${user.username}! 👋`)
       navigate(from, { replace: true })
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Invalid OTP.'
+      const msg = getErrorMessage(err, 'Invalid OTP.')
       setOtpError(msg); setOtp('')
     } finally { setVerifying(false) }
   }
@@ -188,7 +189,7 @@ export default function LoginPage() {
       toast.success('Password reset! You can now log in.')
       setMode('login'); setFpStep(1); setFpEmail(''); setFpOtp(''); setFpNewPassword('')
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Reset failed.')
+      toast.error(getErrorMessage(err, 'Reset failed.'))
     } finally { setFpLoading(false) }
   }
 

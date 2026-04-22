@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { recommendationAPI } from '../utils/api'
+import { recommendationAPI, getErrorMessage } from '../utils/api'
 import toast from 'react-hot-toast'
 
 export function useRecommendations() {
@@ -81,11 +81,7 @@ export function useRecommendations() {
       clearInterval(interval)
       setThoughtSteps(prev => [
         ...prev,
-        `❌ Error: ${
-          Array.isArray(err.response?.data?.detail)
-            ? err.response.data.detail.map(e => e.msg || JSON.stringify(e)).join(', ')
-            : err.response?.data?.detail || err.message
-        }`,
+        `❌ Error: ${getErrorMessage(err, 'Agent run failed.')}`
       ])
       toast.error('Agent run failed. Check GROQ_API_KEY in your .env')
     } finally {
