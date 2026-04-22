@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './hooks/useAuth'
 import { ThemeProvider } from './hooks/useTheme'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import ErrorBoundary from './components/ui/ErrorBoundary'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import OnboardingPage from './pages/OnboardingPage'
@@ -34,6 +35,7 @@ export default function App() {
               error:   { iconTheme: { primary: '#f87171', secondary: '#fff' } },
             }}
           />
+          <ErrorBoundary>
           <Routes>
             <Route path="/"                element={<Navigate to="/dashboard" replace />} />
             <Route path="/login"           element={<LoginPage />} />
@@ -48,6 +50,7 @@ export default function App() {
             <Route path="/code-help"       element={<ProtectedRoute><CodeHelpPage /></ProtectedRoute>} />
             <Route path="*"               element={<Navigate to="/dashboard" replace />} />
           </Routes>
+          </ErrorBoundary>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

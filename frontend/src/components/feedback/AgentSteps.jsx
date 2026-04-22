@@ -21,9 +21,15 @@ export default function AgentSteps({ steps = [], generating = false }) {
 
       {open && (
         <div className="px-4 pb-4 space-y-1.5 border-t border-white/[0.05] pt-3">
-          {steps.map((step, i) => (
-            <p key={i} className="text-white/45 text-xs font-mono leading-relaxed">{step}</p>
-          ))}
+        {steps.map((step, i) => {
+            const str = typeof step === 'string' ? step
+              : Array.isArray(step) ? step.map(e => typeof e === 'object' ? (e.msg || JSON.stringify(e)) : String(e)).join(', ')
+              : step && typeof step === 'object' ? (step.msg || step.message || JSON.stringify(step))
+              : String(step ?? '')
+            return (
+              <p key={i} className="text-white/45 text-xs font-mono leading-relaxed">{str}</p>
+            )
+          })}
           {generating && (
             <div className="flex items-center gap-2 text-pink-400 text-xs font-mono">
               <div className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
