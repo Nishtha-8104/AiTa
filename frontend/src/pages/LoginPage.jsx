@@ -1,9 +1,48 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Eye, EyeOff, Mail, Lock, Sparkles, AlertCircle, ShieldCheck, RefreshCw, KeyRound } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { authAPI } from '../utils/api'
 import toast from 'react-hot-toast'
+
+// ── Single-input OTP component — one invisible input, 6 visual boxes ─────────
+function OtpInput({ value, onChange, error, autoFocus }) {
+  const digits = (value + '      ').slice(0, 6).split('')
+  return (
+    <div className="relative flex justify-center">
+      <div className="flex gap-2 pointer-events-none select-none">
+        {digits.map((d, i) => (
+          <div key={i} className={`w-12 h-14 rounded-xl border flex items-center justify-center text-xl font-mono font-700 transition-all ${
+            error
+              ? 'border-red-500/60 bg-red-500/5 text-red-300'
+              : d.trim()
+              ? 'border-brand-500/60 bg-brand-600/10 text-white'
+              : value.length === i
+              ? 'border-brand-400/80 bg-brand-600/5'
+              : 'border-white/10 bg-surface-700/60'
+          }`}>
+            {d.trim()
+              ? d
+              : value.length === i
+              ? <span className="animate-pulse text-brand-400 text-2xl leading-none">|</span>
+              : null}
+          </div>
+        ))}
+      </div>
+      {/* Invisible input that captures all typing */}
+      <input
+        type="text"
+        inputMode="numeric"
+        autoComplete="one-time-code"
+        autoFocus={autoFocus}
+        value={value}
+        maxLength={6}
+        onChange={e => onChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
+        className="absolute inset-0 opacity-0 cursor-text w-full"
+      />
+    </div>
+  )
+}
 
 export default function LoginPage() {
   const { loginStep1, loginStep2 } = useAuth()
@@ -11,35 +50,33 @@ export default function LoginPage() {
   const location = useLocation()
   const from = location.state?.from?.pathname || '/dashboard'
 
-  const [mode, setMode] = useState('login')
+  const [mode, setMode] = useState('login')   // 'login' | 'forgot'
 
-  // Login state
-  const [form, setForm]                 = useState({ email: '', password: '' })
+  // ── Login state ───────────────────────────────────────────────────────────
+  const [form,         setForm]         = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors]             = useState({})
-  const [loading, setLoading]           = useState(false)
-  const [step, setStep]                 = useState(1)
-  const [otpToken, setOtpToken]         = useState('')
-  const [emailHint, setEmailHint]       = useState('')
-  const [otp, setOtp]                   = useState(['', '', '', '', '', ''])
-  const [otpError, setOtpError]         = useState('')
-  const [verifying, setVerifying]       = useState(false)
-  const [resending, setResending]       = useState(false)
-  const [countdown, setCountdown]       = useState(0)
-  const otpRefs = useRef([])
+  const [errors,       setErrors]       = useState({})
+  const [loading,      setLoading]      = useState(false)
+  const [step,         setStep]         = useState(1)
+  const [otpToken,     setOtpToken]     = useState('')
+  const [emailHint,    setEmailHint]    = useState('')
+  const [otp,          setOtp]          = useState('')
+  const [otpError,     setOtpError]     = useState('')
+  const [verifying,    setVerifying]    = useState(false)
+  const [resending,    setResending]    = useState(false)
+  const [countdown,    setCountdown]    = useState(0)
 
-  // Forgot password state
-  const [fpEmail, setFpEmail]             = useState('')
-  const [fpStep, setFpStep]               = useState(1)
-  const [fpOtpToken, setFpOtpToken]       = useState('')
-  const [fpEmailHint, setFpEmailHint]     = useState('')
-  const [fpOtp, setFpOtp]                 = useState(['', '', '', '', '', ''])
-  const [fpOtpError, setFpOtpError]       = useState('')
+  // ── Forgot password state ─────────────────────────────────────────────────
+  const [fpEmail,       setFpEmail]       = useState('')
+  const [fpStep,        setFpStep]        = useState(1)
+  const [fpOtpToken,    setFpOtpToken]    = useState('')
+  const [fpEmailHint,   setFpEmailHint]   = useState('')
+  const [fpOtp,         setFpOtp]         = useState('')
+  const [fpOtpError,    setFpOtpError]    = useState('')
   const [fpNewPassword, setFpNewPassword] = useState('')
-  const [fpShowPw, setFpShowPw]           = useState(false)
-  const [fpLoading, setFpLoading]         = useState(false)
-  const [fpCountdown, setFpCountdown]     = useState(0)
-  const fpOtpRefs = useRef([])
+  const [fpShowPw,      setFpShowPw]      = useState(false)
+  const [fpLoading,     setFpLoading]     = useState(false)
+  const [fpCountdown,   setFpCountdown]   = useState(0)
 
   useEffect(() => {
     if (countdown <= 0) return
@@ -52,6 +89,15 @@ export default function LoginPage() {
     const t = setTimeout(() => setFpCountdown(c => c - 1), 1000)
     return () => clearTimeout(t)
   }, [fpCountdown])
+
+  // Auto-submit when 6 digits entered
+  useEffect(() => {
+    if (otp.length === 6) handleVerifyOtp(otp)
+  }, [otp])
+
+  useEffect(() => {
+    if (fpOtp.length === 6 && fpStep === 2) handleFpVerifyOtp(fpOtp)
+  }, [fpOtp])
 
   // ── Login handlers ────────────────────────────────────────────────────────
   const validateStep1 = () => {
@@ -69,34 +115,18 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const data = await loginStep1(form.email, form.password)
-      setOtpToken(data.otp_token)
-      setEmailHint(data.email_hint)
-      setStep(2)
-      setCountdown(30)
+      setOtpToken(data.otp_token); setEmailHint(data.email_hint)
+      setStep(2); setCountdown(30); setOtp('')
       toast.success('OTP sent to your email!')
     } catch (err) {
       const msg = err.response?.data?.detail || 'Login failed.'
-      toast.error(msg)
-      setErrors({ general: msg })
+      toast.error(msg); setErrors({ general: msg })
     } finally { setLoading(false) }
   }
 
-  const handleOtpChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return
-    const next = [...otp]; next[index] = value.slice(-1); setOtp(next); setOtpError('')
-    if (value && index < 5) otpRefs.current[index + 1]?.focus()
-  }
-  const handleOtpKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) otpRefs.current[index - 1]?.focus()
-    if (e.key === 'Enter') handleVerifyOtp()
-  }
-  const handleOtpPaste = (e) => {
-    const p = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
-    if (p.length === 6) { setOtp(p.split('')); otpRefs.current[5]?.focus() }
-  }
-  const handleVerifyOtp = async () => {
-    const code = otp.join('')
+  const handleVerifyOtp = async (code = otp) => {
     if (code.length < 6) { setOtpError('Enter all 6 digits'); return }
+    if (verifying) return
     setVerifying(true); setOtpError('')
     try {
       const user = await loginStep2(otpToken, code)
@@ -104,16 +134,17 @@ export default function LoginPage() {
       navigate(from, { replace: true })
     } catch (err) {
       const msg = err.response?.data?.detail || 'Invalid OTP.'
-      setOtpError(msg); setOtp(['', '', '', '', '', '']); otpRefs.current[0]?.focus()
+      setOtpError(msg); setOtp('')
     } finally { setVerifying(false) }
   }
+
   const handleResend = async () => {
     if (countdown > 0) return
     setResending(true)
     try {
       const data = await loginStep1(form.email, form.password)
-      setOtpToken(data.otp_token); setOtp(['', '', '', '', '', '']); setOtpError(''); setCountdown(30)
-      toast.success('New OTP sent!'); otpRefs.current[0]?.focus()
+      setOtpToken(data.otp_token); setOtp(''); setOtpError(''); setCountdown(30)
+      toast.success('New OTP sent!')
     } catch { toast.error('Failed to resend OTP.') }
     finally { setResending(false) }
   }
@@ -126,68 +157,40 @@ export default function LoginPage() {
     try {
       const { data } = await authAPI.forgotPassword(fpEmail)
       setFpOtpToken(data.otp_token); setFpEmailHint(data.email_hint)
-      setFpStep(2); setFpCountdown(30)
+      setFpStep(2); setFpCountdown(30); setFpOtp('')
       toast.success('OTP sent! Check your email.')
     } catch { toast.error('Something went wrong. Try again.') }
     finally { setFpLoading(false) }
   }
-  const handleFpOtpChange = (index, value) => {
-    if (!/^\d*$/.test(value)) return
-    const next = [...fpOtp]; next[index] = value.slice(-1); setFpOtp(next); setFpOtpError('')
-    if (value && index < 5) fpOtpRefs.current[index + 1]?.focus()
-  }
-  const handleFpOtpKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !fpOtp[index] && index > 0) fpOtpRefs.current[index - 1]?.focus()
-    if (e.key === 'Enter') handleFpVerifyOtp()
-  }
-  const handleFpOtpPaste = (e) => {
-    const p = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
-    if (p.length === 6) { setFpOtp(p.split('')); fpOtpRefs.current[5]?.focus() }
-  }
-  const handleFpVerifyOtp = () => {
-    if (fpOtp.join('').length < 6) { setFpOtpError('Enter all 6 digits'); return }
+
+  const handleFpVerifyOtp = (code = fpOtp) => {
+    if (code.length < 6) { setFpOtpError('Enter all 6 digits'); return }
     setFpStep(3)
   }
+
   const handleFpResend = async () => {
     if (fpCountdown > 0) return
     setFpLoading(true)
     try {
       const { data } = await authAPI.forgotPassword(fpEmail)
-      setFpOtpToken(data.otp_token); setFpOtp(['', '', '', '', '', '']); setFpOtpError(''); setFpCountdown(30)
-      toast.success('New OTP sent!'); fpOtpRefs.current[0]?.focus()
+      setFpOtpToken(data.otp_token); setFpOtp(''); setFpOtpError(''); setFpCountdown(30)
+      toast.success('New OTP sent!')
     } catch { toast.error('Failed to resend.') }
     finally { setFpLoading(false) }
   }
+
   const handleFpReset = async (e) => {
     e.preventDefault()
-    if (!fpNewPassword || fpNewPassword.length < 8) { toast.error('Password must be at least 8 characters'); return }
+    if (!fpNewPassword || fpNewPassword.length < 8) { toast.error('Min 8 characters'); return }
     setFpLoading(true)
     try {
-      await authAPI.resetPassword({ otp_token: fpOtpToken, otp: fpOtp.join(''), new_password: fpNewPassword })
+      await authAPI.resetPassword({ otp_token: fpOtpToken, otp: fpOtp, new_password: fpNewPassword })
       toast.success('Password reset! You can now log in.')
-      setMode('login'); setFpStep(1); setFpEmail(''); setFpOtp(['', '', '', '', '', '']); setFpNewPassword('')
+      setMode('login'); setFpStep(1); setFpEmail(''); setFpOtp(''); setFpNewPassword('')
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Reset failed. Try again.')
+      toast.error(err.response?.data?.detail || 'Reset failed.')
     } finally { setFpLoading(false) }
   }
-
-  // ── Shared OTP boxes ──────────────────────────────────────────────────────
-  const OtpBoxes = ({ value, onChange, onKeyDown, onPaste, refs, error }) => (
-    <div className="flex gap-2 justify-center" onPaste={onPaste}>
-      {value.map((digit, i) => (
-        <input key={i} ref={el => refs.current[i] = el}
-          type="text" inputMode="numeric" maxLength={1} value={digit}
-          onChange={e => onChange(i, e.target.value)}
-          onKeyDown={e => onKeyDown(i, e)}
-          className={`w-12 h-14 text-center text-xl font-mono font-700 rounded-xl border bg-surface-700/60 text-white focus:outline-none transition-all ${
-            error ? 'border-red-500/60 bg-red-500/5'
-            : digit ? 'border-brand-500/60 bg-brand-600/10'
-            : 'border-white/10 focus:border-brand-500/50'
-          }`}
-        />
-      ))}
-    </div>
-  )
 
   const title = mode === 'forgot'
     ? fpStep === 1 ? 'Reset your password' : fpStep === 2 ? 'Verify your email' : 'Set new password'
@@ -246,7 +249,7 @@ export default function LoginPage() {
 
         <div className="glass-card p-8">
 
-          {/* ── Login: Step 1 ── */}
+          {/* ── Login Step 1 ── */}
           {mode === 'login' && step === 1 && (
             <>
               {errors.general && (
@@ -302,25 +305,33 @@ export default function LoginPage() {
             </>
           )}
 
-          {/* ── Login: Step 2 OTP ── */}
+          {/* ── Login Step 2 OTP ── */}
           {mode === 'login' && step === 2 && (
             <div className="space-y-6">
               <div className="flex items-center gap-3 p-4 bg-brand-600/8 border border-brand-500/20 rounded-xl">
                 <ShieldCheck size={20} className="text-brand-400 shrink-0" />
-                <p className="text-white/60 text-sm">OTP sent to <span className="text-white font-600">{emailHint}</span>. Expires in 10 minutes.</p>
+                <p className="text-white/60 text-sm">
+                  OTP sent to <span className="text-white font-600">{emailHint}</span>. Expires in 10 minutes.
+                </p>
               </div>
               <div>
-                <label className="label text-center block mb-3">Enter OTP</label>
-                <OtpBoxes value={otp} onChange={handleOtpChange} onKeyDown={handleOtpKeyDown} onPaste={handleOtpPaste} refs={otpRefs} error={otpError} />
-                {otpError && <p className="flex items-center justify-center gap-1.5 text-red-400 text-xs mt-3"><AlertCircle size={12} />{otpError}</p>}
+                <label className="label text-center block mb-3">
+                  Enter OTP {otp.length === 6 && !verifying && <span className="text-brand-400 text-xs ml-1">✓ verifying…</span>}
+                </label>
+                <OtpInput value={otp} onChange={v => { setOtp(v); setOtpError('') }} error={otpError} autoFocus />
+                {otpError && (
+                  <p className="flex items-center justify-center gap-1.5 text-red-400 text-xs mt-3">
+                    <AlertCircle size={12} />{otpError}
+                  </p>
+                )}
               </div>
-              <button onClick={handleVerifyOtp} disabled={verifying || otp.join('').length < 6} className="btn-primary">
+              <button onClick={() => handleVerifyOtp()} disabled={verifying || otp.length < 6} className="btn-primary">
                 {verifying
                   ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Verifying…</span>
                   : <span className="flex items-center justify-center gap-2"><ShieldCheck size={16} />Verify & Sign In</span>}
               </button>
               <div className="flex items-center justify-between text-sm">
-                <button onClick={() => { setStep(1); setOtp(['', '', '', '', '', '']); setOtpError('') }}
+                <button onClick={() => { setStep(1); setOtp(''); setOtpError('') }}
                   className="text-white/30 hover:text-white/60 transition-colors">← Back</button>
                 <button onClick={handleResend} disabled={countdown > 0 || resending}
                   className="flex items-center gap-1.5 text-brand-400 hover:text-brand-300 disabled:text-white/20 disabled:cursor-not-allowed transition-colors">
@@ -331,7 +342,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* ── Forgot: Step 1 email ── */}
+          {/* ── Forgot Step 1 ── */}
           {mode === 'forgot' && fpStep === 1 && (
             <form onSubmit={handleFpSendOtp} className="space-y-5">
               <div>
@@ -354,19 +365,25 @@ export default function LoginPage() {
             </form>
           )}
 
-          {/* ── Forgot: Step 2 OTP ── */}
+          {/* ── Forgot Step 2 OTP ── */}
           {mode === 'forgot' && fpStep === 2 && (
             <div className="space-y-6">
               <div className="flex items-center gap-3 p-4 bg-brand-600/8 border border-brand-500/20 rounded-xl">
                 <ShieldCheck size={20} className="text-brand-400 shrink-0" />
-                <p className="text-white/60 text-sm">OTP sent to <span className="text-white font-600">{fpEmailHint}</span>. Expires in 10 minutes.</p>
+                <p className="text-white/60 text-sm">
+                  OTP sent to <span className="text-white font-600">{fpEmailHint}</span>. Expires in 10 minutes.
+                </p>
               </div>
               <div>
                 <label className="label text-center block mb-3">Enter OTP</label>
-                <OtpBoxes value={fpOtp} onChange={handleFpOtpChange} onKeyDown={handleFpOtpKeyDown} onPaste={handleFpOtpPaste} refs={fpOtpRefs} error={fpOtpError} />
-                {fpOtpError && <p className="flex items-center justify-center gap-1.5 text-red-400 text-xs mt-3"><AlertCircle size={12} />{fpOtpError}</p>}
+                <OtpInput value={fpOtp} onChange={v => { setFpOtp(v); setFpOtpError('') }} error={fpOtpError} autoFocus />
+                {fpOtpError && (
+                  <p className="flex items-center justify-center gap-1.5 text-red-400 text-xs mt-3">
+                    <AlertCircle size={12} />{fpOtpError}
+                  </p>
+                )}
               </div>
-              <button onClick={handleFpVerifyOtp} disabled={fpOtp.join('').length < 6} className="btn-primary">
+              <button onClick={() => handleFpVerifyOtp()} disabled={fpOtp.length < 6} className="btn-primary">
                 <span className="flex items-center justify-center gap-2"><ShieldCheck size={16} />Verify OTP</span>
               </button>
               <div className="flex items-center justify-between text-sm">
@@ -380,7 +397,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* ── Forgot: Step 3 new password ── */}
+          {/* ── Forgot Step 3 new password ── */}
           {mode === 'forgot' && fpStep === 3 && (
             <form onSubmit={handleFpReset} className="space-y-5">
               <div className="flex items-center gap-3 p-4 bg-green-600/8 border border-green-500/20 rounded-xl">

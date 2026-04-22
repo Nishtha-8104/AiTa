@@ -172,7 +172,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <button
               onClick={() => navigate('/profile')}
               className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-surface-700/60 transition-colors"
