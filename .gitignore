@@ -33,3 +33,9 @@ build/
 # Optional: lock files (if you want to ignore)
 # package-lock.json
 # yarn.lock
+
+# Gmail API credentials (NEVER commit these!)
+credentials.json
+token.json
+backend/app/credentials.json
+backend/app/token.json

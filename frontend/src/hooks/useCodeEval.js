@@ -45,10 +45,10 @@ export function useCodeEval() {
     try {
       const { data } = await codeEvalAPI.submitAndEvaluate({
         language,
-        code,
-        title:           title           || undefined,
-        problem_context: problemContext  || undefined,
-        expected_output: expectedOutput  || undefined,
+        code:            code.slice(0, 50000),
+        title:           title                          || undefined,
+        problem_context: problemContext?.slice(0, 5000) || undefined,
+        expected_output: expectedOutput?.slice(0, 2000) || undefined,
       })
       setActiveResult(data)
       toast.success(`✅ Evaluation complete — Score: ${data.scores.overall.toFixed(1)}/100`)

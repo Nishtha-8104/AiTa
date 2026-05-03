@@ -1,6 +1,7 @@
 import uuid
 import smtplib
 import logging
+import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta, timezone
@@ -22,6 +23,16 @@ logger = logging.getLogger(__name__)
 
 OTP_EXPIRY_MINUTES = 10
 
+# Try to import Gmail API
+try:
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+    from google.auth.transport.requests import Request
+    GMAIL_API_AVAILABLE = True
+except ImportError:
+    GMAIL_API_AVAILABLE = False
+    logger.warning("Gmail API libraries not installed. Using SMTP fallback.")
+
 
 def _mask_email(email: str) -> str:
     """s***@gmail.com — shows first char + domain only."""
@@ -29,16 +40,70 @@ def _mask_email(email: str) -> str:
     return f"{local[0]}***@{domain}"
 
 
+def _get_gmail_service():
+    """Get authenticated Gmail API service using OAuth2 refresh token."""
+    if not GMAIL_API_AVAILABLE:
+        return None
+    
+    if not settings.GMAIL_CLIENT_ID or not settings.GMAIL_CLIENT_SECRET or not settings.GMAIL_REFRESH_TOKEN:
+        return None
+    
+    try:
+        # Create credentials from refresh token
+        creds = Credentials(
+            token=None,
+            refresh_token=settings.GMAIL_REFRESH_TOKEN,
+            token_uri="https://oauth2.googleapis.com/token",
+            client_id=settings.GMAIL_CLIENT_ID,
+            client_secret=settings.GMAIL_CLIENT_SECRET,
+            scopes=["https://www.googleapis.com/auth/gmail.send"]
+        )
+        
+        # Refresh the access token
+        creds.refresh(Request())
+        
+        # Build Gmail service
+        service = build('gmail', 'v1', credentials=creds)
+        return service
+    except Exception as e:
+        logger.error(f"Failed to initialize Gmail API: {e}")
+        return None
+
+
+def _send_email_via_gmail_api(to_email: str, subject: str, body: str) -> bool:
+    """Send email using Gmail API (works on Render - uses HTTPS)."""
+    try:
+        service = _get_gmail_service()
+        if not service:
+            return False
+        
+        # Create message
+        message = MIMEText(body)
+        message["To"] = to_email
+        message["From"] = settings.GMAIL_FROM_EMAIL
+        message["Subject"] = subject
+        
+        # Encode message
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        
+        # Send via Gmail API
+        service.users().messages().send(
+            userId="me",
+            body={"raw": raw_message}
+        ).execute()
+        
+        logger.info(f"Email sent via Gmail API to {to_email}")
+        return True
+    except Exception as e:
+        logger.error(f"Gmail API send failed: {e}")
+        return False
+
+
 def _send_otp_email(to_email: str, otp: str, username: str) -> None:
     """
-    Send OTP via SMTP. Falls back to console log if SMTP is not configured
-    so development works without email setup.
+    Send OTP via Gmail API (preferred) or SMTP fallback.
+    Falls back to console log if neither is configured.
     """
-    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        # Dev fallback — print to console
-        logger.warning(f"[DEV] OTP for {to_email}: {otp}")
-        return
-
     subject = "Your aiTA Login OTP"
     body = f"""Hi {username},
 
@@ -51,31 +116,38 @@ If you did not request this, please ignore this email.
 
 — aiTA Team
 """
-    msg = MIMEMultipart()
-    msg["From"]    = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
-    msg["To"]      = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
 
-    try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
-            server.ehlo()
-            server.starttls()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
-    except Exception as exc:
-        # Don't expose SMTP errors to the client — log and continue
-        logger.error(f"SMTP send failed for {to_email}: {exc}")
-        # Still log OTP to console so dev/test isn't blocked
-        logger.warning(f"[FALLBACK] OTP for {to_email}: {otp}")
+    # Try Gmail API first (works on Render)
+    if GMAIL_API_AVAILABLE and settings.GMAIL_REFRESH_TOKEN:
+        if _send_email_via_gmail_api(to_email, subject, body):
+            return
+    
+    # Fallback to SMTP (may not work on Render)
+    if settings.SMTP_USER and settings.SMTP_PASSWORD:
+        msg = MIMEMultipart()
+        msg["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+
+        try:
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+                server.ehlo()
+                server.starttls()
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
+            logger.info(f"OTP sent via SMTP to {to_email}")
+            return
+        except Exception as exc:
+            logger.error(f"SMTP send failed for {to_email}: {exc}")
+    
+    # Final fallback to console
+    print(f"[DEV] OTP for {to_email}: {otp}") 
+    logger.warning(f"[DEV] OTP for {to_email}: {otp}")
 
 
 def _send_otp_email_reset(to_email: str, otp: str, username: str) -> None:
-    """Send password-reset OTP email."""
-    if not settings.SMTP_USER or not settings.SMTP_PASSWORD:
-        logger.warning(f"[DEV] Password reset OTP for {to_email}: {otp}")
-        return
-
+    """Send password-reset OTP email via Gmail API or SMTP."""
     subject = "Reset your aiTA password"
     body = f"""Hi {username},
 
@@ -89,20 +161,33 @@ If you did not request this, you can safely ignore this email.
 
 — aiTA Team
 """
-    msg = MIMEMultipart()
-    msg["From"]    = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
-    msg["To"]      = to_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
 
-    try:
-        with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
-            server.ehlo(); server.starttls()
-            server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
-            server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
-    except Exception as exc:
-        logger.error(f"SMTP reset send failed for {to_email}: {exc}")
-        logger.warning(f"[FALLBACK] Reset OTP for {to_email}: {otp}")
+    # Try Gmail API first
+    if GMAIL_API_AVAILABLE and settings.GMAIL_REFRESH_TOKEN:
+        if _send_email_via_gmail_api(to_email, subject, body):
+            return
+    
+    # Fallback to SMTP
+    if settings.SMTP_USER and settings.SMTP_PASSWORD:
+        msg = MIMEMultipart()
+        msg["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_USER}>"
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain"))
+
+        try:
+            with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=10) as server:
+                server.ehlo()
+                server.starttls()
+                server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                server.sendmail(settings.SMTP_USER, to_email, msg.as_string())
+            logger.info(f"Reset OTP sent via SMTP to {to_email}")
+            return
+        except Exception as exc:
+            logger.error(f"SMTP reset send failed for {to_email}: {exc}")
+    
+    # Final fallback
+    logger.warning(f"[DEV] Password reset OTP for {to_email}: {otp}")
 
 
 class AuthService:
