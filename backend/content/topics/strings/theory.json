@@ -1,0 +1,222 @@
+{
+  "schema": "theory/v1",
+  "topic": "strings",
+  "items": [
+    {
+      "id": "theory-c-strings-1",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "How does C know where a string ends, and why does a 5-letter word need a `char` array of size at least 6?",
+      "model_answer": "A C string is a char array whose text is followed by the null character `'\\0'`. There is no stored length; functions like `strlen` and `printf(\"%s\")` find the end by scanning until they reach `'\\0'`. The terminator takes one element, so 5 letters need 6 elements.",
+      "key_points": [
+        "a C string is a char array terminated by the null character '\\0'",
+        "string functions find the end by scanning for '\\0'",
+        "the array needs one extra element for the terminator"
+      ]
+    },
+    {
+      "id": "theory-c-strings-2",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "Why does `if (s == \"yes\")` not check whether the string `s` contains \"yes\", and what should be used?",
+      "model_answer": "In this comparison both sides become pointers: `s` is the address of its first character and `\"yes\"` is the address of a literal. `==` compares those addresses, not the characters, so it is almost always false. `strcmp(s, \"yes\") == 0` compares the characters one by one and returns 0 when the strings are equal.",
+      "key_points": [
+        "== compares the addresses of the strings, not their contents",
+        "strcmp compares the strings character by character",
+        "strcmp returns 0 when the strings are equal"
+      ]
+    },
+    {
+      "id": "theory-c-strings-3",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "Why does `c - '0'` turn a digit character into its number value, and `c - 'a'` give the position of a lowercase letter?",
+      "model_answer": "A `char` is stored as a small integer, its character code. The digits '0' to '9' have consecutive codes, so subtracting the code of '0' gives 0 to 9. The lowercase letters 'a' to 'z' are also consecutive, so `c - 'a'` gives 0 to 25, which is convenient as an index into a counting array of 26 elements.",
+      "key_points": [
+        "characters are stored as integer codes",
+        "digits and lowercase letters have consecutive codes",
+        "subtracting '0' or 'a' gives the digit value or the letter's 0-25 position"
+      ]
+    },
+    {
+      "id": "theory-c-strings-4",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "When should you read text with `fgets` instead of `scanf(\"%s\", ...)`, and what must you watch out for with each?",
+      "model_answer": "`scanf(\"%s\")` reads a single word and stops at the first whitespace, so it cannot read a line with spaces; without a width such as `%99s` it can also overflow the buffer. `fgets(buf, size, stdin)` reads a whole line including spaces and never writes more than `size - 1` characters, but it keeps the newline character at the end, which often has to be removed.",
+      "key_points": [
+        "%s reads only one word and stops at whitespace",
+        "%s without a width limit can overflow the buffer",
+        "fgets reads a whole line within the buffer size but keeps the trailing newline"
+      ]
+    },
+    {
+      "id": "theory-c-strings-5",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "Why does `for (i = 0; i < strlen(s); i++)` become very slow for a string of 100000 characters?",
+      "model_answer": "`strlen` has no stored length to return; it walks through the string until it finds `'\\0'`, which takes time proportional to the length. Placed in the loop condition, it is called again on every repetition, so the total work is about n × n, around 10^10 steps here. Computing the length once before the loop, or looping until `s[i] != '\\0'`, keeps it linear.",
+      "key_points": [
+        "strlen scans the whole string to find '\\0', taking O(n)",
+        "in the loop condition it runs on every iteration",
+        "the total becomes O(n squared); compute the length once instead"
+      ]
+    },
+    {
+      "id": "theory-c-strings-6",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "Why are `strcpy` and `strcat` considered dangerous, and what must you guarantee before calling them?",
+      "model_answer": "Both copy characters until they reach the source's `'\\0'`, and neither knows how large the destination array is. If the destination is too small they keep writing past its end, a buffer overflow, which is undefined behaviour and a classic security hole. Before calling them you must make sure the destination has room for all the characters plus the terminator, or use a size-limited function such as `snprintf`.",
+      "key_points": [
+        "they copy until the source's '\\0' without knowing the destination size",
+        "a destination that is too small is overflowed, causing undefined behaviour or security bugs",
+        "the destination must have room for the characters plus '\\0', or use bounded alternatives"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "What makes `std::string` easier and safer to use than a C-style `char` array?",
+      "model_answer": "A `std::string` manages its own memory and grows as needed, so there is no fixed buffer to overflow. It stores its length, available through `size()`, so you never handle the `'\\0'` yourself. It also supports natural operators: `==` and `<` compare contents and `+` joins strings.",
+      "key_points": [
+        "string manages its own memory and grows automatically",
+        "it knows its length through size(), with no manual '\\0' handling",
+        "operators like ==, < and + work on the contents"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "When do you read text with `cin >> s` and when with `getline(cin, s)`?",
+      "model_answer": "`cin >> s` skips leading whitespace and reads a single word, stopping at the next space or newline. `getline(cin, s)` reads an entire line, including spaces, up to the newline, which it removes. Use `>>` for words or tokens and `getline` for full lines such as a sentence; remember that a previous `>>` leaves a newline that getline would read as an empty line.",
+      "key_points": [
+        "cin >> reads one whitespace-separated word",
+        "getline reads a whole line including spaces",
+        "a newline left by an earlier >> makes the next getline return empty"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "What does `s.find(\"ab\")` return when \"ab\" is not in `s`, and how should the result be checked?",
+      "model_answer": "When the text is found, `find` returns the index of its first occurrence. When it is not found, it returns `string::npos`, a special constant equal to the largest `size_t` value, not -1. The result should be compared with `string::npos`, as in `if (s.find(\"ab\") != string::npos)`; storing it in an int and comparing with -1 relies on a conversion and is easy to get wrong.",
+      "key_points": [
+        "find returns the index of the first occurrence when found",
+        "it returns string::npos when not found",
+        "npos is the largest size_t value, so compare against string::npos rather than -1"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "In a loop that builds a long string, why is `s += piece;` much faster than `s = s + piece;`?",
+      "model_answer": "`s + piece` creates a brand-new temporary string containing a copy of all of `s` followed by `piece`, and then assigns it back. Doing that on each repetition copies the growing string again and again, which adds up to roughly quadratic work. `s += piece` appends in place, using the string's spare capacity, so each character is copied about once (amortised constant time per character).",
+      "key_points": [
+        "s + piece builds a new temporary that copies all of s",
+        "repeating that in a loop leads to roughly quadratic copying",
+        "+= appends in place, amortised constant time per character"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-5",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "How does `<` compare two `std::string`s, and why is `\"Zebra\" < \"apple\"` true?",
+      "model_answer": "Strings are compared lexicographically: character by character from the start, and the first position where they differ decides, based on the character codes. If one string is a prefix of the other, the shorter one is smaller. Uppercase letters have smaller codes than lowercase ones in ASCII, so 'Z' (90) is less than 'a' (97) and \"Zebra\" comes first. For case-insensitive order, convert both strings to the same case before comparing.",
+      "key_points": [
+        "strings compare character by character, and the first difference decides",
+        "the comparison uses character codes, with a prefix being smaller",
+        "uppercase codes are lower than lowercase codes, so normalise case for case-insensitive order"
+      ]
+    },
+    {
+      "id": "theory-cpp-strings-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "Why can calling `s.substr(i)` inside a loop over every `i` make an O(n) idea run in O(n²) time?",
+      "model_answer": "`substr` does not give a view of the original string; it constructs a new string and copies every character of the requested part. `s.substr(i)` copies n - i characters, so doing it for every i copies about n²/2 characters in total. Working with indexes into the original string (or a `string_view`) avoids the copies.",
+      "key_points": [
+        "substr creates a new string and copies the characters",
+        "each call costs time proportional to its length",
+        "calling it for every position totals O(n squared); use indexes or string_view instead"
+      ]
+    },
+    {
+      "id": "theory-python-strings-1",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "What does it mean that Python strings are immutable, and what happens with `s[0] = \"H\"`?",
+      "model_answer": "An immutable object cannot be changed after it is created. `s[0] = \"H\"` therefore raises a TypeError. Every string method, such as `upper()` or `replace()`, returns a new string instead, and the result must be assigned, for example `s = \"H\" + s[1:]`.",
+      "key_points": [
+        "strings cannot be changed in place after creation",
+        "assigning to s[0] raises a TypeError",
+        "string methods return new strings that must be assigned"
+      ]
+    },
+    {
+      "id": "theory-python-strings-2",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "What do `split()` and `join()` do, and how do they work together?",
+      "model_answer": "`s.split()` breaks a string into a list of words, cutting at whitespace and dropping empty pieces. `sep.join(items)` does the reverse: it glues a list of strings together with `sep` between them, and every item must already be a string. Together they convert between a line of text and a list, for example `\" \".join(reversed(line.split()))` reverses the order of words.",
+      "key_points": [
+        "split breaks a string into a list of words on whitespace",
+        "join combines a list of strings with a separator",
+        "join requires all items to be strings"
+      ]
+    },
+    {
+      "id": "theory-python-strings-3",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "How can you use `ord` and `chr` to count how often each lowercase letter appears in a word?",
+      "model_answer": "`ord(c)` gives the character's code number and `chr(n)` turns a code back into a character. The lowercase letters have consecutive codes, so `ord(c) - ord(\"a\")` is 0 for 'a' up to 25 for 'z'. That value can index a list of 26 counters, `counts[ord(c) - ord(\"a\")] += 1`, and `chr(i + ord(\"a\"))` gives the letter back when printing.",
+      "key_points": [
+        "ord gives a character's code and chr converts a code back",
+        "lowercase letters have consecutive codes",
+        "ord(c) - ord('a') gives an index 0-25 into a list of counters"
+      ]
+    },
+    {
+      "id": "theory-python-strings-4",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "Two lines that look identical, read with `input()`, compare as unequal. What is a likely cause and how do you guard against it?",
+      "model_answer": "One line may contain invisible extra characters, such as trailing spaces or a carriage return `\\r` from Windows line endings, so `\"abc\" != \"abc\\r\"`. `strip()` removes whitespace from both ends of a string before comparing, and `split()` without arguments also ignores such characters when splitting into words.",
+      "key_points": [
+        "lines can contain invisible trailing spaces or a carriage return",
+        "those extra characters make the strings unequal",
+        "strip() removes whitespace at both ends before comparing"
+      ]
+    },
+    {
+      "id": "theory-python-strings-5",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "Why does `sorted([\"banana\", \"Apple\", \"cherry\"])` put \"Apple\" first, and why might `sorted([\"b\", \"a\", \"C\"])` surprise you?",
+      "model_answer": "Strings are compared character by character by their Unicode code points, and the first difference decides. Uppercase letters have smaller code points than lowercase letters, so any word starting with a capital comes before every word starting with a lowercase letter: `[\"b\", \"a\", \"C\"]` sorts to `[\"C\", \"a\", \"b\"]`. For a case-insensitive order use `sorted(words, key=str.lower)`.",
+      "key_points": [
+        "strings compare character by character by code point",
+        "uppercase letters have smaller codes than lowercase letters",
+        "use key=str.lower for case-insensitive sorting"
+      ]
+    },
+    {
+      "id": "theory-python-strings-6",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "For `s = \"hello\"`, why does `s[10]` raise an error but `s[3:10]` does not? What does `s[::-1]` do?",
+      "model_answer": "Indexing a single position checks the bounds, so `s[10]` raises an IndexError. Slicing is more forgiving: the start and end are clamped to the valid range, so `s[3:10]` simply returns `\"lo\"`, and a slice entirely out of range returns an empty string. A step of -1 walks backwards, so `s[::-1]` returns a reversed copy, `\"olleh\"`.",
+      "key_points": [
+        "indexing a position out of range raises IndexError",
+        "slices clamp their bounds and return a shorter or empty string instead",
+        "a step of -1 produces a reversed copy"
+      ]
+    }
+  ]
+}

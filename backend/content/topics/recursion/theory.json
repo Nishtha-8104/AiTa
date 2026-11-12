@@ -1,0 +1,222 @@
+{
+  "schema": "theory/v1",
+  "topic": "recursion",
+  "items": [
+    {
+      "id": "theory-c-recursion-1",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "When `factorial(3)` calls `factorial(2)`, and so on, how can each call have its own value of `n` at the same time?",
+      "model_answer": "Every function call gets a new stack frame on the call stack, holding its own copies of the parameters and local variables. So `factorial(3)`, `factorial(2)`, `factorial(1)` and `factorial(0)` each have a separate `n`. Each call waits until the call it made returns, and the results are combined on the way back: 1, 1, 2, 6.",
+      "key_points": [
+        "each call gets its own stack frame",
+        "parameters and local variables are separate for every call",
+        "each call waits for the inner call, and results are combined as the calls return"
+      ]
+    },
+    {
+      "id": "theory-c-recursion-2",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "Besides having a base case, what must every recursive call do, and what happens if it does not?",
+      "model_answer": "Every recursive call must work on a smaller input, so that the chain of calls moves steadily toward the base case. If the input does not get smaller, or can skip past the base case (for example jumping from 1 to -1 when the base case is `n == 0`), the calls never stop. Each call uses stack space, so the stack eventually overflows and the program crashes.",
+      "key_points": [
+        "each call must make progress toward the base case with a smaller input",
+        "otherwise recursion never stops (infinite recursion)",
+        "the call stack fills up and the program crashes with a stack overflow"
+      ]
+    },
+    {
+      "id": "theory-c-recursion-3",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "Compare solving a problem with recursion versus a loop. What does recursion cost, and when is it still the better choice?",
+      "model_answer": "Each recursive call adds a stack frame and has call overhead, so recursion uses memory proportional to its depth and is usually a little slower than a loop, which uses constant extra memory. Very deep recursion can overflow the stack. Recursion is still the clearer choice when a problem is naturally made of smaller copies of itself, such as trees, divide and conquer (splitting into halves), or trying all choices with backtracking.",
+      "key_points": [
+        "each call uses stack memory and has call overhead",
+        "a loop uses constant extra memory and avoids stack overflow",
+        "recursion is clearer for self-similar problems such as trees, divide and conquer, or backtracking"
+      ]
+    },
+    {
+      "id": "theory-c-recursion-4",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "Why is the plain recursive Fibonacci function `fib(n) = fib(n-1) + fib(n-2)` so slow for n = 45?",
+      "model_answer": "Each call makes two further calls, and the two branches recompute the same values: `fib(n-2)` is computed inside `fib(n-1)` and again separately, and so on all the way down. The number of calls grows exponentially, roughly by a factor of 1.6 per level, reaching billions for n = 45. Storing each computed value (memoisation) or computing upward in a loop makes every value be computed only once.",
+      "key_points": [
+        "each call branches into two calls",
+        "the same subproblems are recomputed many times",
+        "the number of calls grows exponentially; memoisation computes each value only once"
+      ]
+    },
+    {
+      "id": "theory-c-recursion-5",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "Why does a recursive function that goes 1000000 calls deep crash in C, while a loop with 1000000 iterations is fine?",
+      "model_answer": "Every active call keeps a stack frame holding its return address, parameters and local variables, and the frames all stay on the stack until the deepest call returns. The stack is small, typically a few megabytes, so a million frames exceed it and the program crashes with a stack overflow, usually seen as a segmentation fault, with no helpful error message. A loop reuses the same variables in every iteration, so it needs no extra memory per iteration.",
+      "key_points": [
+        "every active call keeps a stack frame (return address, parameters, locals)",
+        "the stack is limited, often only a few megabytes",
+        "a million nested frames overflow it and crash, while a loop reuses the same memory"
+      ]
+    },
+    {
+      "id": "theory-c-recursion-6",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "What is tail recursion, and is `return n * factorial(n - 1);` tail recursive?",
+      "model_answer": "A call is a tail call when it is the very last thing the function does, so nothing remains to be done after it returns. Such recursion can be turned into a loop by the compiler, reusing the same stack frame, but the C standard does not guarantee this optimisation. `return n * factorial(n - 1);` is not tail recursive, because the multiplication by `n` happens after the recursive call returns. Passing an accumulator, as in `fact(n - 1, acc * n)`, makes it tail recursive.",
+      "key_points": [
+        "in tail recursion the recursive call is the last operation, with nothing left after it",
+        "compilers may turn tail recursion into a loop, but C does not guarantee it",
+        "n * factorial(n - 1) is not tail recursive because the multiplication happens after the call"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "What are the roles of the base case and the recursive case in a recursive function?",
+      "model_answer": "The base case handles the smallest input directly, returning an answer without making another call, and it is what stops the recursion. The recursive case reduces the problem to a smaller version, calls the function on it, and combines that result into the answer for the current input. Without a base case the recursion never ends; without a smaller recursive call it never reaches the base case.",
+      "key_points": [
+        "the base case answers the smallest input directly and stops the recursion",
+        "the recursive case calls the function on a smaller input",
+        "the recursive case combines the smaller result into the current answer"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "What is wrong with this body of `long long fib(int n)`: `if (n < 2) return n; fib(n - 1) + fib(n - 2);`?",
+      "model_answer": "The sum of the two recursive calls is computed and then thrown away, because it is not returned. The function then reaches its end without a return statement, which for a non-void function is undefined behaviour: the caller receives a garbage value. The line must be `return fib(n - 1) + fib(n - 2);`.",
+      "key_points": [
+        "the computed sum is discarded because it is not returned",
+        "reaching the end of a non-void function without return is undefined behaviour",
+        "the recursive result must be returned"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "In a backtracking function that builds a `vector<int> path`, why must you `pop_back()` after each recursive call returns?",
+      "model_answer": "All the recursive calls share the same `path`. When the function makes a choice it pushes an element, explores everything that follows from that choice, and then must undo the choice so the next option starts from the same state. Without `pop_back`, elements from earlier branches stay in the path and leak into the following branches, producing wrong results.",
+      "key_points": [
+        "the path is shared state used by all recursive calls",
+        "after exploring a choice it must be undone to restore the previous state",
+        "otherwise choices from one branch leak into the next branches"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "How does memoisation turn the exponential recursive Fibonacci into a fast solution?",
+      "model_answer": "Plain recursion recomputes the same values many times, giving an exponential number of calls. Memoisation stores the result for each `n` in an array or map the first time it is computed, and every later call for the same `n` returns the stored value immediately. Each of the n + 1 values is then computed only once, so the running time becomes linear.",
+      "key_points": [
+        "plain recursion recomputes the same subproblems repeatedly",
+        "memoisation stores each result the first time it is computed",
+        "later calls reuse the stored value, so each value is computed once and the time becomes linear"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-5",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "A depth-first search written recursively crashes on a path-shaped graph of 10^6 nodes but works on small graphs. Why, and how can it be fixed?",
+      "model_answer": "Each recursive call adds a stack frame, and on a path every node is visited one level deeper than the previous, so the depth reaches 10^6. The default call stack is only a few megabytes, so it overflows and the program crashes. The fix is to replace the recursion with a loop that keeps its own explicit `stack` of nodes on the heap, which can grow far larger.",
+      "key_points": [
+        "each recursive call adds a stack frame",
+        "a path-shaped graph makes the recursion depth equal to the number of nodes",
+        "the limited call stack overflows; use an explicit stack data structure instead"
+      ]
+    },
+    {
+      "id": "theory-cpp-recursion-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "Why is the recursion depth of merge sort only about log n, while a function that recurses on n - 1 reaches depth n?",
+      "model_answer": "Merge sort splits the input in half at each level, so after about log2(n) halvings the pieces have size 1; the depth, and therefore the stack usage, is O(log n). A function that reduces n to n - 1 needs n nested calls before reaching the base case, so its depth is n. Depth is separate from total work: merge sort still does O(n log n) work in total, spread across many shallow calls.",
+      "key_points": [
+        "halving the input at each level gives a depth of about log2 n",
+        "reducing the input by one each time gives a depth of n",
+        "depth determines stack usage, separately from the total work"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-1",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "Why must a recursive function have a base case, and what goes wrong without it?",
+      "model_answer": "The base case is the smallest input, answered directly without another call; it is what stops the chain of calls. Without it, or if it is never reached, the function keeps calling itself. Python stops this after about 1000 nested calls and raises a RecursionError.",
+      "key_points": [
+        "the base case answers the smallest input without recursing",
+        "it is what stops the recursion",
+        "without it the calls never stop and Python raises RecursionError"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-2",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "A recursive `total(nums)` ends with `nums[0] + total(nums[1:])` but forgets `return` on that line. What happens?",
+      "model_answer": "The sum is computed and then discarded. A Python function that finishes without a `return` returns `None`, so the caller receives `None`. The next level up then tries to add a number to `None`, which raises a TypeError. The recursive result has to be returned: `return nums[0] + total(nums[1:])`.",
+      "key_points": [
+        "without return, the computed value is discarded",
+        "a function with no return gives back None",
+        "adding a number to None raises a TypeError, so the result must be returned"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-3",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "What is Python's recursion limit, why does it exist, and what are the options when a problem needs deeper recursion?",
+      "model_answer": "By default Python allows about 1000 nested calls and raises RecursionError beyond that. The limit protects the interpreter from overflowing the underlying C stack, which would crash the whole process. `sys.setrecursionlimit` can raise it, but setting it very high can still crash the interpreter, so for deep problems the safer option is to rewrite the recursion as a loop, possibly with an explicit stack.",
+      "key_points": [
+        "the default recursion limit is about 1000 calls, beyond which RecursionError is raised",
+        "it protects against overflowing the interpreter's C stack and crashing",
+        "sys.setrecursionlimit raises it but is risky; converting to iteration is safer"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-4",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "What does putting `@functools.lru_cache(maxsize=None)` above a recursive Fibonacci function do?",
+      "model_answer": "The decorator stores the result of each call, keyed by its arguments. When the function is called again with the same arguments, the stored result is returned without running the body. Each `fib(k)` is therefore computed only once, turning the exponential plain recursion into linear time. The arguments must be hashable, such as numbers or tuples, not lists.",
+      "key_points": [
+        "it caches each result keyed by the arguments",
+        "repeated calls with the same arguments return the cached value",
+        "each value is computed once, making the solution linear; arguments must be hashable"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-5",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "A backtracking function records solutions with `results.append(path)`, but at the end every recorded solution is empty. Why?",
+      "model_answer": "`results.append(path)` stores a reference to the same `path` list, not a snapshot of it. The backtracking keeps changing that list, popping elements when it undoes choices, and by the end it is empty, so every entry in `results` refers to that one empty list. Recording a copy, `results.append(path[:])`, saves the contents at that moment.",
+      "key_points": [
+        "append(path) stores a reference to the same list object",
+        "the path keeps changing as choices are undone with pop",
+        "all entries show the final state of the list; append a copy such as path[:]"
+      ]
+    },
+    {
+      "id": "theory-python-recursion-6",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "Why is deep or heavy recursion particularly costly in Python compared with an equivalent loop?",
+      "model_answer": "Every Python function call creates a new frame object and has significant overhead compared with one loop iteration, so recursion that makes millions of calls is noticeably slower. Python also does not perform tail-call optimisation, so even a tail-recursive function uses one frame per call and is limited by the recursion limit. When the depth or the number of calls is large, a loop is faster and avoids RecursionError.",
+      "key_points": [
+        "each function call creates a frame and has high overhead in Python",
+        "Python does not optimise tail calls",
+        "loops avoid both the call overhead and the recursion limit"
+      ]
+    }
+  ]
+}

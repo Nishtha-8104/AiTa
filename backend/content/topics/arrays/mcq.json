@@ -1,0 +1,798 @@
+{
+  "schema": "mcq/v1",
+  "topic": "arrays",
+  "items": [
+    {
+      "id": "mcq-c-arrays-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[5] = {4, 8, 15, 16, 23};",
+        "    printf(\"%d %d\\n\", a[1], a[4]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4 16",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8 16",
+          "misconception": null
+        },
+        {
+          "text": "8 23",
+          "misconception": null
+        },
+        {
+          "text": "4 23",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Indexes start at 0, so a[1] is the second element (8) and a[4] is the fifth and last (23).",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-arrays-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {1, 2, 3, 4};",
+        "    int sum = 0;",
+        "    for (int i = 0; i < 4; i++) {",
+        "        sum += a[i];",
+        "    }",
+        "    printf(\"%d\\n\", sum);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "1234",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The loop visits indexes 0 to 3 and adds 1 + 2 + 3 + 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-arrays-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[5] = {1, 2};",
+        "    printf(\"%d %d\\n\", a[1], a[4]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 0",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "2 0",
+          "misconception": null
+        },
+        {
+          "text": "2 2",
+          "misconception": null
+        },
+        {
+          "text": "2 5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "When an array is initialised with fewer values than its size, the remaining elements are set to 0.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-arrays-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[6];",
+        "    printf(\"%d\\n\", (int) (sizeof(a) / sizeof(a[0])));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "24",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "sizeof(a) is the size of the whole array in bytes; dividing by the size of one element gives the element count.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-arrays-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[5] = {1, 2, 3, 4, 5};",
+        "    for (int i = 0; i < 5 / 2; i++) {",
+        "        int t = a[i];",
+        "        a[i] = a[4 - i];",
+        "        a[4 - i] = t;",
+        "    }",
+        "    for (int i = 0; i < 5; i++) {",
+        "        printf(\"%d\", a[i]);",
+        "    }",
+        "    printf(\"\\n\");",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "12345",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "54321",
+          "misconception": null
+        },
+        {
+          "text": "52341",
+          "misconception": null
+        },
+        {
+          "text": "54123",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Swapping the first and last, then the second and second-to-last, reverses the array; the middle element stays put.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-arrays-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int g[2][3] = {{1, 2, 3}, {4, 5, 6}};",
+        "    printf(\"%d\\n\", g[1][0] + g[0][2]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "g[1][0] is the first element of the second row (4) and g[0][2] is the last element of the first row (3).",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {5, 10, 15};",
+        "    v.push_back(20);",
+        "    cout << v.size() << \" \" << v.back() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 15",
+          "misconception": null
+        },
+        {
+          "text": "4 20",
+          "misconception": null
+        },
+        {
+          "text": "4 5",
+          "misconception": null
+        },
+        {
+          "text": "3 20",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "push_back adds 20 at the end, so the vector now holds 4 elements and back() is 20.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int a[] = {3, 6, 9};",
+        "    cout << a[0] + a[2] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "15",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "18",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "a[0] is 3 and a[2] is 9, the first and third elements.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v(3, 7);",
+        "    v[1] = 0;",
+        "    for (int x : v) {",
+        "        cout << x << \" \";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 0 7",
+          "misconception": null
+        },
+        {
+          "text": "7 0 7",
+          "misconception": null
+        },
+        {
+          "text": "0 7 7",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "7 7 7",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "vector<int> v(3, 7) makes three elements that are all 7; then the middle one is set to 0.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {1, 2, 3};",
+        "    for (int x : v) {",
+        "        x *= 2;",
+        "    }",
+        "    cout << v[0] << v[1] << v[2] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "246",
+          "misconception": null
+        },
+        {
+          "text": "2 4 6",
+          "misconception": null
+        },
+        {
+          "text": "123",
+          "misconception": null
+        },
+        {
+          "text": "1 2 3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "int x is a copy of each element, so doubling it leaves the vector unchanged; int &x would have changed it.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {4, 1, 3};",
+        "    sort(v.begin(), v.end());",
+        "    cout << v[0] << v[2] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "14",
+          "misconception": null
+        },
+        {
+          "text": "43",
+          "misconception": null
+        },
+        {
+          "text": "41",
+          "misconception": null
+        },
+        {
+          "text": "13",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "After sorting the vector is {1, 3, 4}, so the first element is 1 and the last is 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-arrays-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {2, 9, 4, 9, 1};",
+        "    int best = 0;",
+        "    for (int i = 1; i < (int) v.size(); i++) {",
+        "        if (v[i] > v[best]) {",
+        "            best = i;",
+        "        }",
+        "    }",
+        "    cout << best << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "best is an index; the second 9 is not greater than the first, so the first 9's index, 1, is kept.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "nums = [10, 20, 30, 40]",
+        "print(nums[-1], nums[1:3])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "40 [20, 30]",
+          "misconception": null
+        },
+        {
+          "text": "10 [20, 30, 40]",
+          "misconception": null
+        },
+        {
+          "text": "40 [10, 20, 30]",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "30 [20, 30]",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Index -1 is the last element, and the slice 1:3 takes indexes 1 and 2, stopping before 3.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a = [1, 2, 3]",
+        "b = a",
+        "b.append(4)",
+        "print(len(a))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "b = a does not copy the list; both names refer to the same list, so appending through b changes a too.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "grid = [[0] * 2] * 2",
+        "grid[0][0] = 5",
+        "print(grid)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[[5, 0], [0, 0]]",
+          "misconception": null
+        },
+        {
+          "text": "[[5, 5], [0, 0]]",
+          "misconception": null
+        },
+        {
+          "text": "[[5, 0], [5, 0]]",
+          "misconception": null
+        },
+        {
+          "text": "[[5, 5], [5, 5]]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Multiplying the outer list repeats a reference to the same inner list, so both rows are one list.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-arrays-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "An array has 10 elements and its indexes start at 0. What is the index of its last element?"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "11",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Counting from 0, the ten indexes are 0 to 9.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-arrays-2",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Why is reading the element at index n of an array with n elements (indexes starting at 0) a mistake?"
+      ],
+      "options": [
+        {
+          "text": "The valid indexes are 0 to n - 1, so index n is past the end",
+          "misconception": null
+        },
+        {
+          "text": "Index n is the first element, not the last",
+          "misconception": null
+        },
+        {
+          "text": "An array can never hold exactly n elements",
+          "misconception": null
+        },
+        {
+          "text": "It is not a mistake; index n is the last element",
+          "misconception": "index_out_of_range"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "With indexes starting at 0, the last valid index is one less than the length; going past it reads memory or raises an error.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-arrays-3",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What is the main advantage of keeping 100 test scores in one array instead of in 100 separate variables?"
+      ],
+      "options": [
+        {
+          "text": "The scores take no memory when they are in an array",
+          "misconception": null
+        },
+        {
+          "text": "A loop can visit every score by its index, so the same code handles any number of scores",
+          "misconception": null
+        },
+        {
+          "text": "Arrays sort themselves automatically",
+          "misconception": null
+        },
+        {
+          "text": "Each score can then hold several values at once",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "An array gives every value a numbered position, so one loop replaces 100 separate lines of code.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "temps = [31, 28, 35, 35, 30, 36]",
+        "count = 0",
+        "for i in range(1, len(temps)):",
+        "    if temps[i] > temps[i - 1]:",
+        "        count += 1",
+        "print(count)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Only 28 to 35 and 30 to 36 are rises; 35 followed by 35 is not greater, so the count is 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a = [3, 1, 4, 1, 5]",
+        "prefix = [0]",
+        "for x in a:",
+        "    prefix.append(prefix[-1] + x)",
+        "print(prefix[4] - prefix[1])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "14",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "prefix[k] is the sum of the first k elements, so prefix[4] - prefix[1] is a[1] + a[2] + a[3] = 1 + 4 + 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-arrays-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a = [1, 2, 3, 4, 5]",
+        "for i in range(1, len(a)):",
+        "    a[i] = a[i - 1]",
+        "print(a)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[1, 1, 2, 3, 4]",
+          "misconception": "mutate_while_iterating"
+        },
+        {
+          "text": "[1, 1, 1, 1, 1]",
+          "misconception": null
+        },
+        {
+          "text": "[5, 1, 2, 3, 4]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 3, 4, 5, 5]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Each a[i - 1] has already been overwritten with 1 by the previous step, so the 1 is copied all the way along.",
+      "verify_code": []
+    }
+  ]
+}

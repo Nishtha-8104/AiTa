@@ -1,0 +1,840 @@
+{
+  "schema": "mcq/v1",
+  "topic": "searching",
+  "items": [
+    {
+      "id": "mcq-c-searching-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {7, 3, 9, 3};",
+        "    int pos = -1;",
+        "    for (int i = 0; i < 4; i++) {",
+        "        if (a[i] == 3) {",
+        "            pos = i;",
+        "            break;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", pos);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "-1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The loop stops at the first 3, which is at index 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-searching-2",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {7, 3, 9, 3};",
+        "    int pos = -1;",
+        "    for (int i = 0; i < 4; i++) {",
+        "        if (a[i] == 3) {",
+        "            pos = i;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", pos);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "-1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Without a break the loop keeps going, so pos is overwritten by the last match, at index 3.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-searching-3",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int lo = 0, hi = 9;",
+        "    int mid = lo + (hi - lo) / 2;",
+        "    printf(\"%d\\n\", mid);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "4.5",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "(9 - 0) / 2 is integer division, giving 4, so the middle index is 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-searching-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "How many times does this binary search loop run before it finds 11?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {1, 3, 5, 7, 9, 11};",
+        "    int target = 11;",
+        "    int lo = 0, hi = 5, steps = 0;",
+        "    while (lo <= hi) {",
+        "        int mid = (lo + hi) / 2;",
+        "        steps++;",
+        "        if (a[mid] == target) {",
+        "            break;",
+        "        } else if (a[mid] < target) {",
+        "            lo = mid + 1;",
+        "        } else {",
+        "            hi = mid - 1;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", steps);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "mid goes 2 (value 5), then 4 (value 9), then 5 (value 11): three steps, each halving the range.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-searching-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {4, 8, 15, 16, 23};",
+        "    int target = 42;",
+        "    int checks = 0;",
+        "    int found = 0;",
+        "    for (int i = 0; i < 5; i++) {",
+        "        checks++;",
+        "        if (a[i] == target) {",
+        "            found = 1;",
+        "            break;",
+        "        }",
+        "    }",
+        "    printf(\"%d %d\\n\", found, checks);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0 5",
+          "misconception": null
+        },
+        {
+          "text": "0 4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "1 5",
+          "misconception": null
+        },
+        {
+          "text": "0 0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "42 is not in the array, so a linear search has to check all five elements before giving up.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-searching-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "This binary search finds the first position whose value is at least x. What does it print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {2, 4, 4, 4, 8};",
+        "    int x = 4;",
+        "    int lo = 0, hi = 5;",
+        "    while (lo < hi) {",
+        "        int mid = (lo + hi) / 2;",
+        "        if (a[mid] < x) {",
+        "            lo = mid + 1;",
+        "        } else {",
+        "            hi = mid;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", lo);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "mid 2 (4) moves hi to 2, mid 1 (4) moves hi to 1, mid 0 (2) moves lo to 1; the first 4 is at index 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {4, 8, 15};",
+        "    auto it = find(v.begin(), v.end(), 8);",
+        "    cout << (it - v.begin()) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "find returns an iterator to the match; subtracting begin() turns it into the index, 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"hello\";",
+        "    cout << (s.find('z') == string::npos) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "-1",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "When find has no match it returns string::npos, so the comparison is true and prints as 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {1, 3, 5, 7};",
+        "    cout << binary_search(v.begin(), v.end(), 7)",
+        "         << binary_search(v.begin(), v.end(), 4) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "01",
+          "misconception": null
+        },
+        {
+          "text": "11",
+          "misconception": null
+        },
+        {
+          "text": "30",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "binary_search only reports whether the value is present: 7 is, 4 is not.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {10, 20, 30, 40};",
+        "    cout << lower_bound(v.begin(), v.end(), 25) - v.begin() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "25",
+          "misconception": null
+        },
+        {
+          "text": "30",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "lower_bound points at the first element not less than 25, which is 30 at index 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {2, 1, 2, 2};",
+        "    cout << count(v.begin(), v.end(), 2) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "count checks every element and counts the ones equal to 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-searching-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {1, 2, 2, 2, 5};",
+        "    auto first = lower_bound(v.begin(), v.end(), 2);",
+        "    auto last = upper_bound(v.begin(), v.end(), 2);",
+        "    cout << last - first << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "lower_bound finds the first 2 (index 1) and upper_bound the first element after the 2s (index 4); the distance is how many 2s there are.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "nums = [5, 3, 8]",
+        "print(nums.index(8), 3 in nums)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 True",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "2 True",
+          "misconception": null
+        },
+        {
+          "text": "2 False",
+          "misconception": null
+        },
+        {
+          "text": "8 True",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "index gives the position of the value, counting from 0, and in checks membership.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"banana\"",
+        "print(s.find(\"na\"), s.find(\"x\"))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2 -1",
+          "misconception": null
+        },
+        {
+          "text": "2 None",
+          "misconception": null
+        },
+        {
+          "text": "4 -1",
+          "misconception": null
+        },
+        {
+          "text": "3 0",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "find returns the index of the first match, and -1 when there is none.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "import bisect",
+        "",
+        "a = [1, 3, 3, 7]",
+        "print(bisect.bisect_left(a, 3), bisect.bisect_right(a, 3))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "2 3",
+          "misconception": null
+        },
+        {
+          "text": "1 3",
+          "misconception": null
+        },
+        {
+          "text": "0 3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "bisect_left gives the position before the existing 3s and bisect_right the position after them.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-searching-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "Binary search only gives correct answers when what is true about the data?"
+      ],
+      "options": [
+        {
+          "text": "The data has no duplicates",
+          "misconception": null
+        },
+        {
+          "text": "The data is sorted",
+          "misconception": null
+        },
+        {
+          "text": "The data holds fewer than 100 elements",
+          "misconception": null
+        },
+        {
+          "text": "The data holds only positive numbers",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Binary search throws away half the range after each comparison, which is only safe when the order tells it which half the target must be in.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-searching-2",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "About how many comparisons does binary search need, at most, to search 1000 sorted elements?"
+      ],
+      "options": [
+        {
+          "text": "About 1000",
+          "misconception": null
+        },
+        {
+          "text": "About 500",
+          "misconception": null
+        },
+        {
+          "text": "About 100",
+          "misconception": null
+        },
+        {
+          "text": "About 10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Each comparison halves the range, and 1000 can be halved about 10 times before one element is left.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-searching-3",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "Linear search looks for a value that is not in a list of n elements. How many elements does it check?"
+      ],
+      "options": [
+        {
+          "text": "All n of them",
+          "misconception": null
+        },
+        {
+          "text": "About half of them",
+          "misconception": null
+        },
+        {
+          "text": "Only the first one",
+          "misconception": null
+        },
+        {
+          "text": "None, because it knows the value is missing",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Linear search can only conclude a value is missing after checking every element.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "nums = [3, 12, 7, 15]",
+        "answer = -1",
+        "for i, x in enumerate(nums):",
+        "    if x > 10:",
+        "        answer = i",
+        "        break",
+        "print(answer, nums[answer])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 15",
+          "misconception": null
+        },
+        {
+          "text": "1 12",
+          "misconception": null
+        },
+        {
+          "text": "2 7",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "-1 15",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The loop stops at the first value above 10, which is 12 at index 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "The value 9 is not in the list. What does this program print?",
+        "```python",
+        "a = [2, 5, 8, 11, 14]",
+        "x = 9",
+        "lo, hi = 0, len(a) - 1",
+        "while lo <= hi:",
+        "    mid = (lo + hi) // 2",
+        "    if a[mid] < x:",
+        "        lo = mid + 1",
+        "    else:",
+        "        hi = mid - 1",
+        "print(lo, hi)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 2",
+          "misconception": null
+        },
+        {
+          "text": "2 3",
+          "misconception": null
+        },
+        {
+          "text": "3 3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "-1 -1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "mid 2 (value 8) moves lo to 3, mid 3 (value 11) moves hi to 2, so the loop ends with lo at the position where 9 would be inserted.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-searching-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def root(n):",
+        "    lo, hi = 0, n",
+        "    while lo < hi:",
+        "        mid = (lo + hi + 1) // 2",
+        "        if mid * mid <= n:",
+        "            lo = mid",
+        "        else:",
+        "            hi = mid - 1",
+        "    return lo",
+        "",
+        "",
+        "print(root(30), root(36))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6 6",
+          "misconception": null
+        },
+        {
+          "text": "5 5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5 6",
+          "misconception": null
+        },
+        {
+          "text": "15 18",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The search keeps the largest mid whose square is at most n, so it finds 5 for 30 (25 <= 30 < 36) and exactly 6 for 36.",
+      "verify_code": []
+    }
+  ]
+}

@@ -1,49 +1,48 @@
 import { useState } from 'react'
-import {
-  CheckCircle2, AlertTriangle, Lightbulb, Target, ChevronDown,
-  ChevronUp, BookOpen, Star, Brain, ArrowRight, Clock, Cpu
-} from 'lucide-react'
+import { AlertTriangle, ArrowRight, BookOpen, Brain, CheckCircle2, ChevronDown, Clock, Lightbulb, Star, Target } from 'lucide-react'
+import Chip from '../ui/Chip'
 import ConceptMap from './ConceptMap'
 import AgentSteps from './AgentSteps'
 
-const TYPE_CONFIG = {
-  code_review:    { label: 'Code Review',      color: 'text-orange-400 bg-orange-600/10 border-orange-500/20' },
-  learning_recap: { label: 'Learning Recap',   color: 'text-teal-400   bg-teal-600/10   border-teal-500/20'   },
-  combined:       { label: 'Combined Report',  color: 'text-pink-400   bg-pink-600/10   border-pink-500/20'   },
+const TYPE = {
+  code_review:    { label: 'Code review', tone: 'sun' },
+  learning_recap: { label: 'Learning recap', tone: 'aqua' },
+  combined:       { label: 'Full report', tone: 'pink' },
 }
-const TONE_CONFIG = {
-  encouraging:  { label: '🌱 Encouraging',  color: 'text-green-400'  },
-  constructive: { label: '🔧 Constructive', color: 'text-yellow-400' },
-  challenging:  { label: '⚡ Challenging',  color: 'text-purple-400' },
+const TONE = {
+  encouraging:  'Encouraging',
+  constructive: 'Constructive',
+  challenging:  'Challenging',
 }
 
-function Section({ icon: Icon, title, color, children, defaultOpen = true }) {
+function Section({ icon: Icon, title, tone, children, defaultOpen = true }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="glass-card overflow-hidden">
+    <section className="tile">
       <button
+        type="button"
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-surface-700/20 transition-colors border-b border-white/[0.05]"
+        aria-expanded={open}
+        className="flex min-h-[52px] w-full items-center justify-between gap-3 px-5 text-left"
       >
-        <div className="flex items-center gap-2.5">
-          <Icon size={15} className={color} />
-          <span className="font-display font-700 text-sm text-white">{title}</span>
-        </div>
-        {open ? <ChevronUp size={13} className="text-white/25" /> : <ChevronDown size={13} className="text-white/25" />}
+        <span className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
+          <Icon size={16} className={tone} /> {title}
+        </span>
+        <ChevronDown size={15} className={`text-ink-subtle transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && <div className="px-5 py-4">{children}</div>}
-    </div>
+      {open && <div className="border-t border-line px-5 py-4">{children}</div>}
+    </section>
   )
 }
 
-function TagList({ items = [], color = 'text-white/60', bg = 'bg-surface-600/60', border = 'border-white/[0.06]' }) {
-  if (!items.length) return <p className="text-white/25 text-xs italic">None detected</p>
+function Points({ items = [], dot }) {
+  if (!items.length) return <p className="text-xs italic text-ink-faint">None found.</p>
   return (
-    <ul className="space-y-2">
+    <ul className="space-y-2.5">
       {items.map((item, i) => (
-        <li key={i} className="flex items-start gap-2.5">
-          <span className={`mt-1 w-1.5 h-1.5 rounded-full shrink-0 ${bg.replace('bg-', 'bg-').replace('/60','')}`} />
-          <span className={`text-sm leading-relaxed ${color}`}>{item}</span>
+        <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-muted">
+          <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} aria-hidden="true" />
+          {item}
         </li>
       ))}
     </ul>
@@ -52,140 +51,101 @@ function TagList({ items = [], color = 'text-white/60', bg = 'bg-surface-600/60'
 
 function timeAgo(dateStr) {
   if (!dateStr) return ''
-  const diff = Date.now() - new Date(dateStr)
-  const m = Math.floor(diff / 60000)
-  if (m < 1)  return 'just now'
-  if (m < 60) return `${m}m ago`
+  const m = Math.floor((Date.now() - new Date(dateStr)) / 60000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m} min ago`
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  return `${Math.floor(h / 24)}d ago`
+  if (h < 24) return `${h} h ago`
+  return `${Math.floor(h / 24)} d ago`
 }
 
 export default function FeedbackCard({ report }) {
   if (!report) return null
-
-  const typeConfig = TYPE_CONFIG[report.feedback_type] || TYPE_CONFIG.code_review
-  const toneConfig = TONE_CONFIG[report.tone]          || TONE_CONFIG.encouraging
+  const type = TYPE[report.feedback_type] || TYPE.code_review
 
   return (
     <div className="space-y-4">
-
-      {/* ── Header ── */}
-      <div className="glass-card p-5 border-pink-500/15">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className={`px-2.5 py-1 rounded-lg border text-xs font-display font-600 ${typeConfig.color}`}>
-            {typeConfig.label}
-          </span>
-          <span className={`text-xs font-mono ${toneConfig.color}`}>{toneConfig.label}</span>
-          <span className="flex items-center gap-1 text-white/25 text-xs font-mono ml-auto">
+      <section className="tile p-5 sm:p-6">
+        <div className="flex flex-wrap items-center gap-2">
+          <Chip tone={type.tone}>{type.label}</Chip>
+          {TONE[report.tone] && <Chip>{TONE[report.tone]}</Chip>}
+          {report.pattern_only && (
+            <Chip tone="sun" icon={AlertTriangle}>Built from your mistake patterns only</Chip>
+          )}
+          <span className="ml-auto flex items-center gap-1 font-mono text-xs text-ink-subtle">
             <Clock size={11} /> {timeAgo(report.created_at)}
           </span>
         </div>
 
-        {/* Headline */}
-        <h2 className="font-display font-700 text-white text-lg leading-snug mb-3">
-          {report.headline || 'Feedback Report'}
-        </h2>
+        <h2 className="mt-4 text-xl font-semibold leading-snug tracking-tight text-ink sm:text-2xl">{report.headline || 'Feedback report'}</h2>
+        {report.summary && <p className="mt-3 max-w-[70ch] text-[15px] leading-relaxed text-ink-muted">{report.summary}</p>}
 
-        {/* Summary */}
-        <p className="text-white/65 text-sm leading-relaxed mb-4">
-          {report.summary}
-        </p>
-
-        {/* Motivational */}
         {report.motivational && (
-          <div className="flex items-start gap-3 bg-pink-600/5 border border-pink-500/15 rounded-xl px-4 py-3">
-            <Star size={15} className="text-pink-400 shrink-0 mt-0.5" fill="currentColor" />
-            <p className="text-pink-200/70 text-sm italic leading-relaxed">{report.motivational}</p>
+          <div className="mt-5 flex items-start gap-3 rounded-[18px] border border-pop-pink/20 bg-pop-pink/[0.06] px-4 py-3">
+            <Star size={15} className="mt-0.5 shrink-0 text-pop-pink" fill="currentColor" />
+            <p className="text-sm italic leading-relaxed text-ink-muted">{report.motivational}</p>
           </div>
         )}
 
-        {/* Meta row */}
-        <div className="flex flex-wrap items-center gap-4 mt-4 pt-3 border-t border-white/[0.05] text-xs font-mono text-white/25">
-          {report.tokens_used > 0 && <span><Cpu size={10} className="inline mr-1" />{report.tokens_used} tokens</span>}
-          {report.latency_ms  > 0 && <span>⏱ {(report.latency_ms/1000).toFixed(1)}s</span>}
-          {report.evaluation_id  && <span className="text-orange-400/60">Code Eval #{report.evaluation_id}</span>}
-          {report.cp_session_id  && <span className="text-teal-400/60">Session #{report.cp_session_id}</span>}
-        </div>
-      </div>
+        {report.evaluation_id && (
+          <p className="mt-5 border-t border-line pt-3 text-xs text-ink-subtle">
+            Based on Code workspace attempt <span className="font-mono text-ink-muted">#{report.evaluation_id}</span>
+          </p>
+        )}
+      </section>
 
-      {/* ── Strengths ── */}
-      <Section icon={CheckCircle2} title="What You Did Well" color="text-green-400">
-        <TagList
-          items={report.strengths}
-          color="text-green-300/80"
-          bg="bg-green-500"
-        />
-      </Section>
-
-      {/* ── Errors ── */}
-      {report.errors?.length > 0 && (
-        <Section icon={AlertTriangle} title="Errors & Issues Found" color="text-red-400">
-          <TagList
-            items={report.errors}
-            color="text-red-300/80"
-            bg="bg-red-500"
-          />
-        </Section>
-      )}
-
-      {/* ── Misconceptions ── */}
-      {report.misconceptions?.length > 0 && (
-        <Section icon={Brain} title="Conceptual Misunderstandings" color="text-yellow-400">
-          <TagList
-            items={report.misconceptions}
-            color="text-yellow-200/75"
-            bg="bg-yellow-500"
-          />
-        </Section>
-      )}
-
-      {/* ── Action Items ── */}
-      <Section icon={Target} title="Action Items — Do These Next" color="text-pink-400">
+      <Section icon={Target} title="Do these next" tone="text-pop-pink">
         {report.action_items?.length > 0 ? (
-          <ol className="space-y-2.5">
+          <ol className="space-y-3">
             {report.action_items.map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="w-5 h-5 rounded-md bg-pink-600/20 border border-pink-500/25 flex items-center justify-center shrink-0 mt-0.5">
-                  <span className="text-pink-300 text-xs font-mono font-700">{i + 1}</span>
-                </span>
-                <span className="text-white/70 text-sm leading-relaxed">{item}</span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-pop-pink font-mono text-xs font-semibold text-canvas">{i + 1}</span>
+                <span className="pt-0.5 text-sm leading-relaxed text-ink-muted">{item}</span>
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-white/25 text-xs italic">No action items</p>
+          <p className="text-xs italic text-ink-faint">Nothing to do right now.</p>
         )}
       </Section>
 
-      {/* ── Concept Map ── */}
+      <div className={`grid grid-cols-1 gap-4 ${report.errors?.length > 0 ? 'lg:grid-cols-2' : ''}`}>
+        <Section icon={CheckCircle2} title="What you did well" tone="text-pop-mint">
+          <Points items={report.strengths} dot="bg-pop-mint" />
+        </Section>
+        {report.errors?.length > 0 && (
+          <Section icon={AlertTriangle} title="Mistakes found" tone="text-pop-coral">
+            <Points items={report.errors} dot="bg-pop-coral" />
+          </Section>
+        )}
+      </div>
+
+      {report.misconceptions?.length > 0 && (
+        <Section icon={Brain} title="Ideas that got mixed up" tone="text-pop-sun">
+          <Points items={report.misconceptions} dot="bg-pop-sun" />
+        </Section>
+      )}
+
       {Object.keys(report.concept_map || {}).length > 0 && (
-        <Section icon={BookOpen} title="Concept Understanding Map" color="text-brand-400">
-          <p className="text-white/30 text-xs mb-4">
-            Agent-estimated understanding level for each concept covered (0% = gap, 100% = mastered).
+        <Section icon={BookOpen} title="Concept map for this report" tone="text-pop-aqua" defaultOpen={false}>
+          <p className="mb-4 text-xs leading-relaxed text-ink-subtle">
+            An estimate for this report only. Your measured topic levels, from graded answers, are on Home.
           </p>
           <ConceptMap conceptMap={report.concept_map} />
         </Section>
       )}
 
-      {/* ── Next Topics ── */}
       {report.next_topics?.length > 0 && (
-        <Section icon={Lightbulb} title="Study These Next" color="text-purple-400" defaultOpen={false}>
-          <div className="flex flex-wrap gap-2">
+        <Section icon={Lightbulb} title="Study these next" tone="text-pop-aqua" defaultOpen={false}>
+          <ul className="flex flex-wrap gap-2">
             {report.next_topics.map((t, i) => (
-              <span key={i}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/20 rounded-xl text-purple-300 text-xs font-mono">
-                <ArrowRight size={11} /> {t}
-              </span>
+              <li key={i}><Chip tone="aqua" icon={ArrowRight}>{t}</Chip></li>
             ))}
-          </div>
+          </ul>
         </Section>
       )}
 
-      {/* ── Agent Steps ── */}
-      {report.agent_steps?.length > 0 && (
-        <AgentSteps steps={report.agent_steps} />
-      )}
+      <AgentSteps steps={report.agent_steps || []} />
     </div>
   )
 }

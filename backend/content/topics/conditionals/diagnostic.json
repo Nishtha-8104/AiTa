@@ -1,0 +1,224 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "conditionals",
+  "items": [
+    {
+      "id": "conditionals:1:python",
+      "concept_key": "conditionals:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "x = 5",
+          "if x > 0:",
+          "    print(\"positive\")",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "positive"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:2:python",
+      "concept_key": "conditionals:2",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "a = 3",
+          "b = 7",
+          "if a < b:",
+          "    print(\"a is less\")",
+          "elif a == b:",
+          "    print(\"equal\")",
+          "else:",
+          "    print(\"a is greater\")",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "a is less"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:4:python",
+      "concept_key": "conditionals:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use `elif` instead of multiple separate `if` statements when checking mutually exclusive conditions in a chain?"
+      },
+      "key": {
+        "rubric": [
+          "Using `elif` ensures only one block executes, improving efficiency by skipping remaining checks once a condition is met.",
+          "Multiple separate `if` statements could all evaluate to true if conditions overlap, leading to unintended multiple outputs.",
+          "`elif` creates a clear, logical flow where conditions are checked in order and the first true one wins."
+        ],
+        "model_answer": "Using `elif` ensures that only one block executes in a chain of mutually exclusive conditions, which improves efficiency by skipping unnecessary checks once a condition is satisfied. With separate `if` statements, multiple blocks could run if conditions are not truly exclusive, causing incorrect behavior. The `elif` structure enforces an ordered, logical flow where the first true condition determines the outcome."
+      }
+    },
+    {
+      "id": "conditionals:1:c",
+      "concept_key": "conditionals:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int x = 5;",
+          "    if (x > 0) {",
+          "        printf(\"positive\\n\");",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "positive"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:2:c",
+      "concept_key": "conditionals:2",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int a = 3;",
+          "    int b = 7;",
+          "    if (a < b) {",
+          "        printf(\"a is less\\n\");",
+          "    } else if (a == b) {",
+          "        printf(\"equal\\n\");",
+          "    } else {",
+          "        printf(\"a is greater\\n\");",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "a is less"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:4:c",
+      "concept_key": "conditionals:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use `else if` instead of multiple separate `if` statements when checking mutually exclusive conditions in a chain?"
+      },
+      "key": {
+        "rubric": [
+          "Using `else if` ensures only one block executes, improving efficiency by skipping remaining checks once a condition is met.",
+          "Multiple separate `if` statements could all evaluate to true if conditions overlap, leading to unintended multiple outputs.",
+          "`else if` creates a clear, logical flow where conditions are checked in order and the first true one wins."
+        ],
+        "model_answer": "Using `else if` ensures that only one block executes in a chain of mutually exclusive conditions, which improves efficiency by skipping unnecessary checks once a condition is satisfied. With separate `if` statements, multiple blocks could run if conditions are not truly exclusive, causing incorrect behavior. The `else if` structure enforces an ordered, logical flow where the first true condition determines the outcome."
+      }
+    },
+    {
+      "id": "conditionals:1:cpp",
+      "concept_key": "conditionals:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "int main() {",
+          "    int x = 5;",
+          "    if (x > 0) {",
+          "        std::cout << \"positive\" << std::endl;",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "positive"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:2:cpp",
+      "concept_key": "conditionals:2",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "int main() {",
+          "    int a = 3;",
+          "    int b = 7;",
+          "    if (a < b) {",
+          "        std::cout << \"a is less\" << std::endl;",
+          "    } else if (a == b) {",
+          "        std::cout << \"equal\" << std::endl;",
+          "    } else {",
+          "        std::cout << \"a is greater\" << std::endl;",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "a is less"
+        ]
+      }
+    },
+    {
+      "id": "conditionals:4:cpp",
+      "concept_key": "conditionals:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use `else if` instead of multiple separate `if` statements when checking mutually exclusive conditions in a chain?"
+      },
+      "key": {
+        "rubric": [
+          "Using `else if` ensures only one block executes, improving efficiency by skipping remaining checks once a condition is met.",
+          "Multiple separate `if` statements could all evaluate to true if conditions overlap, leading to unintended multiple outputs.",
+          "`else if` creates a clear, logical flow where conditions are checked in order and the first true one wins."
+        ],
+        "model_answer": "Using `else if` ensures that only one block executes in a chain of mutually exclusive conditions, which improves efficiency by skipping unnecessary checks once a condition is satisfied. With separate `if` statements, multiple blocks could run if conditions are not truly exclusive, causing incorrect behavior. The `else if` structure enforces an ordered, logical flow where the first true condition determines the outcome."
+      }
+    }
+  ]
+}

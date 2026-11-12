@@ -1,0 +1,824 @@
+{
+  "schema": "mcq/v1",
+  "topic": "loops",
+  "items": [
+    {
+      "id": "mcq-c-loops-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int count = 0;",
+        "    for (int i = 0; i < 5; i++) {",
+        "        count++;",
+        "    }",
+        "    printf(\"%d\\n\", count);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "i takes the values 0, 1, 2, 3 and 4, so the body runs five times.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-loops-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    for (int i = 1; i <= 10; i += 3) {",
+        "        printf(\"%d \", i);",
+        "    }",
+        "    printf(\"\\n\");",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 4 7",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "1 2 3 4 5 6 7 8 9 10",
+          "misconception": null
+        },
+        {
+          "text": "1 4 7 10",
+          "misconception": null
+        },
+        {
+          "text": "1 4 7 10 13",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "i goes 1, 4, 7, 10; the next value 13 fails i <= 10, so 10 is the last one printed.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-loops-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int n = 10;",
+        "    int steps = 0;",
+        "    while (n > 1) {",
+        "        n = n / 2;",
+        "        steps++;",
+        "    }",
+        "    printf(\"%d\\n\", steps);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "n goes 10, 5, 2, 1 because integer division drops the remainder, so the loop runs three times.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-loops-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int total = 0;",
+        "    for (int i = 0; i < 3; i++) {",
+        "        for (int j = i; j < 3; j++) {",
+        "            total++;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", total);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "The inner loop starts at i, so it runs 3, then 2, then 1 times: 3 + 2 + 1 = 6.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-loops-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int x = 5;",
+        "    do {",
+        "        printf(\"%d \", x);",
+        "        x--;",
+        "    } while (x > 5);",
+        "    printf(\"\\n\");",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "5 4 3 2 1",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A do-while runs its body once before checking the condition, so 5 is printed, then x > 5 is false.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-loops-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int sum = 0;",
+        "    for (int i = 1; i <= 10; i++) {",
+        "        if (i % 2 == 0) {",
+        "            continue;",
+        "        }",
+        "        if (i > 7) {",
+        "            break;",
+        "        }",
+        "        sum += i;",
+        "    }",
+        "    printf(\"%d\\n\", sum);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "25",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "12",
+          "misconception": null
+        },
+        {
+          "text": "16",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Even values are skipped by continue, and the loop stops at 9 before adding it, so the sum is 1 + 3 + 5 + 7 = 16.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int product = 1;",
+        "    for (int i = 1; i <= 4; i++) {",
+        "        product *= i;",
+        "    }",
+        "    cout << product << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "24",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "product becomes 1 * 1 * 2 * 3 * 4 = 24.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {3, 1, 4};",
+        "    int s = 0;",
+        "    for (int x : v) {",
+        "        s += x;",
+        "    }",
+        "    cout << s << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "314",
+          "misconception": null
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The range-based for visits every element, so s = 3 + 1 + 4 = 8.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int i = 0;",
+        "    while (i < 10) {",
+        "        i += 4;",
+        "    }",
+        "    cout << i << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "16",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "i goes 0, 4, 8, 12; the check happens before each step, so the loop stops only after i reaches 12.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    for (int i = 0, j = 5; i < j; i++, j--) {",
+        "        cout << i << j << \" \";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "05 14 23",
+          "misconception": null
+        },
+        {
+          "text": "05 14 23 32",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "05 14",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0 5 1 4 2 3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The pairs are (0,5), (1,4), (2,3); after that i = 3 and j = 2, so i < j is false.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    for (int i = 1; i <= 3; i++) {",
+        "        for (int j = 1; j <= i; j++) {",
+        "            cout << j;",
+        "        }",
+        "        cout << \" \";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 22 333",
+          "misconception": null
+        },
+        {
+          "text": "1 12 123",
+          "misconception": null
+        },
+        {
+          "text": "123 123 123",
+          "misconception": null
+        },
+        {
+          "text": "1 12",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "On pass i the inner loop prints 1 up to i, giving 1, then 12, then 123.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-loops-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int n = 1234;",
+        "    int rev = 0;",
+        "    while (n > 0) {",
+        "        rev = rev * 10 + n % 10;",
+        "        n /= 10;",
+        "    }",
+        "    cout << rev << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1234",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "4321",
+          "misconception": null
+        },
+        {
+          "text": "432",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Each pass moves the last digit of n onto the end of rev, so the digits come out reversed.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "for i in range(2, 11, 4):",
+        "    print(i, end=\" \")",
+        "print()",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2 6",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "2 6 10",
+          "misconception": null
+        },
+        {
+          "text": "2 4 6 8 10",
+          "misconception": null
+        },
+        {
+          "text": "6 10",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "range(2, 11, 4) gives 2, 6 and 10; the stop value 11 is never reached.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "total = 0",
+        "for i in range(1, 4):",
+        "    for j in range(i):",
+        "        total += j",
+        "print(total)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "j runs 0; then 0, 1; then 0, 1, 2. Adding those gives 0 + 1 + 3 = 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "i = 0",
+        "while True:",
+        "    i += 3",
+        "    if i % 5 == 0:",
+        "        break",
+        "print(i)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "15",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "18",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "i takes the values 3, 6, 9, 12, 15; 15 is the first one divisible by 5, so the loop breaks there.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-loops-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "A loop's condition never becomes false and its body has no break or return. What happens when the program runs?"
+      ],
+      "options": [
+        {
+          "text": "It stops on its own after a fixed number of repetitions",
+          "misconception": null
+        },
+        {
+          "text": "It keeps running until the program is stopped from outside",
+          "misconception": null
+        },
+        {
+          "text": "It refuses to start because the condition is always true",
+          "misconception": null
+        },
+        {
+          "text": "It runs the body once and then stops",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Nothing in the language limits how often a loop repeats; without a way out it is an infinite loop.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-loops-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "A loop counter starts at 0, the loop keeps going while the counter is less than n, and the counter goes up by 1 after each pass. For n greater than 0, how many times does the body run?"
+      ],
+      "options": [
+        {
+          "text": "n - 1 times",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "n + 1 times",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "n times",
+          "misconception": null
+        },
+        {
+          "text": "n / 2 times",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The counter takes the values 0, 1, ..., n - 1, which is n values, one per pass.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-loops-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "A break statement runs inside an inner loop that sits inside an outer loop. What does it do?"
+      ],
+      "options": [
+        {
+          "text": "It ends both loops at once",
+          "misconception": null
+        },
+        {
+          "text": "It skips the rest of this pass of the inner loop and starts its next pass",
+          "misconception": null
+        },
+        {
+          "text": "It ends the whole program",
+          "misconception": null
+        },
+        {
+          "text": "It ends only the inner loop; the outer loop carries on",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "break leaves the nearest enclosing loop only; skipping to the next pass is what continue does.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "for i in range(5, 0, -1):",
+        "    print(i, end=\" \")",
+        "print()",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5 4 3 2 1 0",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        },
+        {
+          "text": "5 4 3 2 1",
+          "misconception": null
+        },
+        {
+          "text": "4 3 2 1 0",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "With a step of -1 the range counts down from 5 and stops just before reaching 0.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "total = 0",
+        "for i in range(5):",
+        "    i += 2",
+        "    total += i",
+        "print(total)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "20",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "27",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Changing i inside the body does not affect the next pass, so i is still 0 to 4 and the sum is 2 + 3 + 4 + 5 + 6 = 20.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-loops-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "for n in range(3):",
+        "    pass",
+        "else:",
+        "    print(\"A\", end=\"\")",
+        "for n in range(3):",
+        "    if n == 1:",
+        "        break",
+        "else:",
+        "    print(\"B\", end=\"\")",
+        "print(n)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "AB2",
+          "misconception": null
+        },
+        {
+          "text": "A1",
+          "misconception": null
+        },
+        {
+          "text": "AB1",
+          "misconception": null
+        },
+        {
+          "text": "A2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A loop's else part runs only when the loop finishes without break, so only A is printed, and n is still 1 from the pass that broke out.",
+      "verify_code": []
+    }
+  ]
+}

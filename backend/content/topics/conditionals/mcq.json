@@ -1,0 +1,836 @@
+{
+  "schema": "mcq/v1",
+  "topic": "conditionals",
+  "items": [
+    {
+      "id": "mcq-c-conditionals-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int x = 7;",
+        "    if (x > 5) {",
+        "        printf(\"big\\n\");",
+        "    } else {",
+        "        printf(\"small\\n\");",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "small",
+          "misconception": null
+        },
+        {
+          "text": "big",
+          "misconception": null
+        },
+        {
+          "text": "big small",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "7 > 5 is true, so only the if block runs.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-conditionals-2",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int n = 0;",
+        "    if (n) {",
+        "        printf(\"yes\\n\");",
+        "    } else {",
+        "        printf(\"no\\n\");",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "no",
+          "misconception": null
+        },
+        {
+          "text": "yes",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "In C a condition is false when its value is 0 and true for any other value, so n = 0 picks the else block.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-conditionals-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a = 3;",
+        "    if (a = 0) {",
+        "        printf(\"zero\\n\");",
+        "    } else {",
+        "        printf(\"%d\\n\", a);",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "zero",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "a = 0 is an assignment, not a comparison: it stores 0 in a and the condition's value is 0 (false), so the else block prints the new a.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-conditionals-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int x = 5, y = 10;",
+        "    if (x > 3 && y < 5) {",
+        "        printf(\"A\\n\");",
+        "    } else if (x > 3 || y < 5) {",
+        "        printf(\"B\\n\");",
+        "    } else {",
+        "        printf(\"C\\n\");",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "A",
+          "misconception": null
+        },
+        {
+          "text": "C",
+          "misconception": null
+        },
+        {
+          "text": "A B",
+          "misconception": null
+        },
+        {
+          "text": "B",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "y < 5 is false, so the && condition fails; the || condition only needs x > 3, so B is printed.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-conditionals-5",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int d = 2;",
+        "    switch (d) {",
+        "        case 1:",
+        "            printf(\"one \");",
+        "        case 2:",
+        "            printf(\"two \");",
+        "        case 3:",
+        "            printf(\"three \");",
+        "        default:",
+        "            printf(\"other\");",
+        "    }",
+        "    printf(\"\\n\");",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "two",
+          "misconception": null
+        },
+        {
+          "text": "two other",
+          "misconception": null
+        },
+        {
+          "text": "two three other",
+          "misconception": null
+        },
+        {
+          "text": "one two three other",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Without break, a switch keeps running every case after the one that matched, so it falls through from case 2 to the end.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-conditionals-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a = 5, b = 2;",
+        "    if (a > 3)",
+        "        if (b > 3)",
+        "            printf(\"X\\n\");",
+        "        else",
+        "            printf(\"Y\\n\");",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "X",
+          "misconception": null
+        },
+        {
+          "text": "Y",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        },
+        {
+          "text": "X Y",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "An else belongs to the nearest if without an else, here if (b > 3); a > 3 is true and b > 3 is false, so Y is printed.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int age = 18;",
+        "    cout << (age >= 18 ? \"adult\" : \"minor\") << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "minor",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "adult",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "adultminor",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The ?: operator picks the first value when the condition is true, and 18 >= 18 is true.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int n = 15;",
+        "    if (n % 3 == 0 && n % 5 == 0) {",
+        "        cout << \"both\" << endl;",
+        "    } else if (n % 3 == 0) {",
+        "        cout << \"three\" << endl;",
+        "    } else {",
+        "        cout << \"neither\" << endl;",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "three",
+          "misconception": null
+        },
+        {
+          "text": "both three",
+          "misconception": null
+        },
+        {
+          "text": "neither",
+          "misconception": null
+        },
+        {
+          "text": "both",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "15 divides by both 3 and 5, so the first block runs and the rest of the chain is skipped.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    bool flag = 5 > 3 && 2 > 4;",
+        "    cout << flag << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "false",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "true",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "2 > 4 is false, so the && is false, and cout prints a false bool as 0.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int x = 10;",
+        "    if (x > 5) {",
+        "        cout << \"A\";",
+        "    }",
+        "    if (x > 8) {",
+        "        cout << \"B\";",
+        "    } else {",
+        "        cout << \"C\";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "A",
+          "misconception": null
+        },
+        {
+          "text": "AB",
+          "misconception": null
+        },
+        {
+          "text": "ABC",
+          "misconception": null
+        },
+        {
+          "text": "AC",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "These are two separate if statements: both conditions are true, so A and then B are printed; the else belongs only to the second if.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    char g = 'B';",
+        "    switch (g) {",
+        "        case 'A':",
+        "            cout << \"excellent\";",
+        "            break;",
+        "        case 'B':",
+        "        case 'C':",
+        "            cout << \"good\";",
+        "            break;",
+        "        default:",
+        "            cout << \"try again\";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "good",
+          "misconception": null
+        },
+        {
+          "text": "excellent",
+          "misconception": null
+        },
+        {
+          "text": "goodtry again",
+          "misconception": null
+        },
+        {
+          "text": "try again",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "case 'B' has no code of its own, so it runs on into case 'C', prints good, and break leaves the switch.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-conditionals-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int a = 0;",
+        "    if (a == 0 || 10 / a > 1) {",
+        "        cout << \"safe\" << endl;",
+        "    } else {",
+        "        cout << \"unsafe\" << endl;",
+        "    }",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "unsafe",
+          "misconception": null
+        },
+        {
+          "text": "The program crashes dividing by zero",
+          "misconception": null
+        },
+        {
+          "text": "safe",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "|| stops as soon as its left side is true, so 10 / a is never evaluated.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "x = 0",
+        "if x:",
+        "    print(\"truthy\")",
+        "else:",
+        "    print(\"falsy\")",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "truthy",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "falsy",
+          "misconception": null
+        },
+        {
+          "text": "Nothing is printed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The number 0 counts as false in a condition, so the else block runs.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "x = 5",
+        "print(1 < x < 10, 10 < x < 20)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "True True",
+          "misconception": null
+        },
+        {
+          "text": "True False",
+          "misconception": null
+        },
+        {
+          "text": "False False",
+          "misconception": null
+        },
+        {
+          "text": "1 0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A chained comparison like 1 < x < 10 means 1 < x and x < 10; 5 is between 1 and 10 but not between 10 and 20.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a = 15",
+        "if a > 10:",
+        "    print(\"A\", end=\" \")",
+        "elif a > 5:",
+        "    print(\"B\", end=\" \")",
+        "if a > 12:",
+        "    print(\"C\")",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "A B C",
+          "misconception": null
+        },
+        {
+          "text": "A",
+          "misconception": null
+        },
+        {
+          "text": "C",
+          "misconception": null
+        },
+        {
+          "text": "A C",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "In the if/elif chain only the first true branch runs, printing A; the second if is a separate statement, and 15 > 12, so C follows.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-conditionals-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "An if / else-if / else chain has several conditions that are all true. How many of its blocks run?"
+      ],
+      "options": [
+        {
+          "text": "Every block whose condition is true",
+          "misconception": null
+        },
+        {
+          "text": "Only the first block whose condition is true",
+          "misconception": null
+        },
+        {
+          "text": "Only the last block whose condition is true",
+          "misconception": null
+        },
+        {
+          "text": "None of them, because the conditions conflict",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The chain is checked top to bottom and stops at the first true condition; the rest are skipped.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-conditionals-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "Which condition is true exactly when a number n is between 1 and 10, including 1 and 10?"
+      ],
+      "options": [
+        {
+          "text": "n >= 1 AND n <= 10",
+          "misconception": null
+        },
+        {
+          "text": "n >= 1 OR n <= 10",
+          "misconception": null
+        },
+        {
+          "text": "n > 1 AND n < 10",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "n >= 1 AND n >= 10",
+          "misconception": "wrong_comparison_operator"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Both limits must hold at once, so AND is needed, and >= / <= include the end points.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-conditionals-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "A program checks the condition A AND B, and A turns out to be false. What does it know about the whole condition before looking at B?"
+      ],
+      "options": [
+        {
+          "text": "Nothing yet; it depends on B",
+          "misconception": null
+        },
+        {
+          "text": "It is true",
+          "misconception": null
+        },
+        {
+          "text": "It is false",
+          "misconception": null
+        },
+        {
+          "text": "It is an error to stop before checking B",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "AND needs both sides to be true, so one false side settles it; most languages skip B in this case.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "temp = 30",
+        "if temp > 30:",
+        "    print(\"hot\")",
+        "elif temp > 20:",
+        "    print(\"warm\")",
+        "else:",
+        "    print(\"cold\")",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "hot",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "warm",
+          "misconception": null
+        },
+        {
+          "text": "cold",
+          "misconception": null
+        },
+        {
+          "text": "hot warm",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "30 > 30 is false because > does not include the equal value, so the chain moves on and 30 > 20 picks warm.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "n = 12",
+        "label = \"even\"",
+        "if n % 2 == 0:",
+        "    if n % 3 == 0:",
+        "        label += \" six\"",
+        "    elif n % 4 == 0:",
+        "        label += \" four\"",
+        "else:",
+        "    label = \"odd\"",
+        "print(label)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "even six four",
+          "misconception": null
+        },
+        {
+          "text": "even four",
+          "misconception": null
+        },
+        {
+          "text": "even six",
+          "misconception": null
+        },
+        {
+          "text": "odd",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "12 is even and divides by 3, so the inner if adds six and its elif is skipped even though 12 also divides by 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-conditionals-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "x = 0",
+        "y = 7",
+        "print(x or y, x and y)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "True False",
+          "misconception": null
+        },
+        {
+          "text": "0 7",
+          "misconception": null
+        },
+        {
+          "text": "True 0",
+          "misconception": null
+        },
+        {
+          "text": "7 0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Python's or gives back the first truthy value (7) and and gives back the first falsy value (0), not True or False.",
+      "verify_code": []
+    }
+  ]
+}

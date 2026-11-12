@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import LogoMark from '../ui/LogoMark'
 
 export default function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -7,17 +8,25 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
-          <p className="text-white/40 font-body text-sm">Loading aiTA...</p>
-        </div>
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-4" role="status">
+        <LogoMark className="h-11 w-11 motion-safe:animate-pulse" />
+        <p className="text-sm text-ink-subtle">Loading PET…</p>
       </div>
     )
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />
+    return (
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 px-4 text-center" role="alert">
+        <LogoMark className="h-11 w-11" />
+        <p className="text-sm text-ink">PET&apos;s backend is not answering.</p>
+        <p className="max-w-sm text-sm text-ink-subtle">Check that it is running, then reload this page.</p>
+      </div>
+    )
+  }
+
+  if (user.role === 'student' && !user.onboarding_done && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />
   }
 
   return children

@@ -1,0 +1,1202 @@
+[
+  {
+    "external_id": "mbpp-002",
+    "title": "Common Numbers",
+    "source": "mbpp",
+    "statement": "The first line contains space-separated integers. The second line contains space-separated integers. Print the integers that appear in both lines, in ascending order, separated by single spaces. Print each such integer only once. If no integer appears in both lines, print nothing at all.",
+    "constraints": "Each line holds between 0 and 100 integers; each integer is between -1000 and 1000.",
+    "topic": "hashing_sets",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    a = set(int(x) for x in rd().split())\n    b = set(int(x) for x in rd().split())\n    return \" \".join(str(v) for v in sorted(a & b))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "1 2 3 4\n3 4 5 6\n",
+        "expected_stdout": "3 4",
+        "rationale": "overlapping tails"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5 1 9 3\n3 9 1\n",
+        "expected_stdout": "1 3 9",
+        "rationale": "unsorted input, output must be ascending"
+      },
+      {
+        "kind": "normal",
+        "stdin": "-5 -1 0 7\n7 0 -5\n",
+        "expected_stdout": "-5 0 7",
+        "rationale": "negatives and zero"
+      },
+      {
+        "kind": "edge",
+        "stdin": "2 2 2 8\n8 2 2\n",
+        "expected_stdout": "2 8",
+        "rationale": "duplicates collapse to one"
+      },
+      {
+        "kind": "normal",
+        "stdin": "10 20 30\n30 20 10\n",
+        "expected_stdout": "10 20 30",
+        "rationale": "identical sets"
+      },
+      {
+        "kind": "edge",
+        "stdin": "-1000 1000\n1000 -1000 0\n",
+        "expected_stdout": "-1000 1000",
+        "rationale": "constraint bounds"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-011",
+    "title": "Remove a Character",
+    "source": "mbpp",
+    "statement": "The first line contains a single word made of lowercase letters. The second line contains a single character. Print the word with every occurrence of that character removed. If removing the character leaves nothing, print an empty line.",
+    "constraints": "The word is between 1 and 200 characters long.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    word = rd()\n    ch = rd()\n    return word.replace(ch, \"\")\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "banana\na\n",
+        "expected_stdout": "bnn",
+        "rationale": "repeated target"
+      },
+      {
+        "kind": "normal",
+        "stdin": "hello\nl\n",
+        "expected_stdout": "heo",
+        "rationale": "adjacent occurrences"
+      },
+      {
+        "kind": "edge",
+        "stdin": "abc\nz\n",
+        "expected_stdout": "abc",
+        "rationale": "character absent, word unchanged"
+      },
+      {
+        "kind": "edge",
+        "stdin": "aaab\na\n",
+        "expected_stdout": "b",
+        "rationale": "only the tail survives"
+      },
+      {
+        "kind": "normal",
+        "stdin": "mississippi\ns\n",
+        "expected_stdout": "miiippi",
+        "rationale": "many occurrences"
+      },
+      {
+        "kind": "edge",
+        "stdin": "xy\ny\n",
+        "expected_stdout": "x",
+        "rationale": "shortest meaningful word"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-014",
+    "title": "Largest Value",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print the largest of those integers. If n is 0, print the word None instead.",
+    "constraints": "0 <= n <= 200; each integer is between -100000 and 100000.",
+    "topic": "arrays",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()]\n    if n == 0:\n        return \"None\"\n    return str(max(values[:n]))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n3 9 2 7 1\n",
+        "expected_stdout": "9",
+        "rationale": "maximum in the middle"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n-8 -3 -20 -1\n",
+        "expected_stdout": "-1",
+        "rationale": "all negative"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n42\n",
+        "expected_stdout": "42",
+        "rationale": "single element"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n",
+        "expected_stdout": "None",
+        "rationale": "empty list prints None"
+      },
+      {
+        "kind": "normal",
+        "stdin": "6\n5 5 5 5 5 5\n",
+        "expected_stdout": "5",
+        "rationale": "all equal"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n-100000 100000 0\n",
+        "expected_stdout": "100000",
+        "rationale": "constraint bounds"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-057",
+    "title": "Sum of Even Numbers",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print the sum of only the even integers among them. If there are no even integers, print 0.",
+    "constraints": "0 <= n <= 200; each integer is between -1000 and 1000.",
+    "topic": "arrays",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    return str(sum(v for v in values if v % 2 == 0))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n1 2 3 4 5\n",
+        "expected_stdout": "6",
+        "rationale": "mixed parity"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n2 4 6 8\n",
+        "expected_stdout": "20",
+        "rationale": "all even"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n1 3 5\n",
+        "expected_stdout": "0",
+        "rationale": "no evens prints 0"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n-2 -4 1 3 6\n",
+        "expected_stdout": "0",
+        "rationale": "negative evens count"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n0\n",
+        "expected_stdout": "0",
+        "rationale": "zero is even"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n",
+        "expected_stdout": "0",
+        "rationale": "empty list prints 0"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-063",
+    "title": "Count Words",
+    "source": "mbpp",
+    "statement": "A single line contains a sentence made of words separated by single spaces. Print the number of words in the sentence. If the line is empty, print 0.",
+    "constraints": "The line is at most 500 characters long.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    line = rd()\n    return str(len(line.split(\" \")) if line else 0)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "the quick brown fox\n",
+        "expected_stdout": "4",
+        "rationale": "four words"
+      },
+      {
+        "kind": "edge",
+        "stdin": "word\n",
+        "expected_stdout": "1",
+        "rationale": "single word"
+      },
+      {
+        "kind": "edge",
+        "stdin": "\n",
+        "expected_stdout": "0",
+        "rationale": "empty line prints 0"
+      },
+      {
+        "kind": "normal",
+        "stdin": "a b c d e f\n",
+        "expected_stdout": "6",
+        "rationale": "six short words"
+      },
+      {
+        "kind": "normal",
+        "stdin": "hello world\n",
+        "expected_stdout": "2",
+        "rationale": "two words"
+      },
+      {
+        "kind": "normal",
+        "stdin": "one two three\n",
+        "expected_stdout": "3",
+        "rationale": "three words"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-078",
+    "title": "Sort Ascending",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print the same integers sorted in ascending order, separated by single spaces, on one line. If n is 0, print an empty line.",
+    "constraints": "0 <= n <= 300; each integer is between -10000 and 10000.",
+    "topic": "sorting",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    return \" \".join(str(v) for v in sorted(values))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n5 3 1 4 2\n",
+        "expected_stdout": "1 2 3 4 5",
+        "rationale": "reverse-ish order"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n-3 7 -8 0\n",
+        "expected_stdout": "-8 -3 0 7",
+        "rationale": "negatives and zero"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n9\n",
+        "expected_stdout": "9",
+        "rationale": "single element"
+      },
+      {
+        "kind": "edge",
+        "stdin": "4\n2 2 1 1\n",
+        "expected_stdout": "1 1 2 2",
+        "rationale": "duplicates preserved"
+      },
+      {
+        "kind": "normal",
+        "stdin": "6\n10 -10 5 -5 0 1\n",
+        "expected_stdout": "-10 -5 0 1 5 10",
+        "rationale": "wide spread"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n-10000 10000 0\n",
+        "expected_stdout": "-10000 0 10000",
+        "rationale": "constraint bounds"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-090",
+    "title": "Remove Repeated Values",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print those integers with duplicates removed, keeping the order of first appearance, separated by single spaces.",
+    "constraints": "0 <= n <= 300; each integer is between -1000 and 1000.",
+    "topic": "arrays",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    seen = set()\n    keep = []\n    for v in values:\n        if v not in seen:\n            seen.add(v)\n            keep.append(v)\n    return \" \".join(str(v) for v in keep)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "6\n1 2 2 3 1 4\n",
+        "expected_stdout": "1 2 3 4",
+        "rationale": "first appearance wins"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n9 9 9 9 9\n",
+        "expected_stdout": "9",
+        "rationale": "all identical"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n7\n",
+        "expected_stdout": "7",
+        "rationale": "single element"
+      },
+      {
+        "kind": "normal",
+        "stdin": "6\n-1 2 -1 3 2 4\n",
+        "expected_stdout": "-1 2 3 4",
+        "rationale": "negatives repeat"
+      },
+      {
+        "kind": "edge",
+        "stdin": "4\n1 2 3 4\n",
+        "expected_stdout": "1 2 3 4",
+        "rationale": "already unique"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n0 0 1 0 1\n",
+        "expected_stdout": "0 1",
+        "rationale": "zeros and ones"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-105",
+    "title": "Swap Letter Case",
+    "source": "mbpp",
+    "statement": "A single line contains a string. Print the same string with every lowercase letter converted to uppercase and every uppercase letter converted to lowercase. Characters that are not letters are printed unchanged.",
+    "constraints": "The string is between 1 and 200 characters long.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    return rd().swapcase()\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "Hello World\n",
+        "expected_stdout": "hELLO wORLD",
+        "rationale": "mixed case"
+      },
+      {
+        "kind": "normal",
+        "stdin": "abc\n",
+        "expected_stdout": "ABC",
+        "rationale": "all lowercase"
+      },
+      {
+        "kind": "normal",
+        "stdin": "XYZ\n",
+        "expected_stdout": "xyz",
+        "rationale": "all uppercase"
+      },
+      {
+        "kind": "edge",
+        "stdin": "a1B2!c\n",
+        "expected_stdout": "A1b2!C",
+        "rationale": "digits and punctuation pass through"
+      },
+      {
+        "kind": "edge",
+        "stdin": "Q\n",
+        "expected_stdout": "q",
+        "rationale": "single letter"
+      },
+      {
+        "kind": "normal",
+        "stdin": "PyThOn RoCkS\n",
+        "expected_stdout": "pYtHoN rOcKs",
+        "rationale": "alternating case"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-127",
+    "title": "Average of Numbers",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print the average of those integers, rounded to exactly two decimal places. If n is 0, print 0.00 instead.",
+    "constraints": "0 <= n <= 200; each integer is between -10000 and 10000.",
+    "topic": "basics_io",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    if n == 0:\n        return \"0.00\"\n    return \"%.2f\" % (sum(values) / n)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "4\n1 2 3 4\n",
+        "expected_stdout": "2.50",
+        "rationale": "average 2.50 exactly"
+      },
+      {
+        "kind": "normal",
+        "stdin": "3\n10 20 30\n",
+        "expected_stdout": "20.00",
+        "rationale": "whole number average"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n",
+        "expected_stdout": "0.00",
+        "rationale": "empty list prints 0.00"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n-2 -4 -6 -8\n",
+        "expected_stdout": "-5.00",
+        "rationale": "negative average"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n7\n",
+        "expected_stdout": "7.00",
+        "rationale": "single element"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n2 4 6 8 10\n",
+        "expected_stdout": "6.00",
+        "rationale": "even spread"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-160",
+    "title": "Find First Position",
+    "source": "mbpp",
+    "statement": "The first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. The third line contains a single integer target. Print the 0-based position of the first occurrence of target among the n integers. If target does not appear, print -1.",
+    "constraints": "0 <= n <= 300; every integer is between -1000 and 1000.",
+    "topic": "searching",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    target = int(rd().strip() or 0)\n    for i, v in enumerate(values):\n        if v == target:\n            return str(i)\n    return \"-1\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n4 8 15 16 23\n15\n",
+        "expected_stdout": "2",
+        "rationale": "target in the middle"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n1 2 3 2 1\n2\n",
+        "expected_stdout": "1",
+        "rationale": "first of two occurrences"
+      },
+      {
+        "kind": "edge",
+        "stdin": "4\n1 2 3 4\n9\n",
+        "expected_stdout": "-1",
+        "rationale": "target absent prints -1"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n7 8 9\n7\n",
+        "expected_stdout": "0",
+        "rationale": "target at index 0"
+      },
+      {
+        "kind": "normal",
+        "stdin": "3\n-5 0 5\n5\n",
+        "expected_stdout": "2",
+        "rationale": "target at the end"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n1\n",
+        "expected_stdout": "-1",
+        "rationale": "empty list prints -1"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-231",
+    "title": "Count Vowels",
+    "source": "mbpp",
+    "statement": "A single line contains a string. Print the number of vowels in it, counting a, e, i, o and u in both lowercase and uppercase.",
+    "constraints": "The string is between 1 and 500 characters long.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    line = rd()\n    return str(sum(1 for c in line if c.lower() in \"aeiou\"))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "hello world\n",
+        "expected_stdout": "3",
+        "rationale": "three vowels"
+      },
+      {
+        "kind": "normal",
+        "stdin": "AEIOU\n",
+        "expected_stdout": "5",
+        "rationale": "uppercase vowels count"
+      },
+      {
+        "kind": "edge",
+        "stdin": "xyz\n",
+        "expected_stdout": "0",
+        "rationale": "no vowels prints 0"
+      },
+      {
+        "kind": "normal",
+        "stdin": "Programming Is Fun\n",
+        "expected_stdout": "5",
+        "rationale": "mixed case sentence"
+      },
+      {
+        "kind": "edge",
+        "stdin": "a\n",
+        "expected_stdout": "1",
+        "rationale": "single vowel"
+      },
+      {
+        "kind": "normal",
+        "stdin": "bcdfg aeiou\n",
+        "expected_stdout": "5",
+        "rationale": "consonants then vowels"
+      }
+    ]
+  },
+  {
+    "external_id": "mbpp-284",
+    "title": "Prime or Composite",
+    "source": "mbpp",
+    "statement": "A single line contains an integer n. Print the word Prime if n is a prime number, and Composite otherwise. Treat any n less than 2 as Composite.",
+    "constraints": "-1000 <= n <= 100000.",
+    "topic": "basics_io",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    if n < 2:\n        return \"Composite\"\n    d = 2\n    while d * d <= n:\n        if n % d == 0:\n            return \"Composite\"\n        d += 1\n    return \"Prime\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "7\n",
+        "expected_stdout": "Prime",
+        "rationale": "small prime"
+      },
+      {
+        "kind": "normal",
+        "stdin": "9\n",
+        "expected_stdout": "Composite",
+        "rationale": "odd composite"
+      },
+      {
+        "kind": "edge",
+        "stdin": "2\n",
+        "expected_stdout": "Prime",
+        "rationale": "smallest prime"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n",
+        "expected_stdout": "Composite",
+        "rationale": "one is composite by the statement"
+      },
+      {
+        "kind": "edge",
+        "stdin": "-7\n",
+        "expected_stdout": "Composite",
+        "rationale": "negatives are composite"
+      },
+      {
+        "kind": "normal",
+        "stdin": "97\n",
+        "expected_stdout": "Prime",
+        "rationale": "two-digit prime"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-two-sum",
+    "title": "Two Sum",
+    "source": "dsa",
+    "statement": "The first line contains an integer n, the number of elements. The second line contains n space-separated integers. The third line contains an integer target. Print the two 0-based indices i and j with i less than j such that the values at those positions add up to target, separated by a single space. If no such pair exists, print -1. If several pairs exist, print the one with the smallest i, and among those the smallest j.",
+    "constraints": "2 <= n <= 200; each value is between -1000 and 1000; target is between -2000 and 2000.",
+    "topic": "hashing_sets",
+    "difficulty": "medium",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    target = int(rd().strip() or 0)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if values[i] + values[j] == target:\n                return \"%d %d\" % (i, j)\n    return \"-1\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "4\n2 7 11 15\n9\n",
+        "expected_stdout": "0 1",
+        "rationale": "classic pair at the front"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n3 2 4 6\n6\n",
+        "expected_stdout": "1 2",
+        "rationale": "answer is not the first index"
+      },
+      {
+        "kind": "edge",
+        "stdin": "2\n3 3\n6\n",
+        "expected_stdout": "0 1",
+        "rationale": "equal values, distinct indices"
+      },
+      {
+        "kind": "edge",
+        "stdin": "4\n1 2 3 4\n100\n",
+        "expected_stdout": "-1",
+        "rationale": "no pair prints -1"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n-3 4 3 90 0\n0\n",
+        "expected_stdout": "0 2",
+        "rationale": "negative plus positive"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n1 1 1 1 2\n3\n",
+        "expected_stdout": "0 4",
+        "rationale": "smallest i then smallest j"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-valid-parentheses",
+    "title": "Valid Parentheses",
+    "source": "dsa",
+    "statement": "A single line contains a string made only of the characters ( ) [ ] { }. Print YES if every bracket is closed by the matching kind of bracket in the correct order, and NO otherwise. An empty line counts as YES.",
+    "constraints": "The string is at most 200 characters long.",
+    "topic": "stacks_queues",
+    "difficulty": "medium",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    s = rd().strip()\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    stack = []\n    for c in s:\n        if c in \"([{\":\n            stack.append(c)\n        else:\n            if not stack or stack.pop() != pairs.get(c):\n                return \"NO\"\n    return \"YES\" if not stack else \"NO\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "()[]{}\n",
+        "expected_stdout": "YES",
+        "rationale": "flat sequence"
+      },
+      {
+        "kind": "normal",
+        "stdin": "([{}])\n",
+        "expected_stdout": "YES",
+        "rationale": "properly nested"
+      },
+      {
+        "kind": "edge",
+        "stdin": "(]\n",
+        "expected_stdout": "NO",
+        "rationale": "mismatched kinds"
+      },
+      {
+        "kind": "edge",
+        "stdin": "(\n",
+        "expected_stdout": "NO",
+        "rationale": "unclosed opener"
+      },
+      {
+        "kind": "edge",
+        "stdin": ")(\n",
+        "expected_stdout": "NO",
+        "rationale": "closer before opener"
+      },
+      {
+        "kind": "normal",
+        "stdin": "(()())\n",
+        "expected_stdout": "YES",
+        "rationale": "repeated nesting"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-binary-search",
+    "title": "Binary Search",
+    "source": "dsa",
+    "statement": "The first line contains an integer n, the number of elements. The second line contains n space-separated integers sorted in ascending order. The third line contains an integer target. Print the 0-based index of target within the sorted list. If target is not present, print -1.",
+    "constraints": "0 <= n <= 500; each value is between -100000 and 100000; all values are distinct.",
+    "topic": "searching",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    target = int(rd().strip() or 0)\n    lo, hi = 0, n - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if values[mid] == target:\n            return str(mid)\n        if values[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return \"-1\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n1 3 5 7 9\n7\n",
+        "expected_stdout": "3",
+        "rationale": "target right of centre"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n1 3 5 7 9\n1\n",
+        "expected_stdout": "0",
+        "rationale": "first element"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n1 3 5 7 9\n9\n",
+        "expected_stdout": "4",
+        "rationale": "last element"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n1 3 5 7 9\n4\n",
+        "expected_stdout": "-1",
+        "rationale": "absent between elements"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n42\n42\n",
+        "expected_stdout": "0",
+        "rationale": "single element found"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n3\n",
+        "expected_stdout": "-1",
+        "rationale": "empty list prints -1"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-reverse-string",
+    "title": "Reverse String",
+    "source": "dsa",
+    "statement": "A single line contains a string. Print the same string with its characters in reverse order.",
+    "constraints": "The string is between 1 and 500 characters long and contains no leading or trailing spaces.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    return rd()[::-1]\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "hello\n",
+        "expected_stdout": "olleh",
+        "rationale": "plain word"
+      },
+      {
+        "kind": "normal",
+        "stdin": "abcdef\n",
+        "expected_stdout": "fedcba",
+        "rationale": "even length"
+      },
+      {
+        "kind": "edge",
+        "stdin": "a\n",
+        "expected_stdout": "a",
+        "rationale": "single character"
+      },
+      {
+        "kind": "edge",
+        "stdin": "racecar\n",
+        "expected_stdout": "racecar",
+        "rationale": "palindrome reverses to itself"
+      },
+      {
+        "kind": "normal",
+        "stdin": "Hello World\n",
+        "expected_stdout": "dlroW olleH",
+        "rationale": "spaces preserved"
+      },
+      {
+        "kind": "normal",
+        "stdin": "12345\n",
+        "expected_stdout": "54321",
+        "rationale": "digits"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-max-subarray",
+    "title": "Maximum Subarray",
+    "source": "dsa",
+    "statement": "The first line contains an integer n, the number of elements. The second line contains n space-separated integers. Print the largest sum obtainable from any contiguous block of one or more of those integers.",
+    "constraints": "1 <= n <= 500; each value is between -10000 and 10000.",
+    "topic": "dynamic_programming",
+    "difficulty": "medium",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    best = cur = values[0]\n    for v in values[1:]:\n        cur = max(v, cur + v)\n        best = max(best, cur)\n    return str(best)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "9\n-2 1 -3 4 -1 2 1 -5 4\n",
+        "expected_stdout": "6",
+        "rationale": "classic Kadane input"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n-5 -2 -8 -1 -9\n",
+        "expected_stdout": "-1",
+        "rationale": "all negative, best is the least bad"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n1 2 3 4\n",
+        "expected_stdout": "10",
+        "rationale": "all positive, whole array"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n-7\n",
+        "expected_stdout": "-7",
+        "rationale": "single negative element"
+      },
+      {
+        "kind": "normal",
+        "stdin": "6\n5 -9 6 -2 3 -1\n",
+        "expected_stdout": "7",
+        "rationale": "restart beats extending"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n0 0 0\n",
+        "expected_stdout": "0",
+        "rationale": "zeros only"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-merge-sorted",
+    "title": "Merge Sorted Arrays",
+    "source": "dsa",
+    "statement": "The first line contains an integer n. The second line contains n space-separated integers in ascending order. The third line contains an integer m. The fourth line contains m space-separated integers in ascending order. Print all n plus m integers in ascending order, separated by single spaces, on one line. If both lists are empty, print an empty line.",
+    "constraints": "0 <= n, m <= 300; each value is between -10000 and 10000.",
+    "topic": "arrays",
+    "difficulty": "medium",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    a = [int(x) for x in rd().split()][:n]\n    m = int(rd().strip() or 0)\n    b = [int(x) for x in rd().split()][:m]\n    out = []\n    i = j = 0\n    while i < n and j < m:\n        if a[i] <= b[j]:\n            out.append(a[i]); i += 1\n        else:\n            out.append(b[j]); j += 1\n    out.extend(a[i:]); out.extend(b[j:])\n    return \" \".join(str(v) for v in out)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "3\n1 3 5\n3\n2 4 6\n",
+        "expected_stdout": "1 2 3 4 5 6",
+        "rationale": "perfect interleave"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n1 2 3\n0\n\n",
+        "expected_stdout": "1 2 3",
+        "rationale": "second list empty"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n3\n7 8 9\n",
+        "expected_stdout": "7 8 9",
+        "rationale": "first list empty"
+      },
+      {
+        "kind": "normal",
+        "stdin": "2\n-5 -1\n3\n-4 0 2\n",
+        "expected_stdout": "-5 -4 -1 0 2",
+        "rationale": "negatives across both"
+      },
+      {
+        "kind": "edge",
+        "stdin": "2\n1 1\n2\n1 1\n",
+        "expected_stdout": "1 1 1 1",
+        "rationale": "all duplicates"
+      },
+      {
+        "kind": "normal",
+        "stdin": "1\n10\n4\n1 2 3 4\n",
+        "expected_stdout": "1 2 3 4 10",
+        "rationale": "one long tail"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-palindrome",
+    "title": "Palindrome String",
+    "source": "dsa",
+    "statement": "A single line contains a string. Print YES if the string reads the same forwards and backwards, and NO otherwise. Compare characters exactly as given, without ignoring case or punctuation.",
+    "constraints": "The string is between 1 and 500 characters long.",
+    "topic": "strings",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    s = rd()\n    return \"YES\" if s == s[::-1] else \"NO\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "racecar\n",
+        "expected_stdout": "YES",
+        "rationale": "odd-length palindrome"
+      },
+      {
+        "kind": "normal",
+        "stdin": "abba\n",
+        "expected_stdout": "YES",
+        "rationale": "even-length palindrome"
+      },
+      {
+        "kind": "edge",
+        "stdin": "a\n",
+        "expected_stdout": "YES",
+        "rationale": "single character"
+      },
+      {
+        "kind": "normal",
+        "stdin": "hello\n",
+        "expected_stdout": "NO",
+        "rationale": "not a palindrome"
+      },
+      {
+        "kind": "edge",
+        "stdin": "Racecar\n",
+        "expected_stdout": "NO",
+        "rationale": "case matters, so NO"
+      },
+      {
+        "kind": "normal",
+        "stdin": "abcba\n",
+        "expected_stdout": "YES",
+        "rationale": "another odd palindrome"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-anagram",
+    "title": "Valid Anagram",
+    "source": "dsa",
+    "statement": "The first line contains a string. The second line contains another string. Print YES if the two strings contain exactly the same characters with the same counts in any order, and NO otherwise. Compare characters exactly as given.",
+    "constraints": "Each string is between 1 and 300 characters long.",
+    "topic": "hashing_sets",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    a = rd()\n    b = rd()\n    return \"YES\" if sorted(a) == sorted(b) else \"NO\"\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "listen\nsilent\n",
+        "expected_stdout": "YES",
+        "rationale": "classic anagram"
+      },
+      {
+        "kind": "normal",
+        "stdin": "hello\nworld\n",
+        "expected_stdout": "NO",
+        "rationale": "different letters"
+      },
+      {
+        "kind": "edge",
+        "stdin": "aab\nabb\n",
+        "expected_stdout": "NO",
+        "rationale": "same letters, different counts"
+      },
+      {
+        "kind": "edge",
+        "stdin": "abc\nabcd\n",
+        "expected_stdout": "NO",
+        "rationale": "different lengths"
+      },
+      {
+        "kind": "normal",
+        "stdin": "evil\nvile\n",
+        "expected_stdout": "YES",
+        "rationale": "another anagram"
+      },
+      {
+        "kind": "edge",
+        "stdin": "Abc\nabc\n",
+        "expected_stdout": "NO",
+        "rationale": "case matters, so NO"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-fibonacci",
+    "title": "Fibonacci Number",
+    "source": "dsa",
+    "statement": "A single line contains an integer n. Print the nth Fibonacci number, where the sequence starts 0, 1, 1, 2, 3, 5 and the 0th value is 0.",
+    "constraints": "0 <= n <= 60.",
+    "topic": "recursion",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return str(a)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "10\n",
+        "expected_stdout": "55",
+        "rationale": "tenth value is 55"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n",
+        "expected_stdout": "0",
+        "rationale": "zeroth value is 0"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n",
+        "expected_stdout": "1",
+        "rationale": "first value is 1"
+      },
+      {
+        "kind": "normal",
+        "stdin": "7\n",
+        "expected_stdout": "13",
+        "rationale": "small value"
+      },
+      {
+        "kind": "edge",
+        "stdin": "60\n",
+        "expected_stdout": "1548008755920",
+        "rationale": "upper constraint, needs 64-bit"
+      },
+      {
+        "kind": "normal",
+        "stdin": "20\n",
+        "expected_stdout": "6765",
+        "rationale": "mid-range value"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-fizzbuzz",
+    "title": "Fizz Buzz",
+    "source": "dsa",
+    "statement": "A single line contains an integer n. Print one value per line for every integer from 1 to n inclusive. Print Fizz when the integer divides by 3, Buzz when it divides by 5, FizzBuzz when it divides by both, and otherwise the integer itself. If n is less than 1, print nothing.",
+    "constraints": "0 <= n <= 200.",
+    "topic": "loops",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    lines = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            lines.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            lines.append(\"Fizz\")\n        elif i % 5 == 0:\n            lines.append(\"Buzz\")\n        else:\n            lines.append(str(i))\n    return \"\\n\".join(lines)\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n",
+        "expected_stdout": "1\n2\nFizz\n4\nBuzz",
+        "rationale": "reaches the first Buzz"
+      },
+      {
+        "kind": "normal",
+        "stdin": "3\n",
+        "expected_stdout": "1\n2\nFizz",
+        "rationale": "reaches the first Fizz"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n",
+        "expected_stdout": "1",
+        "rationale": "single line of output"
+      },
+      {
+        "kind": "edge",
+        "stdin": "15\n",
+        "expected_stdout": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz",
+        "rationale": "reaches the first FizzBuzz"
+      },
+      {
+        "kind": "normal",
+        "stdin": "10\n",
+        "expected_stdout": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz",
+        "rationale": "two Fizzes and two Buzzes"
+      },
+      {
+        "kind": "normal",
+        "stdin": "7\n",
+        "expected_stdout": "1\n2\nFizz\n4\nBuzz\nFizz\n7",
+        "rationale": "no FizzBuzz yet"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-second-largest",
+    "title": "Second Largest",
+    "source": "dsa",
+    "statement": "The first line contains an integer n, the number of elements. The second line contains n space-separated integers. Print the second largest distinct value among them. If fewer than two distinct values exist, print None instead.",
+    "constraints": "0 <= n <= 300; each value is between -10000 and 10000.",
+    "topic": "arrays",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    distinct = sorted(set(values), reverse=True)\n    if len(distinct) < 2:\n        return \"None\"\n    return str(distinct[1])\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n3 9 2 7 1\n",
+        "expected_stdout": "7",
+        "rationale": "clear runner-up"
+      },
+      {
+        "kind": "edge",
+        "stdin": "4\n5 5 5 5\n",
+        "expected_stdout": "None",
+        "rationale": "one distinct value prints None"
+      },
+      {
+        "kind": "edge",
+        "stdin": "5\n8 8 3 3 1\n",
+        "expected_stdout": "3",
+        "rationale": "duplicates at the top"
+      },
+      {
+        "kind": "normal",
+        "stdin": "4\n-1 -5 -3 -2\n",
+        "expected_stdout": "-2",
+        "rationale": "all negative"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n7\n",
+        "expected_stdout": "None",
+        "rationale": "single element prints None"
+      },
+      {
+        "kind": "edge",
+        "stdin": "0\n\n",
+        "expected_stdout": "None",
+        "rationale": "empty list prints None"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-count-characters",
+    "title": "Count Characters",
+    "source": "dsa",
+    "statement": "A single line contains a string of lowercase letters. Print one line for each distinct letter in alphabetical order, giving the letter, a single space, and how many times it appears.",
+    "constraints": "The string is between 1 and 500 lowercase letters with no spaces.",
+    "topic": "hashing_sets",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    s = rd().strip()\n    counts = {}\n    for c in s:\n        counts[c] = counts.get(c, 0) + 1\n    return \"\\n\".join(\"%s %d\" % (k, counts[k]) for k in sorted(counts))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "hello\n",
+        "expected_stdout": "e 1\nh 1\nl 2\no 1",
+        "rationale": "one repeated letter"
+      },
+      {
+        "kind": "normal",
+        "stdin": "aabbcc\n",
+        "expected_stdout": "a 2\nb 2\nc 2",
+        "rationale": "even counts"
+      },
+      {
+        "kind": "edge",
+        "stdin": "z\n",
+        "expected_stdout": "z 1",
+        "rationale": "single letter"
+      },
+      {
+        "kind": "normal",
+        "stdin": "banana\n",
+        "expected_stdout": "a 3\nb 1\nn 2",
+        "rationale": "uneven counts"
+      },
+      {
+        "kind": "edge",
+        "stdin": "abcdef\n",
+        "expected_stdout": "a 1\nb 1\nc 1\nd 1\ne 1\nf 1",
+        "rationale": "all counts are one"
+      },
+      {
+        "kind": "normal",
+        "stdin": "mississippi\n",
+        "expected_stdout": "i 4\nm 1\np 2\ns 4",
+        "rationale": "heavy repetition"
+      }
+    ]
+  },
+  {
+    "external_id": "dsa-move-zeroes",
+    "title": "Move Zeroes",
+    "source": "dsa",
+    "statement": "The first line contains an integer n, the number of elements. The second line contains n space-separated integers. Print the same integers on one line separated by single spaces, with every zero moved to the end while the non-zero values keep their original relative order.",
+    "constraints": "0 <= n <= 300; each value is between -1000 and 1000.",
+    "topic": "arrays",
+    "difficulty": "easy",
+    "reference": "import sys\n\n_data = sys.stdin.read().split(\"\\n\")\n_pos = 0\n\n\ndef rd():\n    global _pos\n    value = _data[_pos] if _pos < len(_data) else \"\"\n    _pos += 1\n    return value\n\n\ndef solve():\n    n = int(rd().strip() or 0)\n    values = [int(x) for x in rd().split()][:n]\n    kept = [v for v in values if v != 0]\n    return \" \".join(str(v) for v in kept + [0] * (len(values) - len(kept)))\n\nout = []\nfor _ in range(int(rd().strip() or 0)):\n    out.append(solve())\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "tests": [
+      {
+        "kind": "sample",
+        "stdin": "5\n0 1 0 3 12\n",
+        "expected_stdout": "1 3 12 0 0",
+        "rationale": "zeros scattered"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n0 0 0\n",
+        "expected_stdout": "0 0 0",
+        "rationale": "all zeros"
+      },
+      {
+        "kind": "edge",
+        "stdin": "3\n1 2 3\n",
+        "expected_stdout": "1 2 3",
+        "rationale": "no zeros, unchanged"
+      },
+      {
+        "kind": "normal",
+        "stdin": "5\n-1 0 -2 0 3\n",
+        "expected_stdout": "-1 -2 3 0 0",
+        "rationale": "negatives keep their order"
+      },
+      {
+        "kind": "edge",
+        "stdin": "1\n0\n",
+        "expected_stdout": "0",
+        "rationale": "single zero"
+      },
+      {
+        "kind": "normal",
+        "stdin": "6\n0 0 1 2 0 3\n",
+        "expected_stdout": "1 2 3 0 0 0",
+        "rationale": "leading zeros"
+      }
+    ]
+  }
+]

@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "McqItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "c",
+            "cpp",
+            "python",
+            "any"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "stem": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Stem",
+          "type": "array"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "title": "Options",
+          "type": "array"
+        },
+        "answer_index": {
+          "title": "Answer Index",
+          "type": "integer"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "verify_code": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Verify Code",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "language",
+        "difficulty",
+        "stem",
+        "options",
+        "answer_index",
+        "explanation"
+      ],
+      "title": "McqItem",
+      "type": "object"
+    },
+    "Option": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "misconception": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Misconception"
+        }
+      },
+      "required": [
+        "text",
+        "misconception"
+      ],
+      "title": "Option",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "mcq/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/McqItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "McqFile",
+  "type": "object"
+}

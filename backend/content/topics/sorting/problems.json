@@ -1,0 +1,706 @@
+{
+  "schema": "problems/v1",
+  "topic": "sorting",
+  "items": [
+    {
+      "id": "pet-sort-descending",
+      "title": "Sort Descending",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. Print them sorted from largest to smallest, separated by single spaces.",
+      "constraints": "1 <= n <= 300; each integer is between -10000 and 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "lines = sys.stdin.read().split(\"\\n\")",
+          "t = int(lines[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(lines[pos])",
+          "    values = list(map(int, lines[pos + 1].split()))",
+          "    pos += 2",
+          "    print(\" \".join(map(str, sorted(values, reverse=True))))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "3 1 4 1 5"
+          ],
+          "output": [
+            "5 4 3 1 1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "7"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "-2 -8 0 3"
+          ],
+          "output": [
+            "3 0 -2 -8"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "2 2 2"
+          ],
+          "output": [
+            "2 2 2"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "10 9 8 7 6 5"
+          ],
+          "output": [
+            "10 9 8 7 6 5"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "1 2 3 4 5"
+          ],
+          "output": [
+            "5 4 3 2 1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-median",
+      "title": "Median",
+      "difficulty": "easy",
+      "statement": "The first line contains an odd integer n. The second line contains n space-separated integers. Print their median, the middle value once the integers are sorted.",
+      "constraints": "1 <= n <= 299 and n is odd; each integer is between -10000 and 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "lines = sys.stdin.read().split(\"\\n\")",
+          "t = int(lines[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(lines[pos])",
+          "    values = sorted(map(int, lines[pos + 1].split()))",
+          "    pos += 2",
+          "    print(values[n // 2])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3",
+            "3 1 2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "9 1 8 2 7"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "4 4 1 4 2"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "7",
+            "-3 -1 -2 0 5 6 -10"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "100 -100 0"
+          ],
+          "output": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-sort-kth-smallest",
+      "title": "K-th Smallest",
+      "difficulty": "easy",
+      "statement": "The first line contains two integers n and k. The second line contains n space-separated integers. Print the k-th smallest of them, counting repeated values separately, so k = 1 means the smallest value and k = n the largest.",
+      "constraints": "1 <= k <= n <= 1000; each integer is between -100000 and 100000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n, k = int(data[pos]), int(data[pos + 1])",
+          "    values = sorted(map(int, data[pos + 2:pos + 2 + n]))",
+          "    pos += 2 + n",
+          "    print(values[k - 1])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5 2",
+            "7 3 9 3 1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "1 1",
+            "-4"
+          ],
+          "output": [
+            "-4"
+          ]
+        },
+        {
+          "input": [
+            "6 6",
+            "1 2 3 4 5 6"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "5 3",
+            "50 40 30 20 10"
+          ],
+          "output": [
+            "30"
+          ]
+        },
+        {
+          "input": [
+            "4 4",
+            "2 2 2 2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "6 2",
+            "-5 0 -100000 100000 -5 3"
+          ],
+          "output": [
+            "-5"
+          ]
+        },
+        {
+          "input": [
+            "7 4",
+            "12 -3 8 -3 0 15 4"
+          ],
+          "output": [
+            "4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-sort-unique-values",
+      "title": "Unique Values in Order",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. Print every different value exactly once, in ascending order, separated by single spaces.",
+      "constraints": "1 <= n <= 1000; each integer is between -100000 and 100000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = sorted(set(map(int, data[pos + 1:pos + 1 + n])))",
+          "    pos += 1 + n",
+          "    print(\" \".join(map(str, values)))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "6",
+            "4 1 4 2 1 4"
+          ],
+          "output": [
+            "1 2 4"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "-3 -1 0 2 5"
+          ],
+          "output": [
+            "-3 -1 0 2 5"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "9 9 9 9 9"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "10 8 6 4 2 0"
+          ],
+          "output": [
+            "0 2 4 6 8 10"
+          ]
+        },
+        {
+          "input": [
+            "7",
+            "0 -7 0 3 -7 3 100000"
+          ],
+          "output": [
+            "-7 0 3 100000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-sort-min-gap",
+      "title": "Smallest Gap",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. Choose two of them at different positions so that the absolute difference between them is as small as possible, and print that difference. If some value appears twice, the answer is 0.",
+      "constraints": "2 <= n <= 1000; each integer is between -100000 and 100000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = sorted(map(int, data[pos + 1:pos + 1 + n]))",
+          "    pos += 1 + n",
+          "    print(min(values[i] - values[i - 1] for i in range(1, n)))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "10 3 7 20 1"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "-5 5"
+          ],
+          "output": [
+            "10"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "1 4 9 16"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "40 30 25 10 -2"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "8 -1 6 8 100 -50"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "-100000 100000 0"
+          ],
+          "output": [
+            "100000"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "100 1 50 25 99"
+          ],
+          "output": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-sort-rank-by-score",
+      "title": "Rank Players by Score",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n, the number of players, who are numbered 1 to n in input order. The second line contains their n scores. Print the player numbers ordered from the highest score to the lowest, separated by single spaces. Players with equal scores are listed with the smaller player number first.",
+      "constraints": "1 <= n <= 1000; each score is between 0 and 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    scores = list(map(int, data[pos + 1:pos + 1 + n]))",
+          "    pos += 1 + n",
+          "    order = sorted(range(1, n + 1), key=lambda p: (-scores[p - 1], p))",
+          "    print(\" \".join(map(str, order)))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "4",
+            "30 50 30 10"
+          ],
+          "output": [
+            "2 1 3 4"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "99"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "5 4 3 2 1"
+          ],
+          "output": [
+            "1 2 3 4 5"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "1 2 3 4 5"
+          ],
+          "output": [
+            "5 4 3 2 1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "7 7 7 7 7 7"
+          ],
+          "output": [
+            "1 2 3 4 5 6"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "0 1000000 20 0 1000000 20"
+          ],
+          "output": [
+            "2 5 3 6 1 4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-sort-by-frequency",
+      "title": "Sort by Frequency",
+      "difficulty": "hard",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. Rearrange them so that values occurring more often come first, and values occurring the same number of times come from smallest to largest; all copies of a value stay next to each other. Print the n rearranged integers separated by single spaces.",
+      "constraints": "1 <= n <= 1000; each integer is between -1000 and 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "from collections import Counter",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = list(map(int, data[pos + 1:pos + 1 + n]))",
+          "    pos += 1 + n",
+          "    count = Counter(values)",
+          "    values.sort(key=lambda v: (-count[v], v))",
+          "    print(\" \".join(map(str, values)))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "7",
+            "4 6 4 2 6 4 9"
+          ],
+          "output": [
+            "4 4 4 6 6 2 9"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "-8"
+          ],
+          "output": [
+            "-8"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "1 2 3 4 5"
+          ],
+          "output": [
+            "1 2 3 4 5"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "3 3 2 2 1 1"
+          ],
+          "output": [
+            "1 1 2 2 3 3"
+          ]
+        },
+        {
+          "input": [
+            "8",
+            "-1 5 -1 0 5 -1 0 7"
+          ],
+          "output": [
+            "-1 -1 -1 0 0 5 5 7"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "9 8 7 7 8 7"
+          ],
+          "output": [
+            "7 7 7 8 8 9"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "1000 -1000 1000 -1000 0"
+          ],
+          "output": [
+            "-1000 -1000 1000 1000 0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0056-merge-intervals",
+      "title": "Merge Intervals",
+      "difficulty": "medium",
+      "statement": "The first line contains n, the number of intervals. Each of the next n lines contains two integers start and end, with start <= end. Merge every group of intervals that overlap or touch, such as 1 4 and 4 5. Print the merged intervals one per line as start and end separated by a space, in ascending order of start.",
+      "constraints": "1 <= n <= 10000; each value is between 0 and 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    pairs = []",
+          "    for i in range(n):",
+          "        pairs.append([int(data[pos + 1 + 2 * i]), int(data[pos + 2 + 2 * i])])",
+          "    pos += 1 + 2 * n",
+          "    pairs.sort()",
+          "    merged = [pairs[0]]",
+          "    for s, e in pairs[1:]:",
+          "        if s <= merged[-1][1]:",
+          "            merged[-1][1] = max(merged[-1][1], e)",
+          "        else:",
+          "            merged.append([s, e])",
+          "    for s, e in merged:",
+          "        print(s, e)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "4",
+            "1 3",
+            "2 6",
+            "8 10",
+            "15 18"
+          ],
+          "output": [
+            "1 6",
+            "8 10",
+            "15 18"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "1 4",
+            "4 5"
+          ],
+          "output": [
+            "1 5"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5 5"
+          ],
+          "output": [
+            "5 5"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "2 2",
+            "2 2",
+            "2 2"
+          ],
+          "output": [
+            "2 2"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "8 10",
+            "1 3",
+            "2 6"
+          ],
+          "output": [
+            "1 6",
+            "8 10"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "1 10",
+            "2 3"
+          ],
+          "output": [
+            "1 10"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "0 0",
+            "1 1",
+            "3 4",
+            "2 2"
+          ],
+          "output": [
+            "0 0",
+            "1 1",
+            "2 2",
+            "3 4"
+          ]
+        }
+      ]
+    }
+  ]
+}

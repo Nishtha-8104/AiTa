@@ -1,0 +1,222 @@
+{
+  "schema": "theory/v1",
+  "topic": "arrays",
+  "items": [
+    {
+      "id": "theory-c-arrays-1",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "Why do C array indexes start at 0 rather than 1?",
+      "model_answer": "The array name stands for the address of the first element, and `a[i]` means \"the element i positions after the start\", which is the same as `*(a + i)`. The first element is zero positions from the start, so it is `a[0]`, and in an array of size n the last element is `a[n - 1]`.",
+      "key_points": [
+        "the array name refers to the address of the first element",
+        "a[i] is the element at offset i from the start, equivalent to *(a + i)",
+        "the first element has offset 0, so the last of n elements is at n - 1"
+      ]
+    },
+    {
+      "id": "theory-c-arrays-2",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "What values does `int a[5];` hold when it is declared inside a function, and how do you make sure it starts at zero?",
+      "model_answer": "A local array is not initialised automatically, so its elements hold whatever values were left in that memory, effectively garbage. Reading them before assigning gives unpredictable results. Writing `int a[5] = {0};` sets every element to zero. Global and static arrays, by contrast, are zero-initialised automatically.",
+      "key_points": [
+        "local arrays are not initialised automatically",
+        "the elements contain leftover garbage values",
+        "= {0} sets all elements to zero (globals and statics are zeroed automatically)"
+      ]
+    },
+    {
+      "id": "theory-c-arrays-3",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "What happens when a C program writes to `a[10]` in an array declared as `int a[10];`?",
+      "model_answer": "C does not check array indexes. Writing `a[10]` simply stores the value into the memory just after the array, which is undefined behaviour. It may silently overwrite another variable, cause wrong answers far away from the bug, or crash with a segmentation fault. Keeping every index between 0 and size - 1 is the programmer's responsibility.",
+      "key_points": [
+        "C performs no bounds checking on array indexes",
+        "accessing out of range is undefined behaviour",
+        "it can overwrite other variables, give wrong results, or crash"
+      ]
+    },
+    {
+      "id": "theory-c-arrays-4",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "A function `void clear(int a[], int n)` sets every element to 0. Why are the caller's elements changed, when C normally passes arguments by value?",
+      "model_answer": "When an array is passed, what gets copied is not the array but a pointer to its first element. The function's parameter therefore points to the caller's own elements, and assigning `a[i] = 0` writes into the caller's array. The size is not passed along with the pointer, which is why `n` has to be a separate parameter.",
+      "key_points": [
+        "passing an array passes a pointer to its first element, not a copy",
+        "the function writes directly into the caller's array",
+        "the size is not included, so it must be passed separately"
+      ]
+    },
+    {
+      "id": "theory-c-arrays-5",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "Why can `int a[1000000];` inside `main` crash, while the same array declared outside all functions works?",
+      "model_answer": "Local variables are stored on the call stack, which is small, often between 1 and 8 MB. A million ints take about 4 MB, which can exceed the stack and crash with a stack overflow or segmentation fault before any code runs. A global (or static) array is stored in the program's static data area instead, which has no such small limit and is zero-initialised. Dynamic allocation with malloc is the other option.",
+      "key_points": [
+        "local arrays live on the stack, which has a small limited size",
+        "a large local array can overflow the stack and crash",
+        "global or static arrays are stored in static memory (zero-initialised), or use malloc"
+      ]
+    },
+    {
+      "id": "theory-c-arrays-6",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "How is a 2D array `int g[R][C]` laid out in memory, and why is looping over columns in the inner loop faster than looping over rows?",
+      "model_answer": "C stores 2D arrays in row-major order: all of row 0, then all of row 1, and so on, in one contiguous block. With the column index in the inner loop, consecutive accesses touch neighbouring memory, which the CPU cache fetches together. With the row index in the inner loop, each access jumps C elements ahead, so the cache is used poorly and the loop runs slower. The layout is also why a function taking a 2D array must know the number of columns.",
+      "key_points": [
+        "2D arrays are stored row by row in contiguous memory (row-major)",
+        "an inner loop over columns accesses consecutive memory and uses the cache well",
+        "an inner loop over rows jumps by a whole row each time, which is slower"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "Give the main advantages of `std::vector` over a plain C-style array.",
+      "model_answer": "A vector knows its own length through `size()`, so it does not need a separate size variable. It can grow at run time with `push_back`, and it manages its memory automatically, freeing it when it goes out of scope. A plain array has a fixed size and decays to a pointer when passed to a function, losing its length.",
+      "key_points": [
+        "a vector knows its size with size()",
+        "a vector can grow dynamically, for example with push_back",
+        "a vector manages its memory automatically, while a plain array has a fixed size and decays to a pointer"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "What is the difference between `v[i]` and `v.at(i)` when `i` is out of range?",
+      "model_answer": "`v[i]` does no bounds checking, so an out-of-range index is undefined behaviour: it may return garbage, corrupt memory, or crash. `v.at(i)` checks the index and throws an `std::out_of_range` exception instead. `at` is slightly slower, so it is mostly useful while debugging.",
+      "key_points": [
+        "v[i] does no bounds checking, so out-of-range access is undefined behaviour",
+        "v.at(i) checks the index and throws out_of_range",
+        "at() has a small runtime cost"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "Why is `vector<int> a; a[0] = 5;` a bug, and what are two correct ways to put 5 into a vector?",
+      "model_answer": "A default-constructed vector is empty: its size is 0 and it has no elements. `operator[]` never creates elements, so `a[0]` refers to memory outside the vector, and writing to it is undefined behaviour. Either append with `a.push_back(5)`, or create the vector with a size first, as in `vector<int> a(1); a[0] = 5;`.",
+      "key_points": [
+        "an empty vector has size 0 and no elements",
+        "operator[] does not create elements, so the write is out of bounds",
+        "use push_back, or construct the vector with a size first"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "Why does `for (int i = 0; i <= v.size() - 1; i++)` misbehave when `v` is empty?",
+      "model_answer": "`v.size()` returns an unsigned `size_t`. For an empty vector, `v.size() - 1` does not give -1 but wraps around to the largest possible size_t value. The condition is then true for a huge range of `i`, so the loop reads far outside the vector. Write `i < v.size()`, or convert the size to int first.",
+      "key_points": [
+        "size() returns an unsigned size_t",
+        "0 - 1 wraps to a huge value instead of -1",
+        "the loop runs past the end; use i < v.size() instead"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-5",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "How can `push_back` take constant time on average even though a vector stores its elements in one contiguous block, and what side effect does this have on pointers to its elements?",
+      "model_answer": "A vector keeps extra capacity beyond its size. When `push_back` finds the capacity full, it allocates a larger block, usually about twice the size, moves the elements there and frees the old block. Because the capacity grows geometrically, these expensive moves are rare and the average cost per push_back is constant (amortised O(1)). The side effect is that a reallocation invalidates all pointers, references and iterators to the old elements; `reserve` can preallocate to avoid it.",
+      "key_points": [
+        "the vector has spare capacity, and when it is full it allocates a bigger block (often double) and moves the elements",
+        "geometric growth makes reallocations rare, so push_back is amortised constant time",
+        "reallocation invalidates pointers, references and iterators to elements"
+      ]
+    },
+    {
+      "id": "theory-cpp-arrays-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "`int n; cin >> n; int a[n];` compiles with g++. Why is it still not standard C++, and what should be used instead?",
+      "model_answer": "Standard C++ requires the size of a plain array to be a compile-time constant; an array whose size comes from run-time input is a variable-length array, a C feature that g++ accepts only as an extension. Such an array is also placed on the stack, so a large n can overflow the stack and crash. `vector<int> a(n);` is standard, stores its elements on the heap, and knows its size.",
+      "key_points": [
+        "standard C++ requires array sizes to be compile-time constants",
+        "variable-length arrays are a compiler extension",
+        "they live on the stack and can overflow it for large n; use vector instead"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-1",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "What do negative indexes like `nums[-1]` mean in Python, and what happens when an index is out of range?",
+      "model_answer": "Negative indexes count from the end of the list: `nums[-1]` is the last element and `nums[-k]` is the same as `nums[len(nums) - k]`. If an index is beyond the list in either direction, Python raises an IndexError instead of reading random memory, because lists check their bounds.",
+      "key_points": [
+        "negative indexes count from the end, with -1 the last element",
+        "nums[-k] is equivalent to nums[len(nums) - k]",
+        "an out-of-range index raises IndexError because Python checks bounds"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-2",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "After `b = a` where `a` is a list, why does `b.append(9)` also change `a`, and how do you make a real copy?",
+      "model_answer": "Assignment does not copy a list; it makes `b` a second name for the same list object. Any change made through either name is seen through both. A separate copy is made with `a[:]`, `list(a)` or `a.copy()`.",
+      "key_points": [
+        "assignment binds a second name to the same list object",
+        "changes through either name are visible through both",
+        "copy with a[:], list(a) or a.copy()"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-3",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "Why does `grid = [[0] * 3] * 3` followed by `grid[0][0] = 1` change the first element of every row?",
+      "model_answer": "`[0] * 3` builds one inner list, and `* 3` on the outer list repeats a reference to that same inner list three times. All three rows are therefore the same object, so changing one row changes them all. Build the grid with a comprehension, `[[0] * 3 for _ in range(3)]`, which creates a new inner list for each row.",
+      "key_points": [
+        "* on the outer list repeats references to the same inner list",
+        "all rows are the same object, so a change shows in every row",
+        "use a list comprehension to create a separate list for each row"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-4",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "What does a slice such as `nums[2:5]` return, and what does that mean for changes and for performance?",
+      "model_answer": "A slice returns a new list containing copies of the references to the selected elements, from index 2 up to but not including 5. Changing the new list (for example assigning to its elements) does not change the original. Creating it takes time proportional to its length, so slicing repeatedly inside a loop can make a program slow.",
+      "key_points": [
+        "a slice creates a new list from start up to but not including the end",
+        "modifying the slice does not change the original list",
+        "slicing costs time proportional to the slice length"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-5",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "Why is `nums.append(x)` fast but `nums.insert(0, x)` and `nums.pop(0)` slow on a long list?",
+      "model_answer": "A Python list is a dynamic array: its elements are stored in one contiguous block. Adding or removing at the end does not move any other element, and spare capacity makes append amortised constant time. Inserting or removing at the front shifts every other element by one position, which takes time proportional to the length of the list. For frequent work at the front, `collections.deque` is fast at both ends.",
+      "key_points": [
+        "a list is a contiguous dynamic array",
+        "operations at the end move no other elements, so append and pop() are fast",
+        "operations at the front shift all elements, costing O(n); use a deque instead"
+      ]
+    },
+    {
+      "id": "theory-python-arrays-6",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "`copy = grid[:]` is used to copy a list of lists, but changing `copy[0][0]` still changes `grid`. Why, and how is a full copy made?",
+      "model_answer": "`grid[:]` is a shallow copy: it creates a new outer list, but its elements are the same inner list objects as in `grid`. Changing an element of an inner list therefore affects both. A full copy needs new inner lists too, for example `[row[:] for row in grid]` or `copy.deepcopy(grid)`.",
+      "key_points": [
+        "slicing makes a shallow copy of only the outer list",
+        "the inner lists are still shared between both",
+        "copy each row (or use copy.deepcopy) for an independent copy"
+      ]
+    }
+  ]
+}

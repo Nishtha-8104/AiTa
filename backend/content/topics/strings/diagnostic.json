@@ -1,0 +1,446 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "strings",
+  "items": [
+    {
+      "id": "strings:1:python",
+      "concept_key": "strings:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "s = \"hello\"",
+          "print(s[1:4])",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ell"
+        ]
+      }
+    },
+    {
+      "id": "strings:3:python",
+      "concept_key": "strings:3",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "s = \"abcde\"",
+          "print(s[::2])",
+          "print(s[1::2])",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ace",
+          "bd"
+        ]
+      }
+    },
+    {
+      "id": "strings:4:python",
+      "concept_key": "strings:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why strings in Python are considered immutable and what happens when you try to modify a character using indexing, such as s[0] = 'x'."
+      },
+      "key": {
+        "rubric": [
+          "Strings in Python cannot be changed after creation; any operation that seems to modify a string actually creates a new string.",
+          "Attempting to assign to an index like s[0] = 'x' raises a TypeError because strings do not support item assignment.",
+          "Immutability ensures that string hash values remain constant, allowing strings to be used as dictionary keys or in sets."
+        ],
+        "model_answer": "Strings in Python are immutable, meaning their contents cannot be altered after creation; any operation that appears to modify a string, such as concatenation or slicing, actually produces a new string object. Trying to change a character via indexing, like s[0] = 'x', results in a TypeError because strings do not support item assignment. This immutability guarantees that a string's hash value remains unchanged, making it safe to use as a key in dictionaries or as an element in sets."
+      }
+    },
+    {
+      "id": "strings:5:python",
+      "concept_key": "strings:5",
+      "tier": 3,
+      "kind": "write_code",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Write a function `count_vowels(s)` that returns the number of vowels (a, e, i, o, u, case-insensitive) in the given string `s`.",
+        "starter_code": [
+          "def count_vowels(s):",
+          "    pass",
+          "",
+          "T = int(input())",
+          "for _ in range(T):",
+          "    s = input()",
+          "    print(count_vowels(s))",
+          ""
+        ]
+      },
+      "key": {
+        "reference": [
+          "def count_vowels(s):",
+          "    return sum(1 for c in s.lower() if c in 'aeiou')",
+          "",
+          "T = int(input())",
+          "for _ in range(T):",
+          "    s = input()",
+          "    print(count_vowels(s))",
+          ""
+        ],
+        "tests": [
+          {
+            "stdin": [
+              "hello"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "AEIOU"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          },
+          {
+            "stdin": [
+              "xyz"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "strings:1:c",
+      "concept_key": "strings:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    char s[] = \"hello\";",
+          "    printf(\"%.*s\\n\", 3, s+1);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ell"
+        ]
+      }
+    },
+    {
+      "id": "strings:3:c",
+      "concept_key": "strings:3",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    char s[] = \"abcde\";",
+          "    printf(\"%c%c%c\\n\", s[0], s[2], s[4]);",
+          "    printf(\"%c%c\\n\", s[1], s[3]);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ace",
+          "bd"
+        ]
+      }
+    },
+    {
+      "id": "strings:5:c",
+      "concept_key": "strings:5",
+      "tier": 3,
+      "kind": "write_code",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Write a function `count_vowels(s)` that returns the number of vowels (a, e, i, o, u, case-insensitive) in the given string `s`.",
+        "starter_code": [
+          "#include <stdio.h>",
+          "#include <ctype.h>",
+          "#include <string.h>",
+          "",
+          "int count_vowels(char s[]) {",
+          "    // TODO: write this function",
+          "    return 0;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        char s[1000];",
+          "        scanf(\"%s\", s);",
+          "        printf(\"%d\\n\", count_vowels(s));",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "reference": [
+          "#include <stdio.h>",
+          "#include <ctype.h>",
+          "#include <string.h>",
+          "",
+          "int count_vowels(char s[]) {",
+          "    int count = 0;",
+          "    for (int i = 0; s[i] != '\\0'; i++) {",
+          "        char c = tolower(s[i]);",
+          "        if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {",
+          "            count++;",
+          "        }",
+          "    }",
+          "    return count;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        char s[1000];",
+          "        scanf(\"%s\", s);",
+          "        printf(\"%d\\n\", count_vowels(s));",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "tests": [
+          {
+            "stdin": [
+              "hello"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "AEIOU"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          },
+          {
+            "stdin": [
+              "xyz"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "strings:4:c",
+      "concept_key": "strings:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why strings in C are considered immutable when using string literals and what happens when you try to modify a character using indexing, such as s[0] = 'x'."
+      },
+      "key": {
+        "rubric": [
+          "String literals in C are stored in read-only memory; attempting to modify them results in undefined behavior.",
+          "If a string is stored in a modifiable array (e.g., char s[] = \"hello\"), then s[0] = 'x' is allowed and changes the first character.",
+          "Immutability of string literals ensures safety when used in contexts like format strings, but modifiable arrays allow in-place changes."
+        ],
+        "model_answer": "In C, string literals (e.g., \"hello\") are stored in read-only memory, so attempting to modify them via indexing like s[0] = 'x' leads to undefined behavior. However, if the string is stored in a modifiable character array (e.g., char s[] = \"hello\"), then s[0] = 'x' is valid and changes the first character. This distinction means that only string literals are effectively immutable, while arrays allow modification."
+      }
+    },
+    {
+      "id": "strings:1:cpp",
+      "concept_key": "strings:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <string>",
+          "int main() {",
+          "    std::string s = \"hello\";",
+          "    std::cout << s.substr(1, 3) << '\\n';",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ell"
+        ]
+      }
+    },
+    {
+      "id": "strings:3:cpp",
+      "concept_key": "strings:3",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <string>",
+          "int main() {",
+          "    std::string s = \"abcde\";",
+          "    std::cout << s[0] << s[2] << s[4] << '\\n';",
+          "    std::cout << s[1] << s[3] << '\\n';",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "ace",
+          "bd"
+        ]
+      }
+    },
+    {
+      "id": "strings:5:cpp",
+      "concept_key": "strings:5",
+      "tier": 3,
+      "kind": "write_code",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Write a function `count_vowels(s)` that returns the number of vowels (a, e, i, o, u, case-insensitive) in the given string `s`.",
+        "starter_code": [
+          "#include <iostream>",
+          "#include <string>",
+          "#include <cctype>",
+          "using namespace std;",
+          "",
+          "int count_vowels(string s) {",
+          "    // TODO: write this function",
+          "    return 0;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    cin >> T;",
+          "    while (T--) {",
+          "        string s;",
+          "        cin >> s;",
+          "        cout << count_vowels(s) << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "reference": [
+          "#include <iostream>",
+          "#include <string>",
+          "#include <cctype>",
+          "using namespace std;",
+          "",
+          "int count_vowels(string s) {",
+          "    int count = 0;",
+          "    for (char c : s) {",
+          "        char lower = tolower(c);",
+          "        if (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u') {",
+          "            count++;",
+          "        }",
+          "    }",
+          "    return count;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    cin >> T;",
+          "    while (T--) {",
+          "        string s;",
+          "        cin >> s;",
+          "        cout << count_vowels(s) << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "tests": [
+          {
+            "stdin": [
+              "hello"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "AEIOU"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          },
+          {
+            "stdin": [
+              "xyz"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "strings:4:cpp",
+      "concept_key": "strings:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why strings in C++ are considered immutable when using string literals and what happens when you try to modify a character using indexing, such as s[0] = 'x'."
+      },
+      "key": {
+        "rubric": [
+          "String literals in C++ are stored in read-only memory; attempting to modify them results in undefined behavior.",
+          "If a string is stored in a std::string object or a modifiable character array, then s[0] = 'x' is allowed and changes the first character.",
+          "Immutability of string literals ensures safety, but std::string provides mutable character access via operator[]."
+        ],
+        "model_answer": "In C++, string literals (e.g., \"hello\") are stored in read-only memory, so attempting to modify them via indexing like s[0] = 'x' leads to undefined behavior. However, if the string is stored in a std::string object or a modifiable character array (e.g., char s[] = \"hello\"), then s[0] = 'x' is valid and changes the first character. This means string literals are immutable, but std::string and character arrays allow in-place modification."
+      }
+    }
+  ]
+}

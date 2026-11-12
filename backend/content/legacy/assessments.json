@@ -1,0 +1,1650 @@
+{
+  "mcqs": [
+    {
+      "external_id": "mcq-basics_io-1",
+      "topic": "basics_io",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nprint(5 // 2)\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "2.5",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(5 // 2)",
+      "explanations": [
+        "The // operator performs floor division, so 5 divided by 2 is 2.5, floored to 2."
+      ]
+    },
+    {
+      "external_id": "mcq-basics_io-2",
+      "topic": "basics_io",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nfor i in range(3):\n    print(i, end=' ')\n```",
+      "options": [
+        {
+          "text": "0 1 2",
+          "misconception": null
+        },
+        {
+          "text": "0 1 2 3",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "1 2 3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0 1",
+          "misconception": "empty_input_unhandled"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "for i in range(3):\n    print(i, end=' ')",
+      "explanations": [
+        "range(3) generates 0, 1, 2, and each is printed with a space, resulting in \"0 1 2 \"."
+      ]
+    },
+    {
+      "external_id": "mcq-basics_io-3",
+      "topic": "basics_io",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nx = 5\nif x > 10:\n    print(\"Big\")\nelse:\n    print(\"Small\")\n```",
+      "options": [
+        {
+          "text": "Big",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "Small",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": "uninitialised_variable"
+        },
+        {
+          "text": "None",
+          "misconception": "missing_base_case"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(\"Small\")",
+      "explanations": [
+        "Since 5 is not greater than 10, the else branch executes and prints \"Small\"."
+      ]
+    },
+    {
+      "external_id": "mcq-basics_io-4",
+      "topic": "basics_io",
+      "difficulty": "hard",
+      "stem": "What does the following code print?\n```python\nlst = [1, 2, 3]\nfor i in lst:\n    lst.append(i * 2)\n    if len(lst) >= 6:\n        break\nprint(lst)\n```",
+      "options": [
+        {
+          "text": "[1, 2, 3, 2, 4, 6]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2, 3, 2, 4, 6, 8, 10, 12]",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "[1, 2, 3]",
+          "misconception": "missing_base_case"
+        },
+        {
+          "text": "[2, 4, 6]",
+          "misconception": "mutate_while_iterating"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = [1, 2, 3]\nfor i in lst:\n    lst.append(i * 2)\n    if len(lst) >= 6:\n        break\nprint(lst)",
+      "explanations": [
+        "The loop appends doubled values but breaks after 3 appends (when length reaches 6), yielding [1,2,3,2,4,6]."
+      ]
+    },
+    {
+      "external_id": "mcq-conditionals-1",
+      "topic": "conditionals",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nx = 5\nif x > 3:\n    print(\"yes\")\nelse:\n    print(\"no\")\n```",
+      "options": [
+        {
+          "text": "yes",
+          "misconception": null
+        },
+        {
+          "text": "no",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "nothing",
+          "misconception": "uninitialised_variable"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(\"yes\")",
+      "explanations": [
+        "The condition x > 3 is true when x is 5, so \"yes\" is printed."
+      ]
+    },
+    {
+      "external_id": "mcq-conditionals-2",
+      "topic": "conditionals",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nage = 17\nif age >= 18:\n    print(\"adult\")\nelse:\n    print(\"minor\")\n```",
+      "options": [
+        {
+          "text": "adult",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "minor",
+          "misconception": null
+        },
+        {
+          "text": "17",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "nothing",
+          "misconception": "uninitialised_variable"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(\"minor\")",
+      "explanations": [
+        "Since age is 17, which is less than 18, the else branch executes and prints \"minor\"."
+      ]
+    },
+    {
+      "external_id": "mcq-conditionals-3",
+      "topic": "conditionals",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nscore = 85\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelse:\n    grade = 'C'\nprint(grade)\n```",
+      "options": [
+        {
+          "text": "A",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "B",
+          "misconception": null
+        },
+        {
+          "text": "C",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "85",
+          "misconception": "return_vs_print"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(\"B\")",
+      "explanations": [
+        "Score 85 is not >= 90, but is >= 80, so grade is set to 'B' and printed."
+      ]
+    },
+    {
+      "external_id": "mcq-conditionals-4",
+      "topic": "conditionals",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ntemp = 22\nif temp > 25:\n    print(\"hot\")\nelif temp < 18:\n    print(\"cold\")\nelse:\n    print(\"moderate\")\n```",
+      "options": [
+        {
+          "text": "hot",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "cold",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "moderate",
+          "misconception": null
+        },
+        {
+          "text": "22",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 2,
+      "verify_code": "print(\"moderate\")",
+      "explanations": [
+        "Temp 22 is not >25 and not <18, so the else branch runs and prints \"moderate\"."
+      ]
+    },
+    {
+      "external_id": "mcq-loops-1",
+      "topic": "loops",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ntotal = 0\nfor _ in range(5):\n    total += 1\nprint(total)\n```",
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "6",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "total = 0\nfor _ in range(5):\n    total += 1\nprint(total)",
+      "explanations": [
+        "The loop runs 5 times, adding 1 each time, so total becomes 5."
+      ]
+    },
+    {
+      "external_id": "mcq-loops-2",
+      "topic": "loops",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nnums = [2, 4, 6]\nfor i in range(len(nums)):\n    if nums[i] % 2 == 0:\n        nums[i] = nums[i] // 2\nprint(nums)\n```",
+      "options": [
+        {
+          "text": "[1, 2, 3]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 4, 6]",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "[1, 2, 6]",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "[0, 2, 3]",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "nums = [2, 4, 6]\nfor i in range(len(nums)):\n    if nums[i] % 2 == 0:\n        nums[i] = nums[i] // 2\nprint(nums)",
+      "explanations": [
+        "Each even number is halved using integer division, so 2\u21921, 4\u21922, 6\u21923."
+      ]
+    },
+    {
+      "external_id": "mcq-loops-3",
+      "topic": "loops",
+      "difficulty": "hard",
+      "stem": "What does the following code print?\n```python\nx = 1\nwhile x < 10:\n    x *= 2\n    if x == 8:\n        break\n    print(x, end=' ')\n```",
+      "options": [
+        {
+          "text": "2 4",
+          "misconception": null
+        },
+        {
+          "text": "2 4 8",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "2 4 8 16",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4 8",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "x = 1\nwhile x < 10:\n    x *= 2\n    if x == 8:\n        break\n    print(x, end=' ')",
+      "explanations": [
+        "x starts at 1; first loop: x=2 (not 8), print 2; second: x=4 (not 8), print 4; third: x=8 \u2192 break, so no print. Output: 2 4."
+      ]
+    },
+    {
+      "external_id": "mcq-functions-1",
+      "topic": "functions",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef f():\n    return 5\nprint(f())\n```",
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "f",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(5)",
+      "explanations": [
+        "The function returns 5, which is printed by the print statement."
+      ]
+    },
+    {
+      "external_id": "mcq-functions-2",
+      "topic": "functions",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef greet(name):\n    print(\"Hello, \" + name)\ngreet(\"Alice\")\n```",
+      "options": [
+        {
+          "text": "Hello, Alice",
+          "misconception": null
+        },
+        {
+          "text": "Hello,",
+          "misconception": "empty_input_unhandled"
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "Alice",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(\"Hello, Alice\")",
+      "explanations": [
+        "The function prints the greeting directly; it does not return a value, so nothing else is printed."
+      ]
+    },
+    {
+      "external_id": "mcq-functions-3",
+      "topic": "functions",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef add_up_to(n):\n    total = 0\n    for i in range(n):\n        total += i\n    return total\nprint(add_up_to(4))\n```",
+      "options": [
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "4",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(6)",
+      "explanations": [
+        "range(4) produces 0,1,2,3; their sum is 6."
+      ]
+    },
+    {
+      "external_id": "mcq-functions-4",
+      "topic": "functions",
+      "difficulty": "hard",
+      "stem": "What does the following code print?\n```python\ndef mystery(x):\n    if x <= 1:\n        return 1\n    return x * mystery(x - 1)\nprint(mystery(4))\n```",
+      "options": [
+        {
+          "text": "24",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "6",
+          "misconception": "missing_base_case"
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(24)",
+      "explanations": [
+        "This computes 4! = 4 \u00d7 3 \u00d7 2 \u00d7 1 = 24; the base case returns 1 for x \u2264 1."
+      ]
+    },
+    {
+      "external_id": "mcq-arrays-1",
+      "topic": "arrays",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\narr = [5, 6, 7]\nprint(len(arr))\n```",
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": "empty_input_unhandled"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(3)",
+      "explanations": [
+        "The len() function returns the number of elements in the list, which is 3."
+      ]
+    },
+    {
+      "external_id": "mcq-arrays-2",
+      "topic": "arrays",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\narr = [1, 2, 3, 4]\ntotal = 0\nfor i in range(len(arr)):\n    total += arr[i]\nprint(total)\n```",
+      "options": [
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "14",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(10)",
+      "explanations": [
+        "The loop sums all elements (1+2+3+4) using indices 0 to 3, resulting in 10."
+      ]
+    },
+    {
+      "external_id": "mcq-arrays-3",
+      "topic": "arrays",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\narr = [0, 1, 2, 3]\nprint(arr[arr[2]])\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "1",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(2)",
+      "explanations": [
+        "arr[2] is 2, so arr[arr[2]] becomes arr[2], which is 2."
+      ]
+    },
+    {
+      "external_id": "mcq-arrays-4",
+      "topic": "arrays",
+      "difficulty": "hard",
+      "stem": "What does the following code print?\n```python\narr = [5, 4, 3, 2, 1]\nfor i in range(len(arr)):\n    if arr[i] % 2 == 0:\n        arr[i] = 0\nprint(arr)\n```",
+      "options": [
+        {
+          "text": "[5, 0, 3, 0, 1]",
+          "misconception": null
+        },
+        {
+          "text": "[5, 4, 3, 2, 1]",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "[0, 0, 0, 0, 0]",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "[5, 0, 3, 2, 1]",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print([5, 0, 3, 0, 1])",
+      "explanations": [
+        "Even elements (4 and 2) are replaced with 0; others remain unchanged."
+      ]
+    },
+    {
+      "external_id": "mcq-strings-1",
+      "topic": "strings",
+      "difficulty": "easy",
+      "stem": "```python\ns = \"hello\"\nprint(s[1])\n```",
+      "options": [
+        {
+          "text": "h",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "e",
+          "misconception": null
+        },
+        {
+          "text": "l",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "o",
+          "misconception": "index_out_of_range"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "s = \"hello\"; print(s[1])",
+      "explanations": [
+        "The character at index 1 in \"hello\" is 'e'."
+      ]
+    },
+    {
+      "external_id": "mcq-strings-2",
+      "topic": "strings",
+      "difficulty": "easy",
+      "stem": "```python\ns = \"\"\nprint(len(s))\n```",
+      "options": [
+        {
+          "text": "1",
+          "misconception": "empty_input_unhandled"
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "-1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "s = \"\"; print(len(s))",
+      "explanations": [
+        "The length of an empty string is 0."
+      ]
+    },
+    {
+      "external_id": "mcq-strings-3",
+      "topic": "strings",
+      "difficulty": "medium",
+      "stem": "```python\ns = \"abc\"\nprint(s * 2)\n```",
+      "options": [
+        {
+          "text": "abcabc",
+          "misconception": null
+        },
+        {
+          "text": "abc",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "ababab",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "abcabcabc",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "s = \"abc\"; print(s * 2)",
+      "explanations": [
+        "Multiplying a string by 2 repeats it twice."
+      ]
+    },
+    {
+      "external_id": "mcq-strings-4",
+      "topic": "strings",
+      "difficulty": "medium",
+      "stem": "```python\ns = \"racecar\"\nprint(s == s[::-1])\n```",
+      "options": [
+        {
+          "text": "True",
+          "misconception": null
+        },
+        {
+          "text": "False",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "racecar",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "None",
+          "misconception": "uninitialised_variable"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "s = \"racecar\"; print(s == s[::-1])",
+      "explanations": [
+        "The string equals its reverse, so the comparison is True."
+      ]
+    },
+    {
+      "external_id": "mcq-hashing_sets-1",
+      "topic": "hashing_sets",
+      "difficulty": "easy",
+      "stem": "```python\ns = {1, 2, 3}\nprint(len(s))\n```",
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "1",
+          "misconception": "wrong_comparison_operator"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(3)",
+      "explanations": [
+        "The set contains three distinct elements, so its length is 3."
+      ]
+    },
+    {
+      "external_id": "mcq-hashing_sets-2",
+      "topic": "hashing_sets",
+      "difficulty": "easy",
+      "stem": "```python\ns = set()\nprint(1 in s)\n```",
+      "options": [
+        {
+          "text": "False",
+          "misconception": null
+        },
+        {
+          "text": "True",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "1",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(False)",
+      "explanations": [
+        "An empty set contains no elements, so membership test returns False."
+      ]
+    },
+    {
+      "external_id": "mcq-hashing_sets-3",
+      "topic": "hashing_sets",
+      "difficulty": "medium",
+      "stem": "```python\ns = {1, 2, 2, 3}\nprint(s)\n```",
+      "options": [
+        {
+          "text": "{1, 2, 3}",
+          "misconception": null
+        },
+        {
+          "text": "{1, 2, 2, 3}",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "[1, 2, 3]",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "{1, 3}",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print({1, 2, 3})",
+      "explanations": [
+        "Sets automatically remove duplicate elements, so only unique values remain."
+      ]
+    },
+    {
+      "external_id": "mcq-hashing_sets-4",
+      "topic": "hashing_sets",
+      "difficulty": "medium",
+      "stem": "```python\ns = {1, 2, 3}\ns.add(2)\nprint(len(s))\n```",
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "1",
+          "misconception": "missing_base_case"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(3)",
+      "explanations": [
+        "Adding a duplicate element to a set does not change its size, so length remains 3."
+      ]
+    },
+    {
+      "external_id": "mcq-recursion-1",
+      "topic": "recursion",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef f(n):\n    if n == 0:\n        return 1\n    return n * f(n-1)\nprint(f(3))\n```",
+      "options": [
+        {
+          "text": "3",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "1",
+          "misconception": "missing_base_case"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(6)",
+      "explanations": [
+        "The function computes factorial recursively; f(3) = 3 \u00d7 2 \u00d7 1 \u00d7 1 = 6."
+      ]
+    },
+    {
+      "external_id": "mcq-recursion-2",
+      "topic": "recursion",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef g(s):\n    if s == \"\":\n        return \"\"\n    return s[-1] + g(s[:-1])\nprint(g(\"abc\"))\n```",
+      "options": [
+        {
+          "text": "abc",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "cba",
+          "misconception": null
+        },
+        {
+          "text": "ab",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "cbaa",
+          "misconception": "uninitialised_variable"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(\"cba\")",
+      "explanations": [
+        "The function recursively builds the reverse of the string by taking the last character and reversing the rest."
+      ]
+    },
+    {
+      "external_id": "mcq-recursion-3",
+      "topic": "recursion",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef h(n):\n    if n <= 0:\n        return 0\n    return h(n-1) + n\nprint(h(4))\n```",
+      "options": [
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "20",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "4",
+          "misconception": "missing_base_case"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(10)",
+      "explanations": [
+        "The function computes the sum of integers from 1 to n recursively; h(4) = 4+3+2+1+0 = 10."
+      ]
+    },
+    {
+      "external_id": "mcq-recursion-4",
+      "topic": "recursion",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef i(n):\n    if n == 1:\n        return 1\n    return i(n//2) + 1\nprint(i(8))\n```",
+      "options": [
+        {
+          "text": "3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(4)",
+      "explanations": [
+        "The function counts how many times you can divide n by 2 until reaching 1, plus one; for 8: 8\u21924\u21922\u21921 gives 3 steps, plus base case returns 4."
+      ]
+    },
+    {
+      "external_id": "mcq-sorting-1",
+      "topic": "sorting",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nlst = [3, 1, 2]\nlst.sort()\nprint(lst[0])\n```",
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "2",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": "index_out_of_range"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = [3, 1, 2]\nlst.sort()\nprint(lst[0])",
+      "explanations": [
+        "The list is sorted in place to [1, 2, 3], so the first element is 1."
+      ]
+    },
+    {
+      "external_id": "mcq-sorting-2",
+      "topic": "sorting",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nlst = []\nlst.sort()\nprint(len(lst))\n```",
+      "options": [
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "-1",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = []\nlst.sort()\nprint(len(lst))",
+      "explanations": [
+        "Sorting an empty list leaves it empty, so its length is 0."
+      ]
+    },
+    {
+      "external_id": "mcq-sorting-3",
+      "topic": "sorting",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nlst = [5, 2, 8, 1]\nfor i in range(len(lst)):\n    for j in range(i + 1, len(lst)):\n        if lst[i] > lst[j]:\n            lst[i], lst[j] = lst[j], lst[i]\nprint(lst)\n```",
+      "options": [
+        {
+          "text": "[1, 2, 5, 8]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 1, 5, 8]",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "[5, 2, 8, 1]",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "[1, 5, 2, 8]",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = [5, 2, 8, 1]\nfor i in range(len(lst)):\n    for j in range(i + 1, len(lst)):\n        if lst[i] > lst[j]:\n            lst[i], lst[j] = lst[j], lst[i]\nprint(lst)",
+      "explanations": [
+        "This implements selection sort correctly, resulting in a sorted list."
+      ]
+    },
+    {
+      "external_id": "mcq-sorting-4",
+      "topic": "sorting",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nlst = [4, 2, 3, 1]\nfor i in range(len(lst) - 1):\n    min_idx = i\n    for j in range(i + 1, len(lst)):\n        if lst[j] < lst[min_idx]:\n            min_idx = j\n    lst[i], lst[min_idx] = lst[min_idx], lst[i]\nprint(lst)\n```",
+      "options": [
+        {
+          "text": "[1, 2, 3, 4]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 1, 3, 4]",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "[4, 2, 3, 1]",
+          "misconception": "missing_base_case"
+        },
+        {
+          "text": "[1, 3, 2, 4]",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = [4, 2, 3, 1]\nfor i in range(len(lst) - 1):\n    min_idx = i\n    for j in range(i + 1, len(lst)):\n        if lst[j] < lst[min_idx]:\n            min_idx = j\n    lst[i], lst[min_idx] = lst[min_idx], lst[i]\nprint(lst)",
+      "explanations": [
+        "This is a correct implementation of selection sort, producing a sorted list."
+      ]
+    },
+    {
+      "external_id": "mcq-searching-1",
+      "topic": "searching",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nlst = [5, 3, 8, 1]\nprint(3 in lst)\n```",
+      "options": [
+        {
+          "text": "True",
+          "misconception": null
+        },
+        {
+          "text": "False",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "1",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = [5, 3, 8, 1]\nprint(3 in lst)",
+      "explanations": [
+        "The `in` operator returns True if the value is found in the list."
+      ]
+    },
+    {
+      "external_id": "mcq-searching-2",
+      "topic": "searching",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ns = \"hello\"\nprint(s.find('x'))\n```",
+      "options": [
+        {
+          "text": "-1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "s = \"hello\"\nprint(s.find('x'))",
+      "explanations": [
+        "The `str.find()` method returns -1 when the substring is not found."
+      ]
+    },
+    {
+      "external_id": "mcq-searching-3",
+      "topic": "searching",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef search(lst, target):\n    for i in range(len(lst)):\n        if lst[i] == target:\n            return i\n    return -1\n\nprint(search([10, 20, 30, 40], 30))\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "30",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "-1",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "1",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "def search(lst, target):\n    for i in range(len(lst)):\n        if lst[i] == target:\n            return i\n    return -1\nprint(search([10, 20, 30, 40], 30))",
+      "explanations": [
+        "The function returns the index of the target value, which is 2 for value 30 in the list."
+      ]
+    },
+    {
+      "external_id": "mcq-searching-4",
+      "topic": "searching",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nlst = []\nprint(lst.index(5) if 5 in lst else -1)\n```",
+      "options": [
+        {
+          "text": "-1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "5",
+          "misconception": "index_out_of_range"
+        },
+        {
+          "text": "[]",
+          "misconception": "mutate_while_iterating"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "lst = []\nprint(lst.index(5) if 5 in lst else -1)",
+      "explanations": [
+        "Since the list is empty, 5 is not in it, so the else branch returns -1."
+      ]
+    },
+    {
+      "external_id": "mcq-stacks_queues-1",
+      "topic": "stacks_queues",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nstack = []\nstack.append(10)\nstack.append(20)\nprint(stack.pop())\n```",
+      "options": [
+        {
+          "text": "10",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "20",
+          "misconception": null
+        },
+        {
+          "text": "[10]",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "30",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "stack = []\nstack.append(10)\nstack.append(20)\nprint(stack.pop())",
+      "explanations": [
+        "The last element appended (20) is the first popped from a stack (LIFO)."
+      ]
+    },
+    {
+      "external_id": "mcq-stacks_queues-2",
+      "topic": "stacks_queues",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nfrom collections import deque\nq = deque()\nq.append(5)\nq.append(15)\nprint(q.popleft())\n```",
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "15",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "[]",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "(5, 15)",
+          "misconception": "mutate_while_iterating"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "from collections import deque\nq = deque()\nq.append(5)\nq.append(15)\nprint(q.popleft())",
+      "explanations": [
+        "A queue removes elements from the front (FIFO), so the first appended (5) is popped first."
+      ]
+    },
+    {
+      "external_id": "mcq-stacks_queues-3",
+      "topic": "stacks_queues",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nstack = [1, 2, 3]\nwhile stack:\n    print(stack.pop(), end=' ')\n```",
+      "options": [
+        {
+          "text": "1 2 3",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "3 2 1",
+          "misconception": null
+        },
+        {
+          "text": "1 2",
+          "misconception": "empty_input_unhandled"
+        },
+        {
+          "text": "3 2 1 0",
+          "misconception": "index_out_of_range"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "stack = [1, 2, 3]\nwhile stack:\n    print(stack.pop(), end=' ')",
+      "explanations": [
+        "The stack is popped until empty, yielding elements in reverse order of insertion (LIFO)."
+      ]
+    },
+    {
+      "external_id": "mcq-stacks_queues-4",
+      "topic": "stacks_queues",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\nfrom collections import deque\nq = deque([10, 20])\nq.append(30)\nq.popleft()\nprint(len(q))\n```",
+      "options": [
+        {
+          "text": "1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0",
+          "misconception": "missing_base_case"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "from collections import deque\nq = deque([10, 20])\nq.append(30)\nq.popleft()\nprint(len(q))",
+      "explanations": [
+        "After appending 30 and removing the leftmost (10), two elements (20, 30) remain."
+      ]
+    },
+    {
+      "external_id": "mcq-dynamic_programming-1",
+      "topic": "dynamic_programming",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef fib(n):\n    if n <= 1:\n        return n\n    return fib(n-1) + fib(n-2)\nprint(fib(4))\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": "missing_base_case"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(3)",
+      "explanations": [
+        "fib(4) computes the 4th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1, fib(2)=1, fib(3)=2, fib(4)=3)."
+      ]
+    },
+    {
+      "external_id": "mcq-dynamic_programming-2",
+      "topic": "dynamic_programming",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndp = [0] * 5\nfor i in range(1, 5):\n    dp[i] = dp[i-1] + 1\nprint(dp[4])\n```",
+      "options": [
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "1",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 2,
+      "verify_code": "print(4)",
+      "explanations": [
+        "dp[0]=0, then dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=4."
+      ]
+    },
+    {
+      "external_id": "mcq-dynamic_programming-3",
+      "topic": "dynamic_programming",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef climbStairs(n):\n    if n == 0:\n        return 1\n    if n == 1:\n        return 1\n    a, b = 1, 1\n    for i in range(2, n+1):\n        a, b = b, a + b\n    return b\nprint(climbStairs(3))\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_comparison_operator"
+        }
+      ],
+      "answer_index": 1,
+      "verify_code": "print(3)",
+      "explanations": [
+        "For n=3, ways: (1,1,1), (1,2), (2,1) \u2192 3 ways. The loop computes Fibonacci-like sequence correctly."
+      ]
+    },
+    {
+      "external_id": "mcq-dynamic_programming-4",
+      "topic": "dynamic_programming",
+      "difficulty": "medium",
+      "stem": "What does the following code print?\n```python\ndef uniquePaths(m, n):\n    dp = [[1] * n for _ in range(m)]\n    for i in range(1, m):\n        for j in range(1, n):\n            dp[i][j] = dp[i-1][j] + dp[i][j-1]\n    return dp[m-1][n-1]\nprint(uniquePaths(3, 2))\n```",
+      "options": [
+        {
+          "text": "1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 2,
+      "verify_code": "print(3)",
+      "explanations": [
+        "Grid 3x2 has 3 unique paths (right-down-right, down-right-right, right-right-down? Wait \u2014 3 rows, 2 columns: only 2 rights and 1 down in some order \u2192 C(3,1)=3)."
+      ]
+    }
+  ],
+  "diagnostic": [
+    {
+      "external_id": "diag-basics_io",
+      "topic": "basics_io",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nx = 5\nprint(x)\n```",
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "x",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "10",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(5)",
+      "explanations": [
+        "The variable x is assigned the value 5, and print(x) outputs that value."
+      ],
+      "is_diagnostic": true
+    },
+    {
+      "external_id": "diag-conditionals",
+      "topic": "conditionals",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nx = 5\nif x > 10:\n    print(\"big\")\nelse:\n    print(\"small\")\n```",
+      "options": [
+        {
+          "text": "small",
+          "misconception": null
+        },
+        {
+          "text": "big",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "nothing",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "5",
+          "misconception": "return_vs_print"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(\"small\")",
+      "explanations": [
+        "The condition x > 10 is false, so the else block runs and prints \"small\"."
+      ],
+      "is_diagnostic": true
+    },
+    {
+      "external_id": "diag-loops",
+      "topic": "loops",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\nfor i in range(3):\n    print(i, end='')\n```",
+      "options": [
+        {
+          "text": "012",
+          "misconception": null
+        },
+        {
+          "text": "123",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0 1 2",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "0123",
+          "misconception": "wrong_loop_bound"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "for i in range(3):\n    print(i, end='')",
+      "explanations": [
+        "range(3) produces 0, 1, 2, and end='' prints them without spaces or newlines."
+      ],
+      "is_diagnostic": true
+    },
+    {
+      "external_id": "diag-arrays",
+      "topic": "arrays",
+      "difficulty": "easy",
+      "stem": "```python\nnums = [5, 5, 5]\nprint(len(nums))\n```",
+      "options": [
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": "empty_input_unhandled"
+        }
+      ],
+      "answer_index": 2,
+      "verify_code": "nums = [5, 5, 5]; print(len(nums))",
+      "explanations": [
+        "The length of a list with three elements is 3, regardless of their values."
+      ],
+      "is_diagnostic": true
+    },
+    {
+      "external_id": "diag-strings",
+      "topic": "strings",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ns = \"hello\"\nprint(s[0])\n```",
+      "options": [
+        {
+          "text": "h",
+          "misconception": null
+        },
+        {
+          "text": "e",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "l",
+          "misconception": "wrong_comparison_operator"
+        },
+        {
+          "text": "o",
+          "misconception": "index_out_of_range"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "s = \"hello\"\nprint(s[0])",
+      "explanations": [
+        "The first character of the string \"hello\" is at index 0, which is 'h'."
+      ],
+      "is_diagnostic": true
+    },
+    {
+      "external_id": "diag-functions",
+      "topic": "functions",
+      "difficulty": "easy",
+      "stem": "What does the following code print?\n```python\ndef greet(name):\n    return \"Hello, \" + name\nprint(greet(\"Alice\"))\n```",
+      "options": [
+        {
+          "text": "Hello, Alice",
+          "misconception": null
+        },
+        {
+          "text": "Hello,",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "None",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "Hello, Alice!",
+          "misconception": "wrong_initial_value"
+        }
+      ],
+      "answer_index": 0,
+      "verify_code": "print(\"Hello, Alice\")",
+      "explanations": [
+        "The function returns the concatenated string, which is then printed by the outer print statement."
+      ],
+      "is_diagnostic": true
+    }
+  ],
+  "debug": [
+    {
+      "external_id": "debug-python-dsa-fizzbuzz",
+      "problem_external_id": "dsa-fizzbuzz",
+      "topic": "loops",
+      "difficulty": "easy",
+      "language": "python",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nA single line contains an integer n. Print one value per line for every integer from 1 to n inclusive. Print Fizz when the integer divides by 3, Buzz when it divides by 5, FizzBuzz when it divides by both, and otherwise the integer itself. If n is less than 1, print nothing.",
+      "fixed_code": "T = int(input().strip())\nfor _ in range(T):\n    n = int(input().strip())\n    if n < 1:\n        continue\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            print(\"FizzBuzz\")\n        elif i % 3 == 0:\n            print(\"Fizz\")\n        elif i % 5 == 0:\n            print(\"Buzz\")\n        else:\n            print(i)\n",
+      "buggy_code": "T = int(input().strip())\nfor _ in range(T):\n    n = int(input().strip())\n    if n < 1:\n        continue\n    for i in range(1, n):\n        if i % 15 == 0:\n            print(\"FizzBuzz\")\n        elif i % 3 == 0:\n            print(\"Fizz\")\n        elif i % 5 == 0:\n            print(\"Buzz\")\n        else:\n            print(i)\n",
+      "bug_type": "off_by_one"
+    },
+    {
+      "external_id": "debug-python-dsa-binary-search",
+      "problem_external_id": "dsa-binary-search",
+      "topic": "searching",
+      "difficulty": "easy",
+      "language": "python",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nThe first line contains an integer n, the number of elements. The second line contains n space-separated integers sorted in ascending order. The third line contains an integer target. Print the 0-based index of target within the sorted list. If target is not present, print -1.",
+      "fixed_code": "T = int(input().strip())\nfor _ in range(T):\n    n = int(input().strip())\n    if n == 0:\n        input()  # consume the empty line or line with no numbers\n        target = int(input().strip())\n        print(-1)\n        continue\n    arr = list(map(int, input().split()))\n    target = int(input().strip())\n    found = -1\n    for i in range(n):\n        if arr[i] == target:\n            found = i\n            break\n    print(found)\n",
+      "buggy_code": "T = int(input().strip())\nfor _ in range(T):\n    n = int(input().strip())\n    if n == 0:\n        input()  # consume the empty line or line with no numbers\n        target = int(input().strip())\n        print(-1)\n        continue\n    arr = list(map(int, input().split()))\n    target = int(input().strip())\n    found = -1\n    for i in range(n):\n        if arr[i] <= target:\n            found = i\n            break\n    print(found)\n",
+      "bug_type": "wrong_comparison_operator"
+    },
+    {
+      "external_id": "debug-python-mbpp-284",
+      "problem_external_id": "mbpp-284",
+      "topic": "basics_io",
+      "difficulty": "easy",
+      "language": "python",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nA single line contains an integer n. Print the word Prime if n is a prime number, and Composite otherwise. Treat any n less than 2 as Composite.",
+      "fixed_code": "import math\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(math.sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\nt = int(input().strip())\nfor _ in range(t):\n    n = int(input().strip())\n    if is_prime(n):\n        print(\"Prime\")\n    else:\n        print(\"Composite\")\n",
+      "buggy_code": "import math\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(math.sqrt(n))):\n        if n % i == 0:\n            return False\n    return True\n\nt = int(input().strip())\nfor _ in range(t):\n    n = int(input().strip())\n    if is_prime(n):\n        print(\"Prime\")\n    else:\n        print(\"Composite\")\n",
+      "bug_type": "wrong_loop_bound"
+    },
+    {
+      "external_id": "debug-python-dsa-count-characters",
+      "problem_external_id": "dsa-count-characters",
+      "topic": "hashing_sets",
+      "difficulty": "easy",
+      "language": "python",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nA single line contains a string of lowercase letters. Print one line for each distinct letter in alphabetical order, giving the letter, a single space, and how many times it appears.",
+      "fixed_code": "t = int(input().strip())\nfor _ in range(t):\n    s = input().strip()\n    freq = {}\n    for char in s:\n        freq[char] = freq.get(char, 0) + 1\n    for char in sorted(freq.keys()):\n        print(f\"{char} {freq[char]}\")\n",
+      "buggy_code": "t = int(input().strip())\nfreq = {}\nfor _ in range(t):\n    s = input().strip()\n    for char in s:\n        freq[char] = freq.get(char, 0) + 1\n    for char in sorted(freq.keys()):\n        print(f\"{char} {freq[char]}\")\n",
+      "bug_type": "uninitialised_variable"
+    },
+    {
+      "external_id": "debug-cpp-dsa-max-subarray",
+      "problem_external_id": "dsa-max-subarray",
+      "topic": "dynamic_programming",
+      "difficulty": "medium",
+      "language": "cpp",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nThe first line contains an integer n, the number of elements. The second line contains n space-separated integers. Print the largest sum obtainable from any contiguous block of one or more of those integers.",
+      "fixed_code": "#include <iostream>\n#include <vector>\n#include <climits>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> a(n);\n        for (int i = 0; i < n; i++) {\n            cin >> a[i];\n        }\n        int best = a[0];\n        int current = a[0];\n        for (int i = 1; i < n; i++) {\n            current = max(a[i], current + a[i]);\n            best = max(best, current);\n        }\n        cout << best << endl;\n    }\n    return 0;\n}\n",
+      "buggy_code": "#include <iostream>\n#include <vector>\n#include <climits>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> a(n);\n        for (int i = 0; i < n; i++) {\n            cin >> a[i];\n        }\n        int best = 0;\n        int current = a[0];\n        for (int i = 1; i < n; i++) {\n            current = max(a[i], current + a[i]);\n            best = max(best, current);\n        }\n        cout << best << endl;\n    }\n    return 0;\n}\n",
+      "bug_type": "wrong_initial_value"
+    },
+    {
+      "external_id": "debug-cpp-dsa-reverse-string",
+      "problem_external_id": "dsa-reverse-string",
+      "topic": "strings",
+      "difficulty": "easy",
+      "language": "cpp",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nA single line contains a string. Print the same string with its characters in reverse order.",
+      "fixed_code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    cin.ignore(); // To ignore the newline after T\n    while (T--) {\n        string s;\n        getline(cin, s);\n        for (int i = s.length() - 1; i >= 0; i--) {\n            cout << s[i];\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+      "buggy_code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    cin.ignore(); // To ignore the newline after T\n    while (T--) {\n        string s;\n        getline(cin, s);\n        for (int i = s.length(); i >= 0; i--) {\n            cout << s[i];\n        }\n        cout << '\\n';\n    }\n    return 0;\n}\n",
+      "bug_type": "off_by_one"
+    },
+    {
+      "external_id": "debug-cpp-dsa-merge-sorted",
+      "problem_external_id": "dsa-merge-sorted",
+      "topic": "arrays",
+      "difficulty": "medium",
+      "language": "cpp",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nThe first line contains an integer n. The second line contains n space-separated integers in ascending order. The third line contains an integer m. The fourth line contains m space-separated integers in ascending order. Print all n plus m integers in ascending order, separated by single spaces, on one line. If both lists are empty, print an empty line.",
+      "fixed_code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> a(n);\n        for (int i = 0; i < n; i++) {\n            cin >> a[i];\n        }\n        int m;\n        cin >> m;\n        vector<int> b(m);\n        for (int i = 0; i < m; i++) {\n            cin >> b[i];\n        }\n\n        vector<int> result;\n        int i = 0, j = 0;\n        while (i < n && j < m) {\n            if (a[i] <= b[j]) {\n                result.push_back(a[i]);\n                i++;\n            } else {\n                result.push_back(b[j]);\n                j++;\n            }\n        }\n        while (i < n) {\n            result.push_back(a[i]);\n            i++;\n        }\n        while (j < m) {\n            result.push_back(b[j]);\n            j++;\n        }\n\n        for (int k = 0; k < result.size(); k++) {\n            if (k > 0) cout << \" \";\n            cout << result[k];\n        }\n        cout << endl;\n    }\n    return 0;\n}\n",
+      "buggy_code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> a(n);\n        for (int i = 0; i < n; i++) {\n            cin >> a[i];\n        }\n        int m;\n        cin >> m;\n        vector<int> b(m);\n        for (int i = 0; i < m; i++) {\n            cin >> b[i];\n        }\n\n        vector<int> result;\n        int i = 0, j = 0;\n        while (i <= n && j < m) {\n            if (a[i] <= b[j]) {\n                result.push_back(a[i]);\n                i++;\n            } else {\n                result.push_back(b[j]);\n                j++;\n            }\n        }\n        while (i < n) {\n            result.push_back(a[i]);\n            i++;\n        }\n        while (j < m) {\n            result.push_back(b[j]);\n            j++;\n        }\n\n        for (int k = 0; k < result.size(); k++) {\n            if (k > 0) cout << \" \";\n            cout << result[k];\n        }\n        cout << endl;\n    }\n    return 0;\n}\n",
+      "bug_type": "index_out_of_range"
+    },
+    {
+      "external_id": "debug-cpp-mbpp-078",
+      "problem_external_id": "mbpp-078",
+      "topic": "sorting",
+      "difficulty": "easy",
+      "language": "cpp",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nThe first line contains an integer n, the number of values that follow. The second line contains n space-separated integers. Print the same integers sorted in ascending order, separated by single spaces, on one line. If n is 0, print an empty line.",
+      "fixed_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> v(n);\n        for (int i = 0; i < n; i++) {\n            cin >> v[i];\n        }\n        sort(v.begin(), v.end());\n        for (int i = 0; i < n; i++) {\n            cout << v[i];\n            if (i < n - 1) cout << \" \";\n        }\n        cout << endl;\n    }\n    return 0;\n}\n",
+      "buggy_code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int n;\n        cin >> n;\n        vector<int> v(n);\n        for (int i = 0; i < n; i++) {\n            cin >> v[i];\n        }\n        sort(v.begin(), v.end());\n        for (int i = 0; i <= n; i++) {\n            cout << v[i];\n            if (i < n - 1) cout << \" \";\n        }\n        cout << endl;\n    }\n    return 0;\n}\n",
+      "bug_type": "wrong_loop_bound"
+    },
+    {
+      "external_id": "debug-cpp-mbpp-231",
+      "problem_external_id": "mbpp-231",
+      "topic": "strings",
+      "difficulty": "easy",
+      "language": "cpp",
+      "statement": "The first line of input contains an integer T, the number of test cases. T test cases follow, each in the format described below. Print the answer for every test case, in order.\n\nA single line contains a string. Print the number of vowels in it, counting a, e, i, o and u in both lowercase and uppercase.",
+      "fixed_code": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    cin.ignore(); // To ignore the newline after reading T\n\n    while (T--) {\n        string s;\n        getline(cin, s);\n        int count = 0; // Correctly initialized for each test case\n\n        for (char c : s) {\n            char lower_c = tolower(c);\n            if (lower_c == 'a' || lower_c == 'e' || lower_c == 'i' || lower_c == 'o' || lower_c == 'u') {\n                count++;\n            }\n        }\n        cout << count << endl;\n    }\n    return 0;\n}\n",
+      "buggy_code": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    cin.ignore(); // To ignore the newline after reading T\n\n    int count = 0;\n\n    while (T--) {\n        string s;\n        getline(cin, s);\n\n        for (char c : s) {\n            char lower_c = tolower(c);\n            if (lower_c == 'a' || lower_c == 'e' || lower_c == 'i' || lower_c == 'o' || lower_c == 'u') {\n                count++;\n            }\n        }\n        cout << count << endl;\n    }\n    return 0;\n}\n",
+      "bug_type": "uninitialised_variable"
+    }
+  ]
+}

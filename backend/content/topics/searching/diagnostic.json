@@ -1,0 +1,263 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "searching",
+  "items": [
+    {
+      "id": "searching:1:python",
+      "concept_key": "searching:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "lst = [5, 1, 3, 2, 4]",
+          "print(lst.index(3))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "searching:3:python",
+      "concept_key": "searching:3",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "def search(arr, x):",
+          "    low = 0",
+          "    high = len(arr) - 1",
+          "    while low <= high:",
+          "        mid = (low + high) // 2",
+          "        if arr[mid] == x:",
+          "            return mid",
+          "        elif arr[mid] < x:",
+          "            low = mid + 1",
+          "        else:",
+          "            high = mid - 1",
+          "    return -1",
+          "",
+          "arr = [2, 4, 6, 8, 10]",
+          "print(search(arr, 6))",
+          "print(search(arr, 5))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2",
+          "-1"
+        ]
+      }
+    },
+    {
+      "id": "searching:4:python",
+      "concept_key": "searching:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why binary search requires the input list to be sorted, and what happens if it is not sorted."
+      },
+      "key": {
+        "rubric": [
+          "Binary search relies on the ordering to eliminate half the search space each time.",
+          "If the list is unsorted, the decision to go left or right may discard the target even if it exists.",
+          "The algorithm may return an incorrect index or fail to find the target despite its presence.",
+          "The time complexity guarantee of O(log n) no longer holds; worst-case behavior becomes unreliable."
+        ],
+        "model_answer": "Binary search works by comparing the target to the middle element and eliminating half the list based on whether the target is smaller or larger — this logic only holds if the list is sorted. If the list is unsorted, the algorithm might incorrectly discard the half containing the target, leading to a wrong result or missing the element entirely. Consequently, binary search on unsorted data is not correct and its O(log n) efficiency cannot be guaranteed."
+      }
+    },
+    {
+      "id": "searching:1:c",
+      "concept_key": "searching:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int lst[] = {5, 1, 3, 2, 4};",
+          "    for (int i = 0; i < 5; i++) {",
+          "        if (lst[i] == 3) {",
+          "            printf(\"%d\\n\", i);",
+          "            break;",
+          "        }",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "searching:3:c",
+      "concept_key": "searching:3",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int search(int arr[], int size, int x) {",
+          "    int low = 0;",
+          "    int high = size - 1;",
+          "    while (low <= high) {",
+          "        int mid = (low + high) / 2;",
+          "        if (arr[mid] == x) {",
+          "            return mid;",
+          "        } else if (arr[mid] < x) {",
+          "            low = mid + 1;",
+          "        } else {",
+          "            high = mid - 1;",
+          "        }",
+          "    }",
+          "    return -1;",
+          "}",
+          "int main() {",
+          "    int arr[] = {2, 4, 6, 8, 10};",
+          "    printf(\"%d\\n\", search(arr, 5, 6));",
+          "    printf(\"%d\\n\", search(arr, 5, 5));",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2",
+          "-1"
+        ]
+      }
+    },
+    {
+      "id": "searching:4:c",
+      "concept_key": "searching:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why binary search requires the input list to be sorted, and what happens if it is not sorted."
+      },
+      "key": {
+        "rubric": [
+          "Binary search relies on the ordering to eliminate half the search space each time.",
+          "If the list is unsorted, the decision to go left or right may discard the target even if it exists.",
+          "The algorithm may return an incorrect index or fail to find the target despite its presence.",
+          "The time complexity guarantee of O(log n) no longer holds; worst-case behavior becomes unreliable."
+        ],
+        "model_answer": "Binary search works by comparing the target to the middle element and eliminating half the array based on whether the target is smaller or larger — this logic only holds if the array is sorted. If the array is unsorted, the algorithm might incorrectly discard the half containing the target, leading to a wrong result or missing the element entirely. Consequently, binary search on unsorted data is not correct and its O(log n) efficiency cannot be guaranteed."
+      }
+    },
+    {
+      "id": "searching:1:cpp",
+      "concept_key": "searching:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "int main() {",
+          "    int lst[] = {5, 1, 3, 2, 4};",
+          "    for (int i = 0; i < 5; i++) {",
+          "        if (lst[i] == 3) {",
+          "            cout << i << endl;",
+          "            break;",
+          "        }",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "searching:3:cpp",
+      "concept_key": "searching:3",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "int search(int arr[], int size, int x) {",
+          "    int low = 0;",
+          "    int high = size - 1;",
+          "    while (low <= high) {",
+          "        int mid = (low + high) / 2;",
+          "        if (arr[mid] == x) {",
+          "            return mid;",
+          "        } else if (arr[mid] < x) {",
+          "            low = mid + 1;",
+          "        } else {",
+          "            high = mid - 1;",
+          "        }",
+          "    }",
+          "    return -1;",
+          "}",
+          "int main() {",
+          "    int arr[] = {2, 4, 6, 8, 10};",
+          "    cout << search(arr, 5, 6) << endl;",
+          "    cout << search(arr, 5, 5) << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "2",
+          "-1"
+        ]
+      }
+    },
+    {
+      "id": "searching:4:cpp",
+      "concept_key": "searching:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why binary search requires the input list to be sorted, and what happens if it is not sorted."
+      },
+      "key": {
+        "rubric": [
+          "Binary search relies on the ordering to eliminate half the search space each time.",
+          "If the list is unsorted, the decision to go left or right may discard the target even if it exists.",
+          "The algorithm may return an incorrect index or fail to find the target despite its presence.",
+          "The time complexity guarantee of O(log n) no longer holds; worst-case behavior becomes unreliable."
+        ],
+        "model_answer": "Binary search works by comparing the target to the middle element and eliminating half the array based on whether the target is smaller or larger — this logic only holds if the array is sorted. If the array is unsorted, the algorithm might incorrectly discard the half containing the target, leading to a wrong result or missing the element entirely. Consequently, binary search on unsorted data is not correct and its O(log n) efficiency cannot be guaranteed."
+      }
+    }
+  ]
+}

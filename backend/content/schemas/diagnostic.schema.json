@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "DiagnosticItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "concept_key": {
+          "title": "Concept Key",
+          "type": "string"
+        },
+        "tier": {
+          "title": "Tier",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "predict_output",
+            "fill_blank",
+            "find_bug",
+            "write_code",
+            "theory"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "c",
+            "cpp",
+            "python",
+            "any"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "body": {
+          "additionalProperties": true,
+          "title": "Body",
+          "type": "object"
+        },
+        "key": {
+          "additionalProperties": true,
+          "title": "Key",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "concept_key",
+        "tier",
+        "kind",
+        "language",
+        "difficulty",
+        "body",
+        "key"
+      ],
+      "title": "DiagnosticItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "diagnostic/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/DiagnosticItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "DiagnosticFile",
+  "type": "object"
+}

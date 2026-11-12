@@ -1,0 +1,752 @@
+{
+  "schema": "mcq/v1",
+  "topic": "basics_io",
+  "items": [
+    {
+      "id": "mcq-c-basics_io-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    printf(\"%d\\n\", 7 / 2);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3.5",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "3.500000",
+          "misconception": "integer_division"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Both 7 and 2 are int, so / is integer division and the fraction is dropped.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-basics_io-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a = 5, b = 2;",
+        "    printf(\"%d %d\\n\", a % b, a * b);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 10",
+          "misconception": null
+        },
+        {
+          "text": "2 10",
+          "misconception": null
+        },
+        {
+          "text": "2.5 10",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "1 7",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "a % b is the remainder of 5 divided by 2, which is 1; a * b is 10.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-basics_io-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    printf(\"%.2f\\n\", 7 / 2.0);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3.00",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "3.5",
+          "misconception": null
+        },
+        {
+          "text": "4.00",
+          "misconception": null
+        },
+        {
+          "text": "3.50",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "2.0 is a double, so the division keeps the fraction, and %.2f prints exactly two decimals.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-basics_io-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int x = 10;",
+        "    x += 5;",
+        "    x *= 2;",
+        "    printf(\"%d\\n\", x);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "25",
+          "misconception": null
+        },
+        {
+          "text": "30",
+          "misconception": null
+        },
+        {
+          "text": "20",
+          "misconception": null
+        },
+        {
+          "text": "15",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "x becomes 10 + 5 = 15, then 15 * 2 = 30.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-basics_io-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char c = 'A';",
+        "    printf(\"%c %d\\n\", c + 2, c);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "A2 65",
+          "misconception": null
+        },
+        {
+          "text": "B 65",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "C 65",
+          "misconception": null
+        },
+        {
+          "text": "67 A",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A char is stored as a number: 'A' is 65, so c + 2 is 67, which %c prints as C.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-basics_io-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int i = 5;",
+        "    int j = i++ + 2;",
+        "    printf(\"%d %d\\n\", i, j);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5 7",
+          "misconception": null
+        },
+        {
+          "text": "6 8",
+          "misconception": null
+        },
+        {
+          "text": "5 8",
+          "misconception": null
+        },
+        {
+          "text": "6 7",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "i++ gives the old value 5 to the expression and then raises i to 6, so j is 5 + 2 = 7.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    cout << 17 % 5 << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3.4",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "12",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "% gives the remainder: 17 = 3 * 5 + 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int x = 7;",
+        "    x = x * 2 - 3;",
+        "    cout << x << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "-7",
+          "misconception": null
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "11",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "The right side is worked out first with the old x: 7 * 2 - 3 = 11, which then replaces x.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int a = 3;",
+        "    double b = a / 2;",
+        "    cout << b << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "1.5",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "1.0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "a / 2 is worked out with two ints first, giving 1; storing it in a double does not bring the .5 back.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    cout << 5 + 3 << \"2\" << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "82",
+          "misconception": null
+        },
+        {
+          "text": "532",
+          "misconception": null
+        },
+        {
+          "text": "5+32",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "5 + 3 is printed as 8, then the text \"2\" is printed straight after it.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"ab\";",
+        "    cout << s + \"cd\" << s.size() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "abcd4",
+          "misconception": null
+        },
+        {
+          "text": "ab2",
+          "misconception": null
+        },
+        {
+          "text": "abcd2",
+          "misconception": null
+        },
+        {
+          "text": "abcd 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "s + \"cd\" makes a new string without changing s, so s.size() is still 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-basics_io-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    cout << (10 / 3) * 3 + 10 % 3 << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "11",
+          "misconception": null
+        },
+        {
+          "text": "13",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "10 / 3 is 3, times 3 is 9, and 10 % 3 adds the remainder 1, giving back 10.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "print(7 // 2, 7 % 2)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3.5 1",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "3 1",
+          "misconception": null
+        },
+        {
+          "text": "4 1",
+          "misconception": null
+        },
+        {
+          "text": "3 0.5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "// divides and drops the fraction, and % gives the remainder, so 7 // 2 is 3 and 7 % 2 is 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "x = \"5\"",
+        "y = 3",
+        "print(x * y)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "15",
+          "misconception": null
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "555",
+          "misconception": null
+        },
+        {
+          "text": "53",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "x is the text \"5\", and multiplying text by 3 repeats it three times.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a, b = 3, 4",
+        "a, b = b, a + b",
+        "print(a, b)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4 8",
+          "misconception": null
+        },
+        {
+          "text": "4 7",
+          "misconception": null
+        },
+        {
+          "text": "3 7",
+          "misconception": null
+        },
+        {
+          "text": "7 4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The right side is worked out first using the old values, (4, 3 + 4), and only then assigned.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-basics_io-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What is 23 modulo 4, that is, the remainder when 23 is divided by 4?"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "5.75",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "19",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "4 goes into 23 five whole times (20), leaving 3.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-basics_io-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "A variable x holds 10. Then the statement x = x + 5 runs. What does it do?"
+      ],
+      "options": [
+        {
+          "text": "Nothing, because x can never equal x + 5",
+          "misconception": null
+        },
+        {
+          "text": "It creates a second variable called x",
+          "misconception": null
+        },
+        {
+          "text": "It checks whether x is equal to x + 5",
+          "misconception": null
+        },
+        {
+          "text": "It works out 10 + 5 and stores 15 in x, replacing 10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "= is assignment, not mathematical equality: the right side is computed first and the result is stored in x.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-basics_io-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Why must a program convert what the user types before doing arithmetic with it?"
+      ],
+      "options": [
+        {
+          "text": "Typed input arrives as characters, which must be turned into a number before it can be added or multiplied",
+          "misconception": null
+        },
+        {
+          "text": "Numbers typed on a keyboard are always stored as negative values",
+          "misconception": null
+        },
+        {
+          "text": "The computer can only do arithmetic on numbers it wrote itself",
+          "misconception": null
+        },
+        {
+          "text": "Conversion makes the program run faster but is not needed",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The keyboard sends characters such as '4' and '2'; reading them as a number (for example with scanf(\"%d\"), cin >> or int()) turns them into the value 42.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "print(10 / 4)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "2.5",
+          "misconception": null
+        },
+        {
+          "text": "2.50",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "In Python, / always gives the exact result as a float, so 10 / 4 is 2.5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "print(int(\"12\") + int(\"3\"), \"12\" + \"3\")",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "15 15",
+          "misconception": null
+        },
+        {
+          "text": "123 123",
+          "misconception": null
+        },
+        {
+          "text": "15 123",
+          "misconception": null
+        },
+        {
+          "text": "123 15",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "int() turns the text into numbers that add to 15, while + on two strings joins them into \"123\".",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-basics_io-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "print(-7 // 2, -7 % 2)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "-3 -1",
+          "misconception": "integer_division"
+        },
+        {
+          "text": "-3 1",
+          "misconception": null
+        },
+        {
+          "text": "-4 -1",
+          "misconception": null
+        },
+        {
+          "text": "-4 1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Python's // rounds down towards minus infinity, so -7 // 2 is -4, and the remainder -7 - (-4 * 2) is 1.",
+      "verify_code": []
+    }
+  ]
+}

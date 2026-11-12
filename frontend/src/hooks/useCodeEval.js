@@ -1,6 +1,16 @@
 import { useState, useCallback } from 'react'
 import { codeEvalAPI, getErrorMessage } from '../utils/api'
 import toast from 'react-hot-toast'
+import { toastAwards } from '../components/practice/shared'
+
+function resultToast(data) {
+  const score = `${(data.scores?.overall ?? 0).toFixed(1)}/100`
+  if (data.verification_status === 'verified') {
+    return `${data.tests_passed}/${data.tests_total} tests passed — ${score}`
+  }
+  if (data.compiled === false) return 'Your code did not compile — see the Tests tab'
+  return `Evaluated, correctness not verified — ${score}`
+}
 
 export function useCodeEval() {
   const [submissions, setSubmissions]     = useState([])
@@ -9,6 +19,7 @@ export function useCodeEval() {
   const [stats, setStats]                 = useState(null)
   const [evaluating, setEvaluating]       = useState(false)
   const [loading, setLoading]             = useState(false)
+  const [error, setError]                 = useState(null)    // last failed evaluation
 
   // ── Fetch submission list ─────────────────────────────────────────────────
   const fetchSubmissions = useCallback(async () => {
@@ -23,13 +34,15 @@ export function useCodeEval() {
     }
   }, [])
 
-  // ── Fetch a submission's full detail (with all evaluations) ───────────────
+  // ── Fetch a submission's detail ───────────────────────────────────────────
+  // The API no longer nests past evaluations, so this loads the code back into the
+  // editor and leaves the result panel empty until the submission is re-evaluated.
   const openSubmission = useCallback(async (id) => {
     setLoading(true)
     try {
       const { data } = await codeEvalAPI.getSubmission(id)
       setActiveSub(data)
-      if (data.evaluations?.length > 0) setActiveResult(data.evaluations[0])
+      setActiveResult(null)
     } catch {
       toast.error('Failed to load submission.')
     } finally {
@@ -38,10 +51,11 @@ export function useCodeEval() {
   }, [])
 
   // ── Submit + evaluate in one shot ─────────────────────────────────────────
-  const submitAndEvaluate = useCallback(async ({ language, code, title, problemContext, expectedOutput }) => {
+  const submitAndEvaluate = useCallback(async ({ language, code, title, problemContext, expectedOutput, problemId }) => {
     setEvaluating(true)
     setActiveResult(null)
     setActiveSub(null)
+    setError(null)
     try {
       const { data } = await codeEvalAPI.submitAndEvaluate({
         language,
@@ -49,15 +63,21 @@ export function useCodeEval() {
         title:           title                          || undefined,
         problem_context: problemContext?.slice(0, 5000) || undefined,
         expected_output: expectedOutput?.slice(0, 2000) || undefined,
+        problem_id:      problemId                      || undefined,
       })
       setActiveResult(data)
-      toast.success(`✅ Evaluation complete — Score: ${data.scores.overall.toFixed(1)}/100`)
+      toast.success(resultToast(data))
+      toastAwards(data)
       // Refresh submissions list
       const { data: subs } = await codeEvalAPI.getSubmissions()
       setSubmissions(subs)
       return data
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Evaluation failed. Check your Groq API key.'))
+      // Kept in state as well as toasted: a toast disappears, and without this the
+      // panel falls back to the empty state as though nothing had been attempted.
+      const message = getErrorMessage(err, 'Evaluation failed. Is the executor running?')
+      setError({ message, status: err?.response?.status ?? null })
+      toast.error(message)
       return null
     } finally {
       setEvaluating(false)
@@ -67,13 +87,16 @@ export function useCodeEval() {
   // ── Re-evaluate an existing submission ────────────────────────────────────
   const reEvaluate = useCallback(async (submissionId) => {
     setEvaluating(true)
+    setError(null)
     try {
       const { data } = await codeEvalAPI.evaluate(submissionId)
       setActiveResult(data)
-      toast.success(`Re-evaluation complete — Score: ${data.scores.overall.toFixed(1)}/100`)
+      toast.success(resultToast(data))
       return data
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Re-evaluation failed.'))
+      const message = getErrorMessage(err, 'Re-evaluation failed.')
+      setError({ message, status: err?.response?.status ?? null })
+      toast.error(message)
       return null
     } finally {
       setEvaluating(false)
@@ -105,11 +128,12 @@ export function useCodeEval() {
   const clearResult = useCallback(() => {
     setActiveResult(null)
     setActiveSub(null)
+    setError(null)
   }, [])
 
   return {
     submissions, activeResult, activeSubmission, stats,
-    evaluating, loading,
+    evaluating, loading, error,
     fetchSubmissions, openSubmission, submitAndEvaluate,
     reEvaluate, fetchStats, deleteSubmission, clearResult,
   }

@@ -1,0 +1,222 @@
+{
+  "schema": "theory/v1",
+  "topic": "searching",
+  "items": [
+    {
+      "id": "theory-c-searching-1",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "How does linear search work, what does it require of the data, and how many comparisons does it need in the worst case?",
+      "model_answer": "Linear search checks the elements one by one from the start until it finds the target or reaches the end. It does not require any order, so it works on unsorted data. In the worst case, when the target is the last element or is absent, it compares against all n elements.",
+      "key_points": [
+        "it checks each element in turn until the target is found",
+        "it works on unsorted data",
+        "the worst case is n comparisons, when the target is last or missing"
+      ]
+    },
+    {
+      "id": "theory-c-searching-2",
+      "language": "c",
+      "difficulty": "easy",
+      "question": "About how many steps does binary search need to search 1,000,000 sorted elements, and why so few?",
+      "model_answer": "Each step compares with the middle element and discards half of the remaining range. After k steps only n / 2^k elements remain, so the number of steps is about log2(n). Since 2^20 is about a million, roughly 20 steps are enough.",
+      "key_points": [
+        "each step halves the remaining search range",
+        "the number of steps is about log2 of n",
+        "for a million elements that is about 20 steps"
+      ]
+    },
+    {
+      "id": "theory-c-searching-3",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "Why do careful binary search implementations compute the middle as `lo + (hi - lo) / 2` instead of `(lo + hi) / 2`?",
+      "model_answer": "For very large indexes, `lo + hi` can exceed the largest value an `int` can hold, and signed overflow is undefined behaviour, typically producing a negative middle index. `hi - lo` is always within range, so `lo + (hi - lo) / 2` gives the same middle position without ever overflowing.",
+      "key_points": [
+        "lo + hi can overflow int for large indexes",
+        "signed overflow is undefined behaviour and can give a negative index",
+        "lo + (hi - lo) / 2 computes the same middle without overflow"
+      ]
+    },
+    {
+      "id": "theory-c-searching-4",
+      "language": "c",
+      "difficulty": "medium",
+      "question": "In a binary search over the inclusive range `[lo, hi]`, why must the loop condition be `lo <= hi`, and why must the updates be `mid + 1` and `mid - 1`?",
+      "model_answer": "With inclusive bounds, the range still contains one element when `lo == hi`, so the loop must run while `lo <= hi`; using `lo < hi` would skip checking that last element. The middle element has already been compared, so the next range must exclude it with `mid + 1` or `mid - 1`. Writing `lo = mid` can leave the range unchanged when `lo == mid`, so the loop runs forever.",
+      "key_points": [
+        "with inclusive bounds, a range of one element (lo == hi) must still be checked",
+        "lo < hi misses that last element",
+        "mid has been checked and must be excluded; lo = mid can loop forever"
+      ]
+    },
+    {
+      "id": "theory-c-searching-5",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "A sorted array contains duplicates. How do you modify binary search to return the first index of the target rather than any matching index?",
+      "model_answer": "An ordinary binary search stops as soon as it finds any element equal to the target, which might be in the middle of a run of duplicates. To find the first one, record `mid` as a candidate answer when `a[mid] == target` and keep searching the left half with `hi = mid - 1`. When the loop ends, the last recorded candidate is the first occurrence; the search is still O(log n).",
+      "key_points": [
+        "a normal binary search can stop at any of the duplicates",
+        "on a match, record the index and continue searching the left half",
+        "the last recorded index is the first occurrence, still in O(log n)"
+      ]
+    },
+    {
+      "id": "theory-c-searching-6",
+      "language": "c",
+      "difficulty": "hard",
+      "question": "What does \"binary search on the answer\" mean, and what property must the problem have for it to work?",
+      "model_answer": "Instead of searching an array, you search over the possible values of the answer, such as the smallest capacity that is enough. You need a yes/no check for a candidate value that is monotonic: once it becomes true it stays true for all larger values (false, false, ..., true, true). Then binary search finds the first value where the check is true, testing about log2(range) candidates, each with one run of the check.",
+      "key_points": [
+        "the search runs over the range of possible answer values",
+        "it needs a monotonic yes/no condition (false then true, never switching back)",
+        "binary search finds the first value where the condition holds, in about log(range) checks"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "What is the difference between `std::find` and `std::binary_search` in what they require and what they return?",
+      "model_answer": "`std::find` is a linear search: it works on any range, sorted or not, takes O(n), and returns an iterator to the first match, or the end iterator if there is none. `std::binary_search` requires the range to be sorted, takes O(log n), and returns only a `bool` saying whether the value is present, not where.",
+      "key_points": [
+        "find works on unsorted data in linear time",
+        "find returns an iterator, equal to end() when not found",
+        "binary_search requires sorted data, runs in O(log n), and returns only a bool"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "question": "Why does binary search take only about log2(n) steps?",
+      "model_answer": "Every comparison with the middle element tells you which half the target must be in, so the other half is thrown away. The range shrinks from n to n/2, n/4, and so on, and it reaches a single element after about log2(n) halvings. For a million elements that is around 20 comparisons.",
+      "key_points": [
+        "each comparison discards half of the remaining range",
+        "the range shrinks to one element after about log2 n halvings",
+        "a million elements need about 20 steps"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "What do `lower_bound` and `upper_bound` return, and how can you use them to count occurrences of `x` in a sorted vector?",
+      "model_answer": "On a sorted range, `lower_bound(x)` returns an iterator to the first element that is not less than x (the first `>= x`), and `upper_bound(x)` returns an iterator to the first element greater than x. All copies of x lie between them, so `upper_bound - lower_bound` is the number of occurrences. Subtracting `v.begin()` from either gives an index.",
+      "key_points": [
+        "lower_bound points to the first element >= x",
+        "upper_bound points to the first element > x",
+        "their difference is the count of x; both need sorted data"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "question": "After `auto it = lower_bound(v.begin(), v.end(), x);`, why is `if (*it == x)` not a safe way to check whether `x` is present?",
+      "model_answer": "If every element is smaller than x, `lower_bound` returns `v.end()`, and dereferencing the end iterator is undefined behaviour. Even when it is not the end, it only points to the first element `>= x`, which might be larger than x. The correct check is `it != v.end() && *it == x`.",
+      "key_points": [
+        "lower_bound returns end() when all elements are smaller than x",
+        "dereferencing end() is undefined behaviour",
+        "check it != end() and *it == x"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-5",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "For a `std::set<int> s`, why is `s.lower_bound(x)` fast while `std::lower_bound(s.begin(), s.end(), x)` is slow?",
+      "model_answer": "A set is a balanced binary search tree, and its iterators are bidirectional, not random access, so there is no way to jump to the middle in one step. The generic `std::lower_bound` still does O(log n) comparisons, but moving the iterators to each middle point takes linear steps, so the total is O(n). The member function `s.lower_bound(x)` walks down the tree directly and takes O(log n).",
+      "key_points": [
+        "set iterators are not random access, so they cannot jump to the middle",
+        "std::lower_bound on set iterators needs linear iterator steps, making it O(n)",
+        "the member set::lower_bound uses the tree structure and runs in O(log n)"
+      ]
+    },
+    {
+      "id": "theory-cpp-searching-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "question": "Explain how to find the smallest value that satisfies a condition using binary search, and what must be true about the condition.",
+      "model_answer": "The condition must be monotonic over the candidate values: false for all values below some threshold and true from the threshold onwards. Then you can binary search over the value range: test the middle candidate, and if the condition is true the answer is at or below it, otherwise above it. After about log2(range) tests you find the threshold, which is the smallest valid value.",
+      "key_points": [
+        "the condition must be monotonic: false up to a point, then true",
+        "binary search over the range of candidate values, testing the middle",
+        "it finds the smallest value satisfying the condition in about log(range) tests"
+      ]
+    },
+    {
+      "id": "theory-python-searching-1",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "Why can `if x in nums:` inside a loop make a program slow when `nums` is a long list, and what is a faster choice?",
+      "model_answer": "For a list, `in` performs a linear search, comparing x with the elements one by one, which takes O(n). Doing that for each of q queries costs about n × q operations. A `set` uses hashing, so `x in s` takes about constant time on average; converting the list to a set once makes the whole loop fast.",
+      "key_points": [
+        "in on a list checks the elements one by one (linear time)",
+        "inside a loop this costs about n times q operations",
+        "a set checks membership in about constant time using hashing"
+      ]
+    },
+    {
+      "id": "theory-python-searching-2",
+      "language": "python",
+      "difficulty": "easy",
+      "question": "Why does binary search on a sorted list of n elements need only about log2(n) comparisons?",
+      "model_answer": "Each comparison with the middle element tells you which half could contain the target, so the other half is discarded. The search range is halved each time, and it shrinks to a single element after about log2(n) halvings, for example about 20 steps for a million elements.",
+      "key_points": [
+        "each comparison discards half of the remaining elements",
+        "the range halves until one element remains",
+        "this takes about log2 n steps"
+      ]
+    },
+    {
+      "id": "theory-python-searching-3",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "What is the difference between `bisect_left(a, x)` and `bisect_right(a, x)` on a sorted list?",
+      "model_answer": "Both return the position where x could be inserted to keep the list sorted. `bisect_left` returns the position before any existing copies of x, which is the index of the first element `>= x`. `bisect_right` returns the position after all existing copies, the index of the first element `> x`. Their difference is the number of times x appears.",
+      "key_points": [
+        "both return an insertion position that keeps the list sorted",
+        "bisect_left gives the index of the first element >= x, bisect_right the first element > x",
+        "their difference counts the occurrences of x"
+      ]
+    },
+    {
+      "id": "theory-python-searching-4",
+      "language": "python",
+      "difficulty": "medium",
+      "question": "Why does `i = bisect_left(a, x)` not by itself tell you that `x` is in the list, and how should you check?",
+      "model_answer": "`bisect_left` always returns an insertion position, whether or not x is present. If x is larger than everything, the result is `len(a)`, which is not a valid index; otherwise `a[i]` is only the first element `>= x`, which may be bigger than x. The correct test is `i < len(a) and a[i] == x`.",
+      "key_points": [
+        "bisect_left returns an insertion point, not proof that x exists",
+        "the result can be len(a), which is out of range",
+        "check i < len(a) and a[i] == x"
+      ]
+    },
+    {
+      "id": "theory-python-searching-5",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "In a hand-written binary search with `lo, hi = 0, len(a) - 1`, why must the loop be `while lo <= hi` and the updates `lo = mid + 1` / `hi = mid - 1`?",
+      "model_answer": "The bounds are inclusive, so when `lo == hi` one candidate element remains and must still be checked; `while lo < hi` would stop without checking it. The middle element has already been compared, so the new range must exclude it. If you wrote `lo = mid`, then when `hi = lo + 1` the middle equals `lo` and the range never shrinks, so the loop runs forever.",
+      "key_points": [
+        "with inclusive bounds, lo == hi still leaves one element to check",
+        "while lo < hi would miss that element",
+        "mid must be excluded with mid + 1 / mid - 1, otherwise the loop can run forever"
+      ]
+    },
+    {
+      "id": "theory-python-searching-6",
+      "language": "python",
+      "difficulty": "hard",
+      "question": "What is \"binary search on the answer\", and what condition must a problem satisfy to use it?",
+      "model_answer": "You binary search over the range of possible answers instead of over a list. For that, you need a function that checks whether a candidate value works, and it must be monotonic: if a value works, every larger value also works (or the reverse). Binary search then finds the boundary, the smallest working value, using about log2(range) calls to the check.",
+      "key_points": [
+        "the search is over the range of possible answer values",
+        "the feasibility check must be monotonic",
+        "it finds the smallest valid value with about log(range) checks"
+      ]
+    }
+  ]
+}

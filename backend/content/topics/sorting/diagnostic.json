@@ -1,0 +1,240 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "sorting",
+  "items": [
+    {
+      "id": "sorting:1:python",
+      "concept_key": "sorting:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "lst = [5, 2, 8, 1]",
+          "lst.sort()",
+          "print(lst[0])",
+          "print(lst[-1])",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "8"
+        ]
+      }
+    },
+    {
+      "id": "sorting:2:python",
+      "concept_key": "sorting:2",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "lst = [3, 1, 4, 1, 5]",
+          "lst.sort()",
+          "for x in lst:",
+          "    print(x, end=' ')",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1 1 3 4 5"
+        ]
+      }
+    },
+    {
+      "id": "sorting:4:python",
+      "concept_key": "sorting:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why calling .sort() on a list modifies the original list, while sorted() returns a new list, and how this affects programming choices when sorting data."
+      },
+      "key": {
+        "rubric": [
+          ".sort() is an in-place method that changes the list object it is called on and returns None.",
+          "sorted() is a built-in function that returns a new sorted list, leaving the original unchanged.",
+          "Choosing between them depends on whether you need to preserve the original data or optimize memory usage."
+        ],
+        "model_answer": "The .sort() method sorts the list in place, meaning it modifies the original list and returns None, whereas sorted() creates and returns a new sorted list without altering the original. This distinction matters when you need to keep the original data unchanged—for example, if you need the unsorted version later—or when you want to avoid side effects. Using .sort() can be more memory-efficient since it doesn’t create a copy, but sorted() is safer when immutability is desired."
+      }
+    },
+    {
+      "id": "sorting:1:c",
+      "concept_key": "sorting:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "#include <stdlib.h>",
+          "",
+          "int compare(const void *a, const void *b) {",
+          "    return (*(int*)a - *(int*)b);",
+          "}",
+          "",
+          "int main() {",
+          "    int lst[] = {5, 2, 8, 1};",
+          "    int n = sizeof(lst) / sizeof(lst[0]);",
+          "    qsort(lst, n, sizeof(int), compare);",
+          "    printf(\"%d\\n\", lst[0]);",
+          "    printf(\"%d\\n\", lst[n-1]);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "8"
+        ]
+      }
+    },
+    {
+      "id": "sorting:2:c",
+      "concept_key": "sorting:2",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "#include <stdlib.h>",
+          "",
+          "int compare(const void *a, const void *b) {",
+          "    return (*(int*)a - *(int*)b);",
+          "}",
+          "",
+          "int main() {",
+          "    int lst[] = {3, 1, 4, 1, 5};",
+          "    int n = sizeof(lst) / sizeof(lst[0]);",
+          "    qsort(lst, n, sizeof(int), compare);",
+          "    for (int i = 0; i < n; i++) {",
+          "        printf(\"%d \", lst[i]);",
+          "    }",
+          "    printf(\"\\n\");",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1 1 3 4 5"
+        ]
+      }
+    },
+    {
+      "id": "sorting:4:c",
+      "concept_key": "sorting:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why calling qsort on an array modifies the original array, while creating a sorted copy returns a new array, and how this affects programming choices when sorting data."
+      },
+      "key": {
+        "rubric": [
+          "qsort sorts the array in place, modifying the original array.",
+          "Creating a sorted copy requires allocating a new array and copying elements, leaving the original unchanged.",
+          "Choosing between them depends on whether you need to preserve the original data or optimize memory usage."
+        ],
+        "model_answer": "qsort sorts the array in place, meaning it modifies the original array directly, whereas creating a sorted copy involves making a new array and leaving the original unchanged. This distinction matters when you need to keep the original data unchanged—for example, if you need the unsorted version later—or when you want to avoid side effects. Sorting in place can be more memory-efficient since it doesn’t allocate extra space, but creating a copy is safer when immutability is desired."
+      }
+    },
+    {
+      "id": "sorting:1:cpp",
+      "concept_key": "sorting:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <algorithm>",
+          "using namespace std;",
+          "",
+          "int main() {",
+          "    int lst[] = {5, 2, 8, 1};",
+          "    int n = sizeof(lst) / sizeof(lst[0]);",
+          "    sort(lst, lst + n);",
+          "    cout << lst[0] << endl;",
+          "    cout << lst[n-1] << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "8"
+        ]
+      }
+    },
+    {
+      "id": "sorting:2:cpp",
+      "concept_key": "sorting:2",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <algorithm>",
+          "using namespace std;",
+          "",
+          "int main() {",
+          "    int lst[] = {3, 1, 4, 1, 5};",
+          "    int n = sizeof(lst) / sizeof(lst[0]);",
+          "    sort(lst, lst + n);",
+          "    for (int i = 0; i < n; i++) {",
+          "        cout << lst[i] << \" \";",
+          "    }",
+          "    cout << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1 1 3 4 5"
+        ]
+      }
+    },
+    {
+      "id": "sorting:4:cpp",
+      "concept_key": "sorting:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why calling sort on a vector modifies the original vector, while creating a sorted copy returns a new vector, and how this affects programming choices when sorting data."
+      },
+      "key": {
+        "rubric": [
+          "sort sorts the vector in place, modifying the original vector.",
+          "Creating a sorted copy requires constructing a new vector and copying elements, leaving the original unchanged.",
+          "Choosing between them depends on whether you need to preserve the original data or optimize memory usage."
+        ],
+        "model_answer": "sort sorts the vector in place, meaning it modifies the original vector directly, whereas creating a sorted copy involves constructing a new vector and leaving the original unchanged. This distinction matters when you need to keep the original data unchanged—for example, if you need the unsorted version later—or when you want to avoid side effects. Sorting in place can be more memory-efficient since it doesn’t allocate extra space, but creating a copy is safer when immutability is desired."
+      }
+    }
+  ]
+}

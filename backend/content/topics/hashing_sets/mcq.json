@@ -1,0 +1,829 @@
+{
+  "schema": "mcq/v1",
+  "topic": "hashing_sets",
+  "items": [
+    {
+      "id": "mcq-c-hashing_sets-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int count[5] = {0};",
+        "    int data[] = {1, 3, 1, 4, 1};",
+        "    for (int i = 0; i < 5; i++) {",
+        "        count[data[i]]++;",
+        "    }",
+        "    printf(\"%d %d\\n\", count[1], count[2]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 0",
+          "misconception": null
+        },
+        {
+          "text": "1 3",
+          "misconception": null
+        },
+        {
+          "text": "3 1",
+          "misconception": null
+        },
+        {
+          "text": "2 0",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Each value is used as an index into count; 1 appears three times and 2 never appears.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-hashing_sets-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"abca\";",
+        "    int seen[26] = {0};",
+        "    int dup = 0;",
+        "    for (int i = 0; s[i] != '\\0'; i++) {",
+        "        if (seen[s[i] - 'a']) {",
+        "            dup = 1;",
+        "        }",
+        "        seen[s[i] - 'a'] = 1;",
+        "    }",
+        "    printf(\"%d\\n\", dup);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "seen marks every letter met so far; the second a finds its mark already set, so dup becomes 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-hashing_sets-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int seen[10] = {0};",
+        "    int vals[] = {2, 5, 2, 7, 5};",
+        "    int distinct = 0;",
+        "    for (int i = 0; i < 5; i++) {",
+        "        if (!seen[vals[i]]) {",
+        "            seen[vals[i]] = 1;",
+        "            distinct++;",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", distinct);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Only the first time a value is seen does it count, so 2, 5 and 7 give three distinct values.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-hashing_sets-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    printf(\"%d %d\\n\", 17 % 10, 27 % 10);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "17 27",
+          "misconception": null
+        },
+        {
+          "text": "7 2",
+          "misconception": null
+        },
+        {
+          "text": "7 7",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Both keys leave remainder 7, so a table that uses key % 10 as the slot would put them in the same slot: a collision.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-hashing_sets-5",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"banana\";",
+        "    int c[26] = {0};",
+        "    for (int i = 0; s[i] != '\\0'; i++) {",
+        "        c[s[i] - 'a']++;",
+        "    }",
+        "    int best = 0;",
+        "    for (int k = 1; k < 26; k++) {",
+        "        if (c[k] > c[best]) {",
+        "            best = k;",
+        "        }",
+        "    }",
+        "    printf(\"%c %d\\n\", 'a' + best, c[best]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "n 2",
+          "misconception": null
+        },
+        {
+          "text": "a 3",
+          "misconception": null
+        },
+        {
+          "text": "b 1",
+          "misconception": null
+        },
+        {
+          "text": "a 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The counts are a: 3, b: 1, n: 2, so the most frequent letter is a.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-hashing_sets-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    const char *w = \"cab\";",
+        "    int h = 0;",
+        "    for (int i = 0; w[i] != '\\0'; i++) {",
+        "        h = (h * 31 + w[i]) % 7;",
+        "    }",
+        "    printf(\"%d\\n\", h);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "294",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "With 'c' = 99, 'a' = 97 and 'b' = 98, h goes 99 % 7 = 1, then (31 + 97) % 7 = 2, then (62 + 98) % 7 = 6.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <set>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    set<int> s = {3, 1, 3, 2};",
+        "    cout << s.size() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A set keeps each value only once, so the second 3 is ignored.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <set>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    set<int> s = {5, 1, 4};",
+        "    for (int x : s) {",
+        "        cout << x << \" \";",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5 1 4",
+          "misconception": null
+        },
+        {
+          "text": "5 4 1",
+          "misconception": null
+        },
+        {
+          "text": "1 4 5",
+          "misconception": null
+        },
+        {
+          "text": "4 1 5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "std::set keeps its elements sorted, so iterating it gives them in ascending order.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <map>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    map<string, int> m;",
+        "    m[\"b\"] = 2;",
+        "    m[\"a\"] = 1;",
+        "    m[\"b\"] += 5;",
+        "    cout << m.size() << \" \" << m[\"b\"] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 7",
+          "misconception": null
+        },
+        {
+          "text": "2 5",
+          "misconception": null
+        },
+        {
+          "text": "2 7",
+          "misconception": null
+        },
+        {
+          "text": "3 5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A map holds one value per key; \"b\" is updated in place, so there are two keys and m[\"b\"] is 2 + 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <unordered_set>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {4, 2, 4, 9, 2};",
+        "    unordered_set<int> seen;",
+        "    int dups = 0;",
+        "    for (int x : v) {",
+        "        if (seen.count(x)) {",
+        "            dups++;",
+        "        } else {",
+        "            seen.insert(x);",
+        "        }",
+        "    }",
+        "    cout << dups << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "The second 4 and the second 2 are already in the set, so two duplicates are counted.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-5",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <map>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    map<char, int> m;",
+        "    for (char c : string(\"hello\")) {",
+        "        m[c]++;",
+        "    }",
+        "    int l = m['l'];",
+        "    int z = m['z'];",
+        "    cout << l << z << m.size() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "204",
+          "misconception": null
+        },
+        {
+          "text": "205",
+          "misconception": null
+        },
+        {
+          "text": "104",
+          "misconception": null
+        },
+        {
+          "text": "2 4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Reading m['z'] with [] inserts the missing key with value 0, so the map grows from 4 keys (h, e, l, o) to 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-hashing_sets-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <set>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    set<int> s = {10, 20, 30};",
+        "    s.insert(20);",
+        "    s.erase(10);",
+        "    cout << s.size() << *s.begin() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "320",
+          "misconception": null
+        },
+        {
+          "text": "210",
+          "misconception": null
+        },
+        {
+          "text": "310",
+          "misconception": null
+        },
+        {
+          "text": "220",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Inserting 20 again changes nothing, erasing 10 leaves {20, 30}, and begin() is the smallest element, 20.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = {1, 2, 2, 3}",
+        "print(len(s))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A set keeps each value once, so the duplicate 2 is dropped.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "d = {\"a\": 1}",
+        "d[\"b\"] = 2",
+        "d[\"a\"] += 10",
+        "print(d[\"a\"], len(d))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "11 2",
+          "misconception": null
+        },
+        {
+          "text": "11 3",
+          "misconception": null
+        },
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "10 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Assigning to an existing key replaces its value, so the dictionary still has two keys.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "counts = {}",
+        "for word in \"the cat the hat\".split():",
+        "    counts[word] = counts.get(word, 0) + 1",
+        "print(counts[\"the\"], \"dog\" in counts)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 False",
+          "misconception": null
+        },
+        {
+          "text": "2 None",
+          "misconception": null
+        },
+        {
+          "text": "2 True",
+          "misconception": null
+        },
+        {
+          "text": "2 False",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "get returns 0 for a missing key, so \"the\" is counted twice; \"dog\" was never added.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-hashing_sets-1",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Why is a hash table (a set, dictionary or map) good for checking whether a value has been seen before?"
+      ],
+      "options": [
+        {
+          "text": "It keeps its values sorted, so the check is always alphabetical",
+          "misconception": null
+        },
+        {
+          "text": "It jumps straight to where the value would be stored, instead of comparing it with every stored value",
+          "misconception": null
+        },
+        {
+          "text": "It never uses any memory",
+          "misconception": null
+        },
+        {
+          "text": "It can only hold numbers, which are fast to compare",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The hash of a value tells the table which slot to look in, so a lookup takes about the same time however many values are stored.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-hashing_sets-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "A set holds the values 3, 7 and 9. The value 7 is added again. How many values does the set hold now?"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A set holds each value at most once, so adding 7 again changes nothing.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-hashing_sets-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Two different keys are sent to the same slot of a hash table. What is this called?"
+      ],
+      "options": [
+        {
+          "text": "An overflow",
+          "misconception": null
+        },
+        {
+          "text": "A duplicate key",
+          "misconception": null
+        },
+        {
+          "text": "A collision",
+          "misconception": null
+        },
+        {
+          "text": "A base case",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A collision is normal; the table handles it, for example by keeping a small list in that slot.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = set()",
+        "for x in [4, 1, 4, 2, 1]:",
+        "    s.add(x)",
+        "print(sorted(s))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[4, 1, 4, 2, 1]",
+          "misconception": null
+        },
+        {
+          "text": "[4, 1, 2]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2, 4]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 1, 2, 4, 4]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Adding a value that is already in a set does nothing, and sorted gives the three values left in ascending order.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "a = {1, 2, 3, 4}",
+        "b = {3, 4, 5}",
+        "print(len(a & b), len(a | b), len(a - b))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2 7 2",
+          "misconception": null
+        },
+        {
+          "text": "2 5 2",
+          "misconception": null
+        },
+        {
+          "text": "2 5 3",
+          "misconception": null
+        },
+        {
+          "text": "5 2 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The common values are 3 and 4, the union holds 1 to 5 once each, and only 1 and 2 are in a but not in b.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-hashing_sets-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "first = {}",
+        "last = {}",
+        "for i, ch in enumerate(\"abcab\"):",
+        "    if ch not in first:",
+        "        first[ch] = i",
+        "    last[ch] = i",
+        "print(first[\"a\"], last[\"a\"], last[\"c\"] - first[\"c\"])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 4 0",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0 3 0",
+          "misconception": null
+        },
+        {
+          "text": "0 0 0",
+          "misconception": null
+        },
+        {
+          "text": "3 3 0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "enumerate counts from 0, first keeps only the earliest position of each letter while last is overwritten every time, so a is at 0 and 3 and c appears only at 2.",
+      "verify_code": []
+    }
+  ]
+}

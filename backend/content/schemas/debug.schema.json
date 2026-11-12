@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "DebugItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "c",
+            "cpp",
+            "python"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "problem_id": {
+          "title": "Problem Id",
+          "type": "string"
+        },
+        "bug_type": {
+          "title": "Bug Type",
+          "type": "string"
+        },
+        "fixed_code": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fixed Code",
+          "type": "array"
+        },
+        "buggy_code": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Buggy Code",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "language",
+        "problem_id",
+        "bug_type",
+        "fixed_code",
+        "buggy_code"
+      ],
+      "title": "DebugItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "debug/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/DebugItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "DebugFile",
+  "type": "object"
+}

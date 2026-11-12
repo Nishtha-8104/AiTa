@@ -1,211 +1,173 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
-import { contentPlayerAPI, codeEvalAPI } from '../utils/api'
+import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
-  ArrowLeft, RefreshCw, Eye, EyeOff, Play, ChevronDown,
-  CheckCircle2, Clock, Lightbulb, BookOpen, Send, Loader2,
-  Code2, MessageSquare, Trophy, ChevronRight, X
+  ArrowLeft, BookOpen, Eye, Flag, Lightbulb, Lock, MessageSquareText, Play, RefreshCw, RotateCcw, Send, Shapes, Sparkles,
 } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth'
+import { problemsAPI, codeEvalAPI, feedbackAPI, getErrorMessage } from '../utils/api'
+import { LANGUAGES, TEMPLATES } from '../components/code/templates'
+import { TOPIC_LABELS, languageLabel } from '../components/learning/labels'
+import ChatPanel from '../components/chat/ChatPanel'
+import AppShell from '../components/ui/AppShell'
+import PageHeader from '../components/ui/PageHeader'
+import Button from '../components/ui/Button'
+import Chip from '../components/ui/Chip'
+import Tabs from '../components/ui/Tabs'
+import BusyNote from '../components/ui/BusyNote'
+import CodeEditor from '../components/ui/CodeEditor'
+import ConfirmDialog from '../components/ui/ConfirmDialog'
+import EmptyState from '../components/ui/EmptyState'
+import { TextField } from '../components/ui/Field'
+import CaseBlock, { OutputBlock } from '../components/ui/CaseBlock'
+import HintLadder from '../components/ui/HintLadder'
+import Verdict, { toneFor } from '../components/ui/Verdict'
+import Workbench, { EditorTile, LanguagePicker } from '../components/practice/Workbench'
+import { toastAwards } from '../components/practice/shared'
 
-const DIFFICULTY_STYLE = {
-  easy:   { color: '#10b981', bg: 'rgba(16,185,129,0.1)',   border: 'rgba(16,185,129,0.3)'  },
-  medium: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)',   border: 'rgba(245,158,11,0.3)'  },
-  hard:   { color: '#ef4444', bg: 'rgba(239,68,68,0.1)',    border: 'rgba(239,68,68,0.3)'   },
-  expert: { color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)',   border: 'rgba(139,92,246,0.3)'  },
+const DIFFICULTIES = [
+  { value: 'easy', label: 'Easy', tone: 'mint' },
+  { value: 'medium', label: 'Medium', tone: 'sun' },
+  { value: 'hard', label: 'Hard', tone: 'coral' },
+  { value: 'expert', label: 'Expert', tone: 'pink' },
+]
+const DIFF_TONE = Object.fromEntries(DIFFICULTIES.map(d => [d.value, d.tone]))
+
+const GENERATE_STEPS = [
+  { after: 0, text: 'Writing a new problem for you…' },
+  { after: 8, text: 'Writing the test cases…' },
+  { after: 25, text: 'Checking the problem works. Almost there…' },
+  { after: 60, text: 'Taking longer than usual. Please keep this page open…' },
+]
+const SOLUTION_STEPS = [
+  { after: 0, text: 'Getting the solution…' },
+  { after: 5, text: 'Writing it in your language and checking it against the tests…' },
+  { after: 45, text: 'Taking longer than usual. Please keep this page open…' },
+]
+const RUN_STEPS = [{ after: 0, text: 'Running your code on the example tests…' }, { after: 10, text: 'Still running…' }]
+const SUBMIT_STEPS = [
+  { after: 0, text: 'Compiling your code…' },
+  { after: 4, text: 'Running your code against all the tests…' },
+  { after: 15, text: 'Scoring correctness, efficiency and style…' },
+  { after: 60, text: 'Taking longer than usual. Please keep this page open…' },
+]
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('codehelp_history') || '[]') } catch { return [] }
 }
 
-const LANGUAGES = ['python', 'javascript', 'java', 'c++', 'go', 'rust']
-
-// ── Markdown-lite renderer ────────────────────────────────────────────────────
-function Md({ text }) {
-  if (!text) return null
-  const lines = text.split('\n')
+function ScoreBreakdown({ scores }) {
+  const items = [
+    { label: 'Overall', val: scores?.overall },
+    { label: 'Correctness', val: scores?.correctness },
+    { label: 'Efficiency', val: scores?.efficiency },
+    { label: 'Style', val: scores?.style },
+  ]
+  const tone = v => (v >= 70 ? 'text-pop-mint' : v >= 50 ? 'text-pop-sun' : 'text-pop-coral')
   return (
-    <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, lineHeight: 1.7 }}>
-      {lines.map((line, i) => {
-        if (!line.trim()) return <div key={i} style={{ height: 8 }} />
-        if (/^#{1,3} /.test(line)) {
-          const content = line.replace(/^#+\s/, '')
-          return <p key={i} style={{ fontWeight: 700, color: '#fff', margin: '12px 0 4px', fontSize: 15 }}>{content}</p>
-        }
-        if (/^[-*] /.test(line.trim())) {
-          return (
-            <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
-              <span style={{ color: '#14b8a6', flexShrink: 0, marginTop: 2 }}>▸</span>
-              <span>{line.replace(/^[\s]*[-*] /, '')}</span>
-            </div>
-          )
-        }
-        return <p key={i} style={{ margin: '2px 0' }}>{line}</p>
-      })}
-    </div>
+    <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {items.map(s => (
+        <div key={s.label} className="rounded-2xl border border-line bg-canvas/60 px-3 py-3">
+          <dd className={`font-mono text-2xl font-semibold ${tone(s.val || 0)}`}>{Math.round(s.val || 0)}</dd>
+          <dt className="mt-0.5 text-[11px] text-ink-subtle">{s.label} <span className="text-ink-faint">/ 100</span></dt>
+        </div>
+      ))}
+    </dl>
   )
 }
 
 export default function CodeHelpPage() {
   const { user } = useAuth()
-  const navigate = useNavigate()
   const location = useLocation()
 
-  const prefillTopic = location.state?.topic || ''
+  const [phase, setPhase] = useState('setup')
+  const [topic, setTopic] = useState(location.state?.topic || '')
+  const [difficulty, setDiff] = useState('medium')
+  const [language, setLang] = useState(user?.preferred_language || 'c')
 
-  // ── Setup state ───────────────────────────────────────────────────────────
-  const [phase, setPhase]         = useState('setup')   // setup | problem
-  const [topic, setTopic]         = useState(prefillTopic)
-  const [difficulty, setDiff]     = useState('medium')
-  const [language, setLang]       = useState('python')
-
-  // ── Problem state ─────────────────────────────────────────────────────────
-  const [problem, setProblem]     = useState(null)
+  const [problem, setProblem] = useState(null)
   const [generating, setGenerating] = useState(false)
-  const [seenTitles, setSeenTitles] = useState([])  // track generated problem titles
+  const [seenTitles, setSeenTitles] = useState([])
+  // Bank picks are ordered by id: without these, "new problem" returns the same one.
+  const [seenIds, setSeenIds] = useState([])
 
-  // ── Editor state ──────────────────────────────────────────────────────────
-  const [code, setCode]           = useState('')
-  const [showSolution, setShowSolution] = useState(false)
-  const [activeTab, setActiveTab] = useState('problem')  // problem | hints | solution
+  const [code, setCode] = useState('')
+  const [activeTab, setActiveTab] = useState('problem')
+  const [gaveUp, setGaveUp] = useState(false)
+  const [confirmGiveUp, setConfirmGiveUp] = useState(false)
+  const [solution, setSolution] = useState(null)
+  const [solutionLoading, setSolutionLoading] = useState(false)
+  const [historyId, setHistoryId] = useState(null)
 
-  // ── AI chat state ─────────────────────────────────────────────────────────
-  const [sessionId, setSessionId] = useState(null)
-  const [chatMsgs, setChatMsgs]   = useState([])
-  const [chatInput, setChatInput] = useState('')
-  const [chatLoading, setChatLoading] = useState(false)
-  const chatEndRef                = useRef(null)
-
-  // ── Run state ─────────────────────────────────────────────────────────────
-  const [running, setRunning]     = useState(false)
-  const [runResults, setRunResults] = useState(null)  // null | { passed, total, cases }
-
-  // ── Submission state ──────────────────────────────────────────────────────
+  const [running, setRunning] = useState(false)
+  const [runResults, setRunResults] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [evalResult, setEvalResult] = useState(null)
-  const [showEval, setShowEval]   = useState(false)
+  const [hints, setHints] = useState([])
+  const [hinting, setHinting] = useState(false)
+  const [history, setHistory] = useState(loadHistory)
 
-  // ── History ───────────────────────────────────────────────────────────────
-  const [history, setHistory]     = useState(() => {
-    try { return JSON.parse(localStorage.getItem('codehelp_history') || '[]') }
-    catch { return [] }
-  })
+  const saveHistory = list => {
+    setHistory(list)
+    try { localStorage.setItem('codehelp_history', JSON.stringify(list)) } catch { /* storage full or blocked */ }
+  }
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [chatMsgs])
+  const resetSeen = () => { setSeenTitles([]); setSeenIds([]) }
 
-  // ── Generate problem ──────────────────────────────────────────────────────
+  // Swapping language swaps the starter code, but only while it is still a starter.
+  const handleLanguageChange = (next) => {
+    const starters = [...Object.values(TEMPLATES), problem?.starter_code]
+    const untouched = !code.trim() || starters.includes(code)
+    setLang(next)
+    setSolution(null)
+    if (untouched && TEMPLATES[next]) setCode(TEMPLATES[next])
+  }
+
   const generateProblem = async () => {
     if (!topic.trim()) { toast.error('Enter a topic first'); return }
     setGenerating(true)
     try {
-      const { data } = await contentPlayerAPI.generateProblem({
-        topic,
-        difficulty,
-        language,
-        exclude_titles: seenTitles,   // tell backend which problems to skip
+      const { data } = await problemsAPI.generate({
+        topic, difficulty, language, exclude_titles: seenTitles, exclude_ids: seenIds,
       })
       setProblem(data)
-      setCode(data.starter_code || '')
-      setShowSolution(false)
+      setCode(data.starter_code || TEMPLATES[language] || '')
       setActiveTab('problem')
       setEvalResult(null)
-      setChatMsgs([])
-      setSessionId(null)
+      setRunResults(null)
+      setHints([])
+      setGaveUp(false)
+      setSolution(null)
+      if (data.title) setSeenTitles(prev => [...new Set([...prev, data.title])])
+      if (data.problem_id) setSeenIds(prev => [...new Set([...prev, data.problem_id])])
 
-      // Track this title so it won't be generated again this session
-      if (data.title) {
-        setSeenTitles(prev => [...new Set([...prev, data.title])])
-      }
-
-      // Create a content player session for history
-      const { data: session } = await contentPlayerAPI.createSession({
-        mode: 'code_help',
-        topic: data.title || topic,
-        language,
-        difficulty,
-      })
-      setSessionId(session.id)
-
-      // Save to local history
-      const entry = {
-        id: session.id,
-        title: data.title,
-        topic,
-        difficulty,
-        language,
-        solvedAt: null,
-        score: null,
-        timestamp: Date.now(),
-      }
-      const updated = [entry, ...history].slice(0, 50)
-      setHistory(updated)
-      localStorage.setItem('codehelp_history', JSON.stringify(updated))
-
+      const entryId = Date.now()
+      setHistoryId(entryId)
+      saveHistory([{ id: entryId, title: data.title, topic, difficulty, language, solvedAt: null, score: null, timestamp: entryId }, ...history].slice(0, 50))
       setPhase('problem')
+      window.scrollTo({ top: 0 })
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Failed to generate problem')
+      toast.error(getErrorMessage(err, "Couldn't create a problem. Try again in a minute."))
     } finally {
       setGenerating(false)
     }
   }
 
-  // ── Run against test cases ────────────────────────────────────────────────
   const runCode = async () => {
     if (!code.trim()) { toast.error('Write some code first'); return }
-    if (!problem?.examples?.length) { toast.error('No test cases available'); return }
+    if (!problem?.problem_id) { toast.error('This problem has no test cases to run.'); return }
     setRunning(true)
     setRunResults(null)
     try {
-      // Ask the AI to run the code against each example and report pass/fail
-      const testCases = problem.examples.map((ex, i) =>
-        `Test ${i + 1}:\n  Input: ${ex.input}\n  Expected Output: ${ex.output}`
-      ).join('\n\n')
-
-      const prompt = `You are a code runner. Given this ${language} code and test cases, determine if the code would produce the correct output for each test case.
-
-Code:
-\`\`\`${language}
-${code}
-\`\`\`
-
-Test Cases:
-${testCases}
-
-For each test case, respond ONLY with valid JSON (no markdown):
-{
-  "cases": [
-    { "input": "...", "expected": "...", "actual": "...", "passed": true/false, "error": null or "error message" }
-  ]
-}
-
-Simulate the execution mentally. If the code has a syntax error or would crash, set passed: false and error to the error message.`
-
-      const { data } = await contentPlayerAPI.chat(sessionId, { message: prompt })
-
-      // Parse JSON from response
-      let parsed = null
-      try {
-        const jsonMatch = data.response.match(/\{[\s\S]*\}/)
-        if (jsonMatch) parsed = JSON.parse(jsonMatch[0])
-      } catch { /* ignore */ }
-
-      if (parsed?.cases) {
-        const passed = parsed.cases.filter(c => c.passed).length
-        setRunResults({ passed, total: parsed.cases.length, cases: parsed.cases })
-        if (passed === parsed.cases.length) toast.success(`All ${passed} test cases passed!`)
-        else toast(`${passed}/${parsed.cases.length} test cases passed`, { icon: '🧪' })
-      } else {
-        // Fallback: show raw response
-        setRunResults({ passed: 0, total: problem.examples.length, cases: [], raw: data.response })
-      }
+      const { data } = await codeEvalAPI.run({ problem_id: problem.problem_id, language, code })
+      setRunResults({ ...data, error: data.compile_output || data.stderr || null })
     } catch (err) {
-      toast.error('Run failed. Try again.')
+      toast.error(getErrorMessage(err, "Couldn't reach the code runner. Try again in a minute."))
     } finally {
       setRunning(false)
     }
   }
 
-  // ── Submit code for evaluation ────────────────────────────────────────────
   const submitCode = async () => {
     if (!code.trim()) { toast.error('Write some code first'); return }
     setSubmitting(true)
@@ -214,612 +176,400 @@ Simulate the execution mentally. If the code has a syntax error or would crash, 
         language,
         code,
         title: problem?.title || topic,
+        // Bind by id so grading uses the stored problem's tests; the description fallback
+        // would create a duplicate problem with a fresh suite.
+        problem_id: problem?.problem_id,
         problem_context: problem?.description || '',
       })
       setEvalResult(data)
-      setShowEval(true)
-
-      // Update history with score
+      setRunResults(null)
+      setHints(data.hint ? [data.hint] : [])
+      toastAwards(data)
       const score = Math.round(data.scores?.overall || 0)
-      const updated = history.map(h =>
-        h.id === sessionId ? { ...h, score, solvedAt: new Date().toISOString() } : h
-      )
-      setHistory(updated)
-      localStorage.setItem('codehelp_history', JSON.stringify(updated))
-
-      if (score >= 70) toast.success(`Score: ${score}/100 — Great work!`)
-      else toast(`Score: ${score}/100 — Keep improving!`, { icon: '📊' })
+      saveHistory(history.map(h => (h.id === historyId ? { ...h, score, solvedAt: new Date().toISOString() } : h)))
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Evaluation failed')
+      toast.error(getErrorMessage(err, "Couldn't grade your code. Try again in a minute."))
     } finally {
       setSubmitting(false)
     }
   }
 
-  // ── AI hint chat ──────────────────────────────────────────────────────────
-  const sendChat = async () => {
-    if (!chatInput.trim() || !sessionId) return
-    const msg = chatInput.trim()
-    setChatInput('')
-    setChatMsgs(prev => [...prev, { role: 'user', content: msg }])
-    setChatLoading(true)
+  const moreHelp = async () => {
+    setHinting(true)
     try {
-      const { data } = await contentPlayerAPI.chat(sessionId, {
-        message: msg,
-        code_snippet: code || undefined,
-      })
-      setChatMsgs(prev => [...prev, { role: 'assistant', content: data.response }])
-    } catch {
-      setChatMsgs(prev => [...prev, { role: 'error', content: 'Failed to get hint.' }])
+      const { data } = await feedbackAPI.hint(problem.problem_id)
+      setHints(prev => [...prev, data])
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'No hint is available right now.'))
     } finally {
-      setChatLoading(false)
+      setHinting(false)
     }
   }
 
-  const diffStyle = DIFFICULTY_STYLE[difficulty] || DIFFICULTY_STYLE.medium
-  const probDiffStyle = problem ? (DIFFICULTY_STYLE[problem.difficulty] || DIFFICULTY_STYLE.medium) : diffStyle
+  // The server only hands the answer over after a pass or a recorded give-up.
+  const hasSolution = Boolean(problem?.problem_id)
+  const passed = Boolean(evalResult && evalResult.tests_total > 0 && evalResult.tests_passed === evalResult.tests_total)
+  const solutionOpen = passed || gaveUp
+  const topLevel = hints.length ? hints[hints.length - 1].level : 0
+  const canHint = Boolean(evalResult && !passed && problem?.problem_id && topLevel < 4)
 
-  // ── SETUP SCREEN ──────────────────────────────────────────────────────────
-  if (phase === 'setup') {
-    return (
-      <div style={S.page}>
-        <div style={S.gridBg} />
-
-        <div style={S.setupWrap}>
-          {/* Header */}
-          <div style={S.setupHeader}>
-            <button onClick={() => navigate('/learn')} style={S.backBtn}>
-              <ArrowLeft size={16} /> Back
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={S.logoIcon}><Code2 size={16} color="#fff" /></div>
-              <span style={S.logoText}>Code Help</span>
-            </div>
-            <div style={{ width: 80 }} />
-          </div>
-
-          <div style={S.setupCard}>
-            <h1 style={S.setupTitle}>Generate a Coding Problem</h1>
-            <p style={S.setupSub}>LeetCode-style problems with AI hints and instant evaluation</p>
-
-            {/* Topic */}
-            <div style={S.fieldGroup}>
-              <label style={S.label}>Topic</label>
-              <input
-                style={S.input}
-                placeholder="e.g. Binary Search, Two Pointers, Dynamic Programming..."
-                value={topic}
-                onChange={e => { setTopic(e.target.value); setSeenTitles([]) }}
-                onKeyDown={e => e.key === 'Enter' && generateProblem()}
-                autoFocus
-              />
-            </div>
-
-            {/* Quick topics */}
-            {(user?.interested_topics?.length > 0) && (
-              <div style={{ marginBottom: 24 }}>
-                <p style={S.label}>Your topics</p>
-                <div style={S.chipRow}>
-                  {user.interested_topics.map(t => (
-                    <button key={t} onClick={() => setTopic(t.replace(/_/g, ' '))} style={{
-                      ...S.chip,
-                      background: topic === t.replace(/_/g, ' ') ? 'rgba(20,184,166,0.15)' : 'rgba(255,255,255,0.04)',
-                      border: `1px solid ${topic === t.replace(/_/g, ' ') ? '#14b8a6' : 'rgba(255,255,255,0.1)'}`,
-                      color: topic === t.replace(/_/g, ' ') ? '#14b8a6' : 'rgba(255,255,255,0.5)',
-                    }}>{t.replace(/_/g, ' ')}</button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Difficulty + Language */}
-            <div style={S.row2}>
-              <div style={S.fieldGroup}>
-                <label style={S.label}>Difficulty</label>
-                <div style={S.diffRow}>
-                  {Object.entries(DIFFICULTY_STYLE).map(([k, v]) => (
-                    <button key={k} onClick={() => { setDiff(k); setSeenTitles([]) }} style={{
-                      ...S.diffBtn,
-                      background: difficulty === k ? v.bg : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${difficulty === k ? v.border : 'rgba(255,255,255,0.08)'}`,
-                      color: difficulty === k ? v.color : 'rgba(255,255,255,0.4)',
-                    }}>{k.charAt(0).toUpperCase() + k.slice(1)}</button>
-                  ))}
-                </div>
-              </div>
-              <div style={S.fieldGroup}>
-                <label style={S.label}>Language</label>
-                <select value={language} onChange={e => setLang(e.target.value)} style={S.select}>
-                  {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
-                </select>
-              </div>
-            </div>
-
-            <button
-              onClick={generateProblem}
-              disabled={!topic.trim() || generating}
-              style={{ ...S.genBtn, opacity: !topic.trim() || generating ? 0.5 : 1 }}
-            >
-              {generating ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Generating...</> : <><Code2 size={16} /> Generate Problem</>}
-            </button>
-          </div>
-
-          {/* History */}
-          {history.length > 0 && (
-            <div style={S.historySection}>
-              <p style={S.historyTitle}>Recent Problems</p>
-              <div style={S.historyList}>
-                {history.slice(0, 8).map(h => {
-                  const ds = DIFFICULTY_STYLE[h.difficulty] || DIFFICULTY_STYLE.medium
-                  return (
-                    <div key={h.id} style={S.historyItem}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={S.historyName}>{h.title || h.topic}</p>
-                        <p style={S.historyMeta}>{h.topic} · {h.language}</p>
-                      </div>
-                      <span style={{ ...S.diffPill, background: ds.bg, border: `1px solid ${ds.border}`, color: ds.color }}>
-                        {h.difficulty}
-                      </span>
-                      {h.score !== null && (
-                        <span style={{ ...S.scorePill, color: h.score >= 70 ? '#10b981' : '#f59e0b' }}>
-                          {h.score}/100
-                        </span>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    )
+  const loadSolution = async (giveUp) => {
+    setSolutionLoading(true)
+    try {
+      const { data } = await problemsAPI.solution(problem.problem_id, { language, give_up: giveUp })
+      setSolution(data)
+    } catch (err) {
+      toast.error(getErrorMessage(err, "Couldn't load the solution. Try again in a minute."))
+    } finally {
+      setSolutionLoading(false)
+    }
   }
 
-  // ── PROBLEM SCREEN ────────────────────────────────────────────────────────
-  return (
-    <div style={S.page}>
-      <div style={S.gridBg} />
+  const openSolution = () => {
+    setActiveTab('solution')
+    if (passed && !solution && !solutionLoading) loadSolution(false)
+  }
 
-      {/* Top bar */}
-      <div style={S.topBar}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button onClick={() => setPhase('setup')} style={S.backBtnSm}>
-            <ArrowLeft size={15} />
-          </button>
-          <span style={S.problemTitle}>{problem?.title}</span>
-          <span style={{
-            ...S.diffPill,
-            background: probDiffStyle.bg,
-            border: `1px solid ${probDiffStyle.border}`,
-            color: probDiffStyle.color,
-          }}>{problem?.difficulty}</span>
-        </div>
+  // The id lets the chat's tools run against this problem's stored tests.
+  const firstExample = problem?.examples?.[0]
+  const problemContext = problem ? [
+    `${problem.title || topic}${problem.problem_id ? ` (problem_id ${problem.problem_id})` : ''}`,
+    problem.description,
+    firstExample && `Example input:\n${firstExample.input}\nExpected output:\n${firstExample.output}`,
+    problem.constraints?.length > 0 && `Constraints:\n${problem.constraints.join('\n')}`,
+  ].filter(Boolean).join('\n\n') : ''
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button onClick={generateProblem} style={S.iconBtn} title="New problem on same topic">
-            <RefreshCw size={15} />
-          </button>
-        </div>
-      </div>
+  const suggestions = [...new Set([
+    ...(user?.interested_topics || []).map(t => t.replace(/_/g, ' ')),
+    ...Object.values(TOPIC_LABELS),
+  ])]
 
-      {/* Main split layout */}
-      <div style={S.splitLayout}>
+  if (phase === 'setup') {
+    return (
+      <AppShell title="Coding problems">
+        <div className="mx-auto grid max-w-[1180px] grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-start">
+          <section className="tile p-6 sm:p-8">
+            <PageHeader
+              eyebrow="Coding problems"
+              title="Practise any topic you choose"
+              description="Pick a topic and a level. We write a fresh problem with test cases."
+            />
 
-        {/* ── LEFT PANEL: Problem ── */}
-        <div style={S.leftPanel}>
-          {/* Tabs */}
-          <div style={S.tabs}>
-            {[
-              { id: 'problem',  label: 'Problem',  icon: <BookOpen size={13} /> },
-              { id: 'hints',    label: 'Hints',    icon: <Lightbulb size={13} /> },
-              { id: 'solution', label: 'Solution', icon: <Eye size={13} /> },
-            ].map(tab => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
-                ...S.tab,
-                background: activeTab === tab.id ? 'rgba(255,255,255,0.08)' : 'transparent',
-                color: activeTab === tab.id ? '#fff' : 'rgba(255,255,255,0.4)',
-                borderBottom: activeTab === tab.id ? '2px solid #14b8a6' : '2px solid transparent',
-              }}>
-                {tab.icon} {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div style={S.leftContent}>
-            {/* Problem tab */}
-            {activeTab === 'problem' && problem && (
-              <div>
-                <h2 style={S.probName}>{problem.title}</h2>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                  <span style={{ ...S.diffPill, background: probDiffStyle.bg, border: `1px solid ${probDiffStyle.border}`, color: probDiffStyle.color }}>
-                    {problem.difficulty}
-                  </span>
-                  <span style={S.langPill}>{language}</span>
-                  <span style={S.topicPill}>{topic}</span>
-                </div>
-
-                <p style={S.sectionLabel}>Description</p>
-                <p style={S.descText}>{problem.description}</p>
-
-                {problem.examples?.length > 0 && (
-                  <>
-                    <p style={S.sectionLabel}>Examples</p>
-                    {problem.examples.map((ex, i) => (
-                      <div key={i} style={S.exampleBox}>
-                        <div style={S.exRow}><span style={S.exLabel}>Input:</span><code style={S.exCode}>{ex.input}</code></div>
-                        <div style={S.exRow}><span style={S.exLabel}>Output:</span><code style={S.exCode}>{ex.output}</code></div>
-                        {ex.explanation && <div style={S.exRow}><span style={S.exLabel}>Explanation:</span><span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>{ex.explanation}</span></div>}
-                      </div>
-                    ))}
-                  </>
-                )}
-
-                {problem.constraints?.length > 0 && (
-                  <>
-                    <p style={S.sectionLabel}>Constraints</p>
-                    <ul style={{ margin: 0, paddingLeft: 20 }}>
-                      {problem.constraints.map((c, i) => (
-                        <li key={i} style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, marginBottom: 4, fontFamily: 'monospace' }}>{c}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Hints tab */}
-            {activeTab === 'hints' && problem && (
-              <div>
-                <p style={S.sectionLabel}>Hints</p>
-                {problem.hints?.length > 0
-                  ? problem.hints.map((h, i) => (
-                    <div key={i} style={S.hintBox}>
-                      <Lightbulb size={14} color="#f59e0b" style={{ flexShrink: 0, marginTop: 2 }} />
-                      <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>{h}</span>
-                    </div>
-                  ))
-                  : <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>No hints available.</p>
-                }
-
-                {/* AI Chat for hints */}
-                <div style={{ marginTop: 24 }}>
-                  <p style={S.sectionLabel}>Ask AI for a hint</p>
-                  <div style={S.chatArea}>
-                    {chatMsgs.length === 0 && (
-                      <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>
-                        Ask for a hint without spoiling the solution
-                      </p>
-                    )}
-                    {chatMsgs.map((m, i) => (
-                      <div key={i} style={{
-                        ...S.chatMsg,
-                        alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                        background: m.role === 'user' ? 'rgba(20,184,166,0.12)' : 'rgba(255,255,255,0.05)',
-                        border: `1px solid ${m.role === 'user' ? 'rgba(20,184,166,0.25)' : 'rgba(255,255,255,0.08)'}`,
-                        color: m.role === 'error' ? '#ef4444' : 'rgba(255,255,255,0.8)',
-                      }}>
-                        {m.content}
-                      </div>
-                    ))}
-                    {chatLoading && (
-                      <div style={{ ...S.chatMsg, alignSelf: 'flex-start', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.3)' }}>Thinking...</span>
-                      </div>
-                    )}
-                    <div ref={chatEndRef} />
-                  </div>
-                  <div style={S.chatInputRow}>
-                    <input
-                      style={S.chatInput}
-                      placeholder="Ask for a hint..."
-                      value={chatInput}
-                      onChange={e => setChatInput(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && sendChat()}
-                    />
-                    <button onClick={sendChat} disabled={!chatInput.trim() || chatLoading} style={S.chatSendBtn}>
-                      <Send size={14} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Solution tab */}
-            {activeTab === 'solution' && problem && (
-              <div>
-                {!showSolution ? (
-                  <div style={S.solutionBlur}>
-                    <Eye size={28} color="rgba(255,255,255,0.2)" />
-                    <p style={{ color: 'rgba(255,255,255,0.4)', margin: '12px 0 20px', fontSize: 14, textAlign: 'center' }}>
-                      Try solving it yourself first.<br />The solution will be revealed when you're ready.
-                    </p>
-                    <button onClick={() => setShowSolution(true)} style={S.revealBtn}>
-                      Reveal Solution
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <p style={S.sectionLabel}>Solution</p>
-                    <div style={S.codeDisplay}>
-                      <pre style={{ margin: 0, overflowX: 'auto', color: '#e2e8f0', fontSize: 13, lineHeight: 1.6 }}>
-                        <code>{problem.solution_code}</code>
-                      </pre>
-                    </div>
-                    {problem.explanation && (
-                      <>
-                        <p style={{ ...S.sectionLabel, marginTop: 20 }}>Explanation</p>
-                        <Md text={problem.explanation} />
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ── RIGHT PANEL: Editor ── */}
-        <div style={S.rightPanel}>
-          {/* Editor header */}
-          <div style={S.editorHeader}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Code2 size={14} color="rgba(255,255,255,0.4)" />
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>Solution</span>
-              <span style={S.langPill}>{language}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <button
-                onClick={() => setCode(problem?.starter_code || '')}
-                style={S.resetBtn}
-                title="Reset to starter code"
-              >
-                <RefreshCw size={12} /> Reset
-              </button>
-              {/* Run button */}
-              <button
-                onClick={runCode}
-                disabled={running || !code.trim()}
-                style={{
-                  ...S.runBtn,
-                  background: 'rgba(16,185,129,0.15)',
-                  border: '1px solid rgba(16,185,129,0.35)',
-                  color: '#10b981',
-                  opacity: running || !code.trim() ? 0.5 : 1,
-                }}
-              >
-                {running
-                  ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} />
-                  : <Play size={13} />}
-                {running ? 'Running...' : 'Run'}
-              </button>
-              {/* Submit button */}
-              <button
-                onClick={submitCode}
-                disabled={submitting || !code.trim()}
-                style={{
-                  ...S.runBtn,
-                  opacity: submitting || !code.trim() ? 0.5 : 1,
-                }}
-              >
-                {submitting
-                  ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} />
-                  : <Trophy size={13} />}
-                {submitting ? 'Evaluating...' : 'Submit'}
-              </button>
-            </div>
-          </div>
-
-          {/* Code editor */}
-          <textarea
-            style={S.editor}
-            value={code}
-            onChange={e => setCode(e.target.value)}
-            spellCheck={false}
-            placeholder="Write your solution here..."
-          />
-
-          {/* Run results panel */}
-          {runResults && (
-            <div style={S.runPanel}>
-              <div style={S.runPanelHeader}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Play size={13} color={runResults.passed === runResults.total ? '#10b981' : '#f59e0b'} />
-                  <span style={{ color: '#fff', fontWeight: 600, fontSize: 13 }}>Test Results</span>
-                  <span style={{
-                    padding: '2px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700,
-                    background: runResults.passed === runResults.total ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)',
-                    color: runResults.passed === runResults.total ? '#10b981' : '#f59e0b',
-                    border: `1px solid ${runResults.passed === runResults.total ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'}`,
-                  }}>
-                    {runResults.passed}/{runResults.total} passed
-                  </span>
-                </div>
-                <button onClick={() => setRunResults(null)} style={S.closeBtn}><X size={13} /></button>
-              </div>
-
-              {runResults.raw ? (
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, margin: 0, lineHeight: 1.6 }}>
-                  {runResults.raw}
-                </p>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {runResults.cases.map((c, i) => (
-                    <div key={i} style={{
-                      background: c.passed ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)',
-                      border: `1px solid ${c.passed ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                      borderRadius: 10, padding: '10px 14px',
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <span style={{ fontSize: 14 }}>{c.passed ? '✅' : '❌'}</span>
-                        <span style={{ color: c.passed ? '#10b981' : '#ef4444', fontSize: 13, fontWeight: 600 }}>
-                          Test Case {i + 1}
-                        </span>
-                      </div>
-                      <div style={S.testRow}>
-                        <span style={S.testLabel}>Input</span>
-                        <code style={S.testCode}>{c.input}</code>
-                      </div>
-                      <div style={S.testRow}>
-                        <span style={S.testLabel}>Expected</span>
-                        <code style={{ ...S.testCode, color: '#86efac' }}>{c.expected}</code>
-                      </div>
-                      <div style={S.testRow}>
-                        <span style={S.testLabel}>Got</span>
-                        <code style={{ ...S.testCode, color: c.passed ? '#86efac' : '#fca5a5' }}>{c.actual}</code>
-                      </div>
-                      {c.error && (
-                        <div style={{ marginTop: 6, color: '#fca5a5', fontSize: 12, fontFamily: 'monospace' }}>
-                          ⚠ {c.error}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Eval result */}
-          {evalResult && showEval && (
-            <div style={S.evalPanel}>
-              <div style={S.evalHeader}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Trophy size={15} color="#f59e0b" />
-                  <span style={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>Evaluation Result</span>
-                </div>
-                <button onClick={() => setShowEval(false)} style={S.closeBtn}><X size={14} /></button>
-              </div>
-
-              {/* Score row */}
-              <div style={S.scoreRow}>
-                {[
-                  { label: 'Overall',     val: evalResult.scores?.overall },
-                  { label: 'Correctness', val: evalResult.scores?.correctness },
-                  { label: 'Efficiency',  val: evalResult.scores?.efficiency },
-                  { label: 'Style',       val: evalResult.scores?.style },
-                ].map(s => (
-                  <div key={s.label} style={S.scoreCard}>
-                    <div style={{
-                      ...S.scoreNum,
-                      color: s.val >= 70 ? '#10b981' : s.val >= 50 ? '#f59e0b' : '#ef4444'
-                    }}>{Math.round(s.val || 0)}</div>
-                    <div style={S.scoreLabel}>{s.label}</div>
-                  </div>
+            <div className="mt-8 space-y-7">
+              <TextField
+                label="Topic"
+                helper="Type anything, like “two pointers” or “pattern printing”, or pick one below."
+                placeholder="e.g. Arrays, Recursion, Strings"
+                value={topic}
+                onChange={e => { setTopic(e.target.value); resetSeen() }}
+                onKeyDown={e => { if (e.key === 'Enter' && !generating) generateProblem() }}
+                icon={Shapes}
+                autoFocus
+              />
+              <div className="-mt-3 flex flex-wrap gap-2">
+                {suggestions.map(t => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => { setTopic(t); resetSeen() }}
+                    aria-pressed={topic === t}
+                    className={`min-h-[36px] rounded-full border px-3.5 text-[13px] transition-colors ${
+                      topic === t ? 'border-ink bg-ink text-canvas' : 'border-line-strong text-ink-subtle hover:border-ink-faint hover:text-ink'
+                    }`}
+                  >
+                    {t}
+                  </button>
                 ))}
               </div>
 
-              {evalResult.summary && (
-                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: '12px 0 0', lineHeight: 1.6 }}>
-                  {evalResult.summary}
-                </p>
-              )}
-
-              {evalResult.key_improvements?.length > 0 && (
-                <div style={{ marginTop: 12 }}>
-                  <p style={{ ...S.sectionLabel, marginBottom: 6 }}>Key improvements</p>
-                  {evalResult.key_improvements.slice(0, 3).map((imp, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
-                      <span style={{ color: '#f59e0b', flexShrink: 0 }}>→</span>
-                      <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13 }}>{imp}</span>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div role="radiogroup" aria-label="Difficulty">
+                  <span className="mb-2.5 block text-[13px] font-medium text-ink-muted">Difficulty</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {DIFFICULTIES.map(d => (
+                      <button
+                        key={d.value}
+                        type="button"
+                        role="radio"
+                        aria-checked={difficulty === d.value}
+                        onClick={() => { setDiff(d.value); resetSeen() }}
+                        className={`min-h-[44px] rounded-2xl border text-sm font-medium transition-colors ${
+                          difficulty === d.value ? 'border-ink bg-ink text-canvas' : 'border-line-strong bg-tile-2 text-ink-muted hover:text-ink'
+                        }`}
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
+                <div>
+                  <span className="mb-2.5 block text-[13px] font-medium text-ink-muted">Language</span>
+                  <LanguagePicker languages={LANGUAGES} value={language} onChange={handleLanguageChange} />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 border-t border-line pt-6">
+                <Button size="lg" icon={Sparkles} onClick={generateProblem} disabled={!topic.trim()} busy={generating} className="self-start">
+                  {generating ? 'Creating…' : 'Create a problem'}
+                </Button>
+                <BusyNote active={generating} steps={GENERATE_STEPS} note="New problems usually take 10 to 40 seconds." />
+              </div>
             </div>
-          )}
+          </section>
+
+          <section className="tile p-6">
+            <p className="eyebrow">Recent problems</p>
+            {history.length === 0 ? (
+              <EmptyState className="mt-4" icon={BookOpen} title="Nothing here yet" body="Problems you create show up here with your score." />
+            ) : (
+              <ul className="mt-3 divide-y divide-line">
+                {history.slice(0, 8).map(h => (
+                  <li key={h.id} className="flex items-center gap-3 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-ink">{h.title || h.topic}</p>
+                      <p className="mt-0.5 truncate text-xs text-ink-subtle">{h.topic} · {languageLabel(h.language)}</p>
+                    </div>
+                    <Chip tone={DIFF_TONE[h.difficulty] || 'neutral'}>{h.difficulty}</Chip>
+                    <span className={`w-14 text-right font-mono text-sm ${h.score == null ? 'text-ink-faint' : h.score >= 70 ? 'text-pop-mint' : 'text-pop-sun'}`}>
+                      {h.score == null ? 'not tried' : `${h.score}`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </div>
+      </AppShell>
+    )
+  }
+
+  const tabs = [
+    { value: 'problem', label: 'Problem', icon: BookOpen },
+    { value: 'hints', label: 'Hints', icon: Lightbulb, badge: problem?.hints?.length || null },
+    hasSolution && { value: 'solution', label: 'Solution', icon: solutionOpen ? Eye : Lock },
+    { value: 'chat', label: 'Ask PET', icon: MessageSquareText },
+  ].filter(Boolean)
+
+  const left = (
+    <section className={`tile flex flex-col ${activeTab === 'chat' ? 'h-[calc(100dvh-4rem)] min-h-[520px]' : ''}`}>
+      <div className="border-b border-line p-3">
+        <Tabs tabs={tabs} value={activeTab} onChange={v => (v === 'solution' ? openSolution() : setActiveTab(v))} label="Problem panels" size="sm" />
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
-  )
-}
+      <div className={`${activeTab === 'chat' ? 'hidden' : ''} p-5 sm:p-6`}>
+        {activeTab === 'problem' && (
+          <div className="space-y-5">
+            <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink-muted">{problem.description}</p>
+            {problem.examples?.length > 0 && (
+              <div className="space-y-3">
+                <p className="eyebrow">Examples</p>
+                {problem.examples.map((ex, i) => (
+                  <div key={i} className="rounded-[18px] border border-line bg-tile-2 p-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                      <OutputBlock label="Input" value={ex.input} tone="aqua" />
+                      <OutputBlock label="Output" value={ex.output} tone="mint" />
+                    </div>
+                    {ex.explanation && <p className="mt-3 text-[13px] leading-relaxed text-ink-subtle">{ex.explanation}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
+            {problem.constraints?.length > 0 && (
+              <div>
+                <p className="eyebrow">Constraints</p>
+                <ul className="mt-2 space-y-1">
+                  {problem.constraints.map((c, i) => <li key={i} className="font-mono text-[13px] text-ink-muted">{c}</li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
-// ── Styles ────────────────────────────────────────────────────────────────────
-const S = {
-  page: {
-    minHeight: '100vh', background: '#050810', display: 'flex',
-    flexDirection: 'column', fontFamily: "'DM Sans','Segoe UI',sans-serif",
-    position: 'relative', overflow: 'hidden',
-  },
-  gridBg: {
-    position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
-    backgroundImage: `linear-gradient(rgba(20,184,166,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(20,184,166,0.02) 1px,transparent 1px)`,
-    backgroundSize: '48px 48px',
-  },
-  // Setup
-  setupWrap: { maxWidth: 640, margin: '0 auto', padding: '32px 20px', width: '100%', position: 'relative', zIndex: 1 },
-  setupHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 },
-  backBtn: { display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '8px 14px', color: 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer' },
-  logoIcon: { width: 32, height: 32, borderRadius: 10, background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  logoText: { fontSize: 16, fontWeight: 700, color: '#fff' },
-  setupCard: { background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 32, marginBottom: 24 },
-  setupTitle: { fontSize: 24, fontWeight: 700, color: '#fff', margin: '0 0 6px', letterSpacing: '-0.4px' },
-  setupSub: { fontSize: 14, color: 'rgba(255,255,255,0.35)', margin: '0 0 28px' },
-  fieldGroup: { marginBottom: 20 },
-  label: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: 8 },
-  input: { width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(20,184,166,0.3)', borderRadius: 10, padding: '13px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' },
-  chipRow: { display: 'flex', flexWrap: 'wrap', gap: 8 },
-  chip: { padding: '6px 14px', borderRadius: 20, fontSize: 12, cursor: 'pointer', fontWeight: 500 },
-  row2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 },
-  diffRow: { display: 'flex', gap: 8, flexWrap: 'wrap' },
-  diffBtn: { padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' },
-  select: { width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', cursor: 'pointer' },
-  genBtn: { width: '100%', background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', border: 'none', borderRadius: 12, padding: '14px', color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  historySection: { background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: 20 },
-  historyTitle: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 },
-  historyList: { display: 'flex', flexDirection: 'column', gap: 8 },
-  historyItem: { display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' },
-  historyName: { fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.8)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
-  historyMeta: { fontSize: 12, color: 'rgba(255,255,255,0.3)', margin: '2px 0 0', fontFamily: 'monospace' },
-  diffPill: { padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' },
-  scorePill: { fontSize: 13, fontWeight: 700, fontFamily: 'monospace', whiteSpace: 'nowrap' },
-  // Problem screen
-  topBar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'rgba(5,8,16,0.95)', borderBottom: '1px solid rgba(255,255,255,0.06)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 20 },
-  backBtnSm: { background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '6px 10px', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center' },
-  problemTitle: { fontSize: 15, fontWeight: 700, color: '#fff', maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-  iconBtn: { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center' },
-  runBtn: { display: 'flex', alignItems: 'center', gap: 6, background: '#7c3aed', border: 'none', borderRadius: 8, padding: '8px 16px', color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer' },
-  splitLayout: { display: 'flex', flex: 1, overflow: 'hidden', height: 'calc(100vh - 53px)', position: 'relative', zIndex: 1 },
-  leftPanel: { width: '42%', minWidth: 320, display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' },
-  tabs: { display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', flexShrink: 0 },
-  tab: { display: 'flex', alignItems: 'center', gap: 6, padding: '11px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none', transition: 'all 0.15s' },
-  leftContent: { flex: 1, overflowY: 'auto', padding: '20px 20px 40px' },
-  probName: { fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 12px', letterSpacing: '-0.3px' },
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '1px', margin: '20px 0 8px' },
-  descText: { color: 'rgba(255,255,255,0.75)', fontSize: 14, lineHeight: 1.7, margin: 0 },
-  exampleBox: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, padding: '14px 16px', marginBottom: 10 },
-  exRow: { display: 'flex', gap: 10, marginBottom: 6, alignItems: 'flex-start', flexWrap: 'wrap' },
-  exLabel: { fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', minWidth: 80, fontFamily: 'monospace' },
-  exCode: { background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '2px 8px', fontSize: 13, color: '#7dd3fc', fontFamily: 'monospace' },
-  langPill: { padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#a78bfa' },
-  topicPill: { padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: 'rgba(20,184,166,0.1)', border: '1px solid rgba(20,184,166,0.25)', color: '#2dd4bf' },
-  hintBox: { display: 'flex', gap: 10, padding: '12px 14px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)', borderRadius: 10, marginBottom: 10 },
-  chatArea: { background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: 14, minHeight: 120, maxHeight: 240, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10 },
-  chatMsg: { padding: '10px 14px', borderRadius: 10, fontSize: 13, lineHeight: 1.6, maxWidth: '90%' },
-  chatInputRow: { display: 'flex', gap: 8, marginTop: 10 },
-  chatInput: { flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '9px 14px', color: '#fff', fontSize: 13, outline: 'none' },
-  chatSendBtn: { background: '#14b8a6', border: 'none', borderRadius: 8, padding: '9px 14px', color: '#000', cursor: 'pointer', display: 'flex', alignItems: 'center' },
-  solutionBlur: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center' },
-  revealBtn: { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 24px', color: 'rgba(255,255,255,0.7)', fontSize: 14, fontWeight: 600, cursor: 'pointer' },
-  codeDisplay: { background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, fontFamily: "'JetBrains Mono','Courier New',monospace" },
-  // Right panel
-  rightPanel: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-  editorHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 },
-  resetBtn: { display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '5px 10px', color: 'rgba(255,255,255,0.4)', fontSize: 12, cursor: 'pointer' },
-  editor: { flex: 1, background: '#0d1117', border: 'none', outline: 'none', padding: '20px', color: '#e2e8f0', fontSize: 14, fontFamily: "'JetBrains Mono','Courier New',monospace", lineHeight: 1.7, resize: 'none', minHeight: 0 },
-  evalPanel: { background: 'rgba(5,8,16,0.98)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '16px 20px', maxHeight: '45%', overflowY: 'auto', flexShrink: 0 },
-  evalHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
-  closeBtn: { background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' },
-  scoreRow: { display: 'flex', gap: 12, flexWrap: 'wrap' },
-  scoreCard: { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '10px 16px', textAlign: 'center', minWidth: 70 },
-  scoreNum: { fontSize: 22, fontWeight: 800, fontFamily: 'monospace', lineHeight: 1 },
-  scoreLabel: { fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.5px' },
-  runPanel: { background: 'rgba(5,8,16,0.98)', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '14px 16px', maxHeight: '40%', overflowY: 'auto', flexShrink: 0 },
-  runPanelHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  testRow: { display: 'flex', gap: 10, marginBottom: 4, alignItems: 'flex-start' },
-  testLabel: { fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.3)', minWidth: 64, fontFamily: 'monospace', paddingTop: 2 },
-  testCode: { background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 5, padding: '2px 8px', fontSize: 12, fontFamily: 'monospace', color: '#7dd3fc' },
+        {activeTab === 'hints' && (
+          problem.hints?.length > 0 ? (
+            <ol className="space-y-3">
+              {problem.hints.map((h, i) => (
+                <li key={i} className="flex gap-3 rounded-[18px] border border-pop-sun/20 bg-pop-sun/[0.05] p-4">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-pop-sun font-mono text-xs font-semibold text-canvas">{i + 1}</span>
+                  <span className="pt-0.5 text-sm leading-relaxed text-ink-muted">{h}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <EmptyState icon={Lightbulb} title="No hints for this problem" body="Try the Ask PET tab. It can give you a hint without the answer." />
+          )
+        )}
+
+        {activeTab === 'solution' && hasSolution && (
+          solutionOpen ? (
+            <div className="space-y-5">
+              {passed && <Chip tone="mint">You passed every test, so the solution is open.</Chip>}
+              <BusyNote active={solutionLoading} steps={SOLUTION_STEPS} />
+              {solution?.code && (
+                <div>
+                  <p className="eyebrow mb-2">Solution · {languageLabel(solution.language)}</p>
+                  {solution.language === 'python' && language !== 'python' && (
+                    <p className="mb-3 text-[13px] leading-relaxed text-ink-subtle">
+                      There is no checked {languageLabel(language)} version of this solution yet, so here is the Python one. The steps are the same.
+                    </p>
+                  )}
+                  <CodeEditor value={solution.code} language={solution.language} readOnly minHeight="160px" maxHeight="480px" label="Solution code" />
+                </div>
+              )}
+              {solution && !solution.code && (
+                <EmptyState icon={BookOpen} title="No model answer for this problem" body="Ask PET to walk you through the approach instead." />
+              )}
+              {!solution && !solutionLoading && (
+                <Button size="sm" variant="secondary" icon={RotateCcw} onClick={() => loadSolution(gaveUp)}>Load the solution</Button>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-start gap-4 rounded-[20px] border border-dashed border-line-strong p-6">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tile-3 text-ink-muted"><Lock size={20} /></span>
+              <div>
+                <p className="text-[15px] font-semibold text-ink">The solution opens when you pass</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink-subtle">Pass every test and it unlocks on its own. Stuck? Try the hints first. You can also give up and see it now.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="hint" size="sm" icon={Lightbulb} onClick={() => setActiveTab('hints')}>See the hints</Button>
+                <Button variant="ghost" size="sm" icon={Flag} onClick={() => setConfirmGiveUp(true)}>I give up</Button>
+              </div>
+            </div>
+          )
+        )}
+      </div>
+
+      {/* Kept mounted while hidden so a reply in progress survives a tab switch */}
+      <div className={`${activeTab === 'chat' ? 'flex' : 'hidden'} min-h-0 flex-1 flex-col p-2`}>
+        <ChatPanel
+          key={problem?.problem_id || problem?.title}
+          problemContext={problemContext}
+          defaultLanguage={language}
+          getCode={() => ({ code, language })}
+          className="flex-1 !border-0 !bg-transparent !shadow-none"
+        />
+      </div>
+    </section>
+  )
+
+  const right = (
+    <>
+      <EditorTile
+        toolbar={
+          <>
+            <LanguagePicker languages={LANGUAGES} value={language} onChange={handleLanguageChange} disabled={running || submitting} />
+            <Button size="sm" variant="ghost" icon={RotateCcw} onClick={() => setCode(problem?.starter_code || TEMPLATES[language] || '')} disabled={running || submitting}>
+              Reset code
+            </Button>
+          </>
+        }
+        footer={
+          <>
+            <Button variant="secondary" icon={Play} onClick={runCode} busy={running} disabled={submitting || hinting || !code.trim()}>Run</Button>
+            <Button icon={Send} onClick={submitCode} busy={submitting} disabled={running || hinting || !code.trim()}>Submit</Button>
+            {canHint ? (
+              <Button variant="hint" icon={Lightbulb} onClick={moreHelp} busy={hinting} disabled={running || submitting} className="sm:ml-auto">
+                {topLevel === 0 ? 'Get a hint' : 'Stronger hint'}
+              </Button>
+            ) : (
+              <span className="text-xs text-ink-subtle sm:ml-auto">Run checks the examples. Submit runs every test and scores your code. Try it with what you know first: hints open after a submission that fails.</span>
+            )}
+          </>
+        }
+      >
+        <CodeEditor value={code} onChange={setCode} language={language} readOnly={submitting} minHeight="380px" maxHeight="640px" label="Your solution" />
+      </EditorTile>
+
+      <BusyNote active={running} steps={RUN_STEPS} />
+      <BusyNote active={submitting} steps={SUBMIT_STEPS} note="This can take up to a minute." />
+
+      {runResults && !running && (
+        <Verdict
+          tone={toneFor(runResults.passed, runResults.total)}
+          title={runResults.verdict}
+          meta={`${runResults.passed}/${runResults.total} example tests passed`}
+        >
+          {runResults.cases.filter(c => !c.passed).slice(0, 2).map((c, i) => (
+            <CaseBlock key={i} input={c.input} expected={c.expected} actual={c.actual} />
+          ))}
+          {runResults.error && (
+            <div className="mt-4"><OutputBlock label="Error output" value={runResults.error} tone="coral" /></div>
+          )}
+        </Verdict>
+      )}
+
+      {evalResult && !submitting && (
+        <Verdict
+          tone={evalResult.tests_total > 0 ? toneFor(evalResult.tests_passed, evalResult.tests_total) : 'neutral'}
+          title={passed ? 'All tests passed' : evalResult.verdict || 'Graded'}
+          meta={evalResult.tests_total > 0 ? `${evalResult.tests_passed}/${evalResult.tests_total} tests passed` : null}
+        >
+          <ScoreBreakdown scores={evalResult.scores} />
+          {evalResult.summary && <p className="mt-4">{evalResult.summary}</p>}
+          {evalResult.first_failing_case && (
+            <CaseBlock
+              input={evalResult.first_failing_case.stdin}
+              expected={evalResult.first_failing_case.expected_stdout}
+              actual={evalResult.first_failing_case.actual_stdout}
+            />
+          )}
+          {evalResult.key_improvements?.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm font-medium text-ink">What to improve</p>
+              <ul className="mt-2 space-y-1.5">
+                {evalResult.key_improvements.slice(0, 3).map((imp, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-pop-sun" aria-hidden="true" />
+                    <span>{imp}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {passed && hasSolution && (
+            <Button size="sm" variant="secondary" icon={Eye} className="mt-4" onClick={openSolution}>Compare with the solution</Button>
+          )}
+        </Verdict>
+      )}
+
+      {hints.length > 0 && !passed && <HintLadder hints={hints} />}
+    </>
+  )
+
+  return (
+    <AppShell title="Coding problems">
+      <div className="mx-auto flex max-w-[1320px] flex-col gap-5">
+        <section className="tile flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <Chip tone={DIFF_TONE[problem?.difficulty] || 'neutral'}>{problem?.difficulty}</Chip>
+              <Chip>{topic}</Chip>
+              <Chip tone="aqua">{languageLabel(language)}</Chip>
+            </div>
+            <h1 className="mt-3 truncate text-2xl font-semibold tracking-tight text-ink">{problem?.title}</h1>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="ghost" icon={ArrowLeft} onClick={() => setPhase('setup')} disabled={generating}>Change topic</Button>
+            <Button variant="secondary" icon={RefreshCw} onClick={generateProblem} busy={generating}>New problem, same topic</Button>
+          </div>
+        </section>
+
+        <BusyNote active={generating} steps={GENERATE_STEPS} />
+
+        <Workbench problem={left} editor={right} />
+      </div>
+
+      <ConfirmDialog
+        open={confirmGiveUp}
+        title="Show the full solution?"
+        body="This shows the full solution. Try a hint first? Once you see the answer, the problem is much less useful for practice."
+        cancelLabel="Try a hint first"
+        confirmLabel="Show solution"
+        tone="danger"
+        onCancel={() => { setConfirmGiveUp(false); setActiveTab('hints') }}
+        onClose={() => setConfirmGiveUp(false)}
+        onConfirm={() => { setConfirmGiveUp(false); setGaveUp(true); loadSolution(true) }}
+      />
+    </AppShell>
+  )
 }

@@ -1,0 +1,859 @@
+{
+  "schema": "mcq/v1",
+  "topic": "stacks_queues",
+  "items": [
+    {
+      "id": "mcq-c-stacks_queues-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int stack[5];",
+        "    int top = 0;",
+        "    stack[top++] = 1;",
+        "    stack[top++] = 2;",
+        "    stack[top++] = 3;",
+        "    top--;",
+        "    printf(\"%d %d\\n\", stack[top - 1], top);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 3",
+          "misconception": null
+        },
+        {
+          "text": "2 2",
+          "misconception": null
+        },
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "3 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Three pushes leave top at 3; popping lowers it to 2, so the top of the stack is now the 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-stacks_queues-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int q[5];",
+        "    int head = 0, tail = 0;",
+        "    q[tail++] = 4;",
+        "    q[tail++] = 7;",
+        "    q[tail++] = 9;",
+        "    head++;",
+        "    printf(\"%d %d\\n\", q[head], tail - head);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9 2",
+          "misconception": null
+        },
+        {
+          "text": "4 3",
+          "misconception": null
+        },
+        {
+          "text": "7 2",
+          "misconception": null
+        },
+        {
+          "text": "7 3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A queue removes from the front: head moves past the 4, leaving 7 at the front and two values waiting.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-stacks_queues-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"abc\";",
+        "    char st[4];",
+        "    int top = 0;",
+        "    for (int i = 0; s[i] != '\\0'; i++) {",
+        "        st[top++] = s[i];",
+        "    }",
+        "    while (top > 0) {",
+        "        putchar(st[--top]);",
+        "    }",
+        "    putchar('\\n');",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "abc",
+          "misconception": null
+        },
+        {
+          "text": "cba",
+          "misconception": null
+        },
+        {
+          "text": "bca",
+          "misconception": null
+        },
+        {
+          "text": "cab",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The last character pushed is the first one popped, so a stack reverses the order.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-stacks_queues-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"(()(\";",
+        "    int depth = 0, deepest = 0;",
+        "    for (int i = 0; s[i] != '\\0'; i++) {",
+        "        if (s[i] == '(') {",
+        "            depth++;",
+        "            if (depth > deepest) {",
+        "                deepest = depth;",
+        "            }",
+        "        } else {",
+        "            depth--;",
+        "        }",
+        "    }",
+        "    printf(\"%d %d\\n\", depth, deepest);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0 2",
+          "misconception": null
+        },
+        {
+          "text": "2 3",
+          "misconception": null
+        },
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "2 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "depth goes 1, 2, 1, 2, so two brackets are still open at the end and the deepest point was 2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-stacks_queues-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "A circular queue stores its values in an array of size 4. What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int capacity = 4;",
+        "    int tail = 3;",
+        "    tail = (tail + 1) % capacity;",
+        "    printf(\"%d\\n\", tail);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": "index_out_of_range"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "% wraps the index back to the start of the array once it passes the last slot.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-stacks_queues-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int st[10];",
+        "    int top = 0;",
+        "    st[top++] = 1;",
+        "    st[top++] = 2;",
+        "    int x = st[--top];",
+        "    st[top++] = 3;",
+        "    st[top++] = x * 10;",
+        "    int y = st[--top];",
+        "    printf(\"%d %d %d\\n\", x, y, st[top - 1]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2 20 3",
+          "misconception": null
+        },
+        {
+          "text": "1 10 3",
+          "misconception": null
+        },
+        {
+          "text": "2 20 1",
+          "misconception": null
+        },
+        {
+          "text": "2 3 20",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "x pops the 2; then 3 and 20 are pushed and y pops the 20, leaving 3 on top of the 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <stack>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    stack<int> s;",
+        "    s.push(1);",
+        "    s.push(2);",
+        "    s.push(3);",
+        "    s.pop();",
+        "    cout << s.top() << s.size() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "33",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": null
+        },
+        {
+          "text": "22",
+          "misconception": null
+        },
+        {
+          "text": "32",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "pop removes the last value pushed, 3, so the top is 2 and two values remain.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <queue>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    queue<int> q;",
+        "    q.push(1);",
+        "    q.push(2);",
+        "    q.push(3);",
+        "    q.pop();",
+        "    cout << q.front() << q.back() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "23",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": null
+        },
+        {
+          "text": "13",
+          "misconception": null
+        },
+        {
+          "text": "32",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "A queue removes from the front, so after one pop 2 is at the front and 3 is still at the back.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <deque>",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    deque<int> d = {1, 2, 3};",
+        "    d.push_front(0);",
+        "    d.pop_back();",
+        "    for (int x : d) {",
+        "        cout << x;",
+        "    }",
+        "    cout << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "123",
+          "misconception": null
+        },
+        {
+          "text": "0123",
+          "misconception": null
+        },
+        {
+          "text": "123 0",
+          "misconception": null
+        },
+        {
+          "text": "012",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "A deque can add and remove at both ends: 0 goes on the front and 3 comes off the back.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <stack>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    stack<char> st;",
+        "    for (char c : string(\"hello\")) {",
+        "        st.push(c);",
+        "    }",
+        "    string out;",
+        "    while (!st.empty()) {",
+        "        out += st.top();",
+        "        st.pop();",
+        "    }",
+        "    cout << out << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "hello",
+          "misconception": null
+        },
+        {
+          "text": "olleh",
+          "misconception": null
+        },
+        {
+          "text": "h",
+          "misconception": null
+        },
+        {
+          "text": "o",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Popping a stack until it is empty gives the values back in reverse order.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <queue>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    queue<int> q;",
+        "    for (int i = 1; i <= 5; i++) {",
+        "        q.push(i);",
+        "    }",
+        "    int sum = 0;",
+        "    while (q.size() > 2) {",
+        "        sum += q.front();",
+        "        q.pop();",
+        "    }",
+        "    cout << sum << \" \" << q.front() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9 4",
+          "misconception": null
+        },
+        {
+          "text": "6 3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "6 4",
+          "misconception": null
+        },
+        {
+          "text": "12 1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Values leave from the front: 1, 2 and 3 are removed (sum 6), leaving 4 and 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-stacks_queues-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <queue>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    priority_queue<int> pq;",
+        "    pq.push(5);",
+        "    pq.push(1);",
+        "    pq.push(8);",
+        "    pq.push(3);",
+        "    pq.pop();",
+        "    cout << pq.top() << pq.size() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "33",
+          "misconception": null
+        },
+        {
+          "text": "83",
+          "misconception": null
+        },
+        {
+          "text": "13",
+          "misconception": null
+        },
+        {
+          "text": "53",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "A priority_queue always gives out its largest value first; pop removes the 8, leaving 5 on top and three values.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "stack = [1, 2]",
+        "stack.append(3)",
+        "stack.pop()",
+        "print(stack)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[2, 3]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2, 3]",
+          "misconception": null
+        },
+        {
+          "text": "[3]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "append pushes on the end and pop() removes from the end, so the 3 that was just pushed comes straight back off.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "from collections import deque",
+        "",
+        "q = deque([1, 2, 3])",
+        "q.append(4)",
+        "q.popleft()",
+        "print(list(q))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[1, 2, 3]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 3, 4]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2, 3, 4]",
+          "misconception": null
+        },
+        {
+          "text": "[4, 2, 3]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A queue adds at the back and removes from the front, so the 1 leaves and the 4 joins at the end.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "stack = []",
+        "for ch in \"ab)c)\":",
+        "    if ch == \")\":",
+        "        stack.pop()",
+        "    else:",
+        "        stack.append(ch)",
+        "print(\"\".join(stack))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "a",
+          "misconception": null
+        },
+        {
+          "text": "ac",
+          "misconception": null
+        },
+        {
+          "text": "abc",
+          "misconception": null
+        },
+        {
+          "text": "b",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The stack goes a, ab, a (the first \")\" pops b), ac, and the second \")\" pops c, leaving a.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-stacks_queues-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "The values 1, 2 and 3 are pushed onto an empty stack in that order. Which value comes off first?"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "All three come off at once",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A stack is last in, first out: the most recently pushed value is removed first.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-stacks_queues-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "Documents sent to a shared printer must be printed in the order they arrived. Which data structure fits best?"
+      ],
+      "options": [
+        {
+          "text": "A stack, because the newest document should print first",
+          "misconception": null
+        },
+        {
+          "text": "A queue, because the first document in should be the first one out",
+          "misconception": null
+        },
+        {
+          "text": "A sorted array, ordered by document size",
+          "misconception": null
+        },
+        {
+          "text": "A set, so duplicate documents are dropped",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "A queue is first in, first out, which is exactly a waiting line.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-stacks_queues-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Why is a stack the natural tool for checking whether brackets like ( [ { } ] ) are balanced?"
+      ],
+      "options": [
+        {
+          "text": "The bracket opened most recently is the one that must be closed next",
+          "misconception": null
+        },
+        {
+          "text": "A stack keeps the brackets sorted",
+          "misconception": null
+        },
+        {
+          "text": "A stack can hold only brackets",
+          "misconception": null
+        },
+        {
+          "text": "A stack removes duplicate brackets automatically",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Each closing bracket must match the latest unmatched opening one, which is exactly what sits on top of the stack.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "items = [4, 5, 6]",
+        "a = items.pop()",
+        "b = items.pop(0)",
+        "print(a, b)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6 4",
+          "misconception": null
+        },
+        {
+          "text": "4 6",
+          "misconception": null
+        },
+        {
+          "text": "6 5",
+          "misconception": null
+        },
+        {
+          "text": "4 5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "pop() with no index removes the last value, while pop(0) removes the first one, so a gets 6 and b gets 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "from collections import deque",
+        "",
+        "q = deque([\"A\", \"B\", \"C\"])",
+        "order = \"\"",
+        "for _ in range(5):",
+        "    person = q.popleft()",
+        "    order += person",
+        "    q.append(person)",
+        "print(order)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "ABCABC",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "CBACB",
+          "misconception": null
+        },
+        {
+          "text": "ABCAB",
+          "misconception": null
+        },
+        {
+          "text": "ABCCB",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Each turn takes the person at the front and sends them to the back, so the turns cycle A, B, C, A, B over five rounds.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-stacks_queues-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "text = []",
+        "undone = []",
+        "for action in [\"a\", \"b\", \"UNDO\", \"c\", \"d\", \"UNDO\", \"UNDO\", \"e\"]:",
+        "    if action == \"UNDO\":",
+        "        if text:",
+        "            undone.append(text.pop())",
+        "    else:",
+        "        text.append(action)",
+        "print(\"\".join(text), \"\".join(undone))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "ae cdb",
+          "misconception": null
+        },
+        {
+          "text": "ae bdc",
+          "misconception": null
+        },
+        {
+          "text": "ace bd",
+          "misconception": null
+        },
+        {
+          "text": "e bdc",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Each UNDO pops the most recent letter still in text, so b, then d, then c are removed in that order, leaving a and the later e.",
+      "verify_code": []
+    }
+  ]
+}

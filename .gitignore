@@ -34,8 +34,29 @@ build/
 # package-lock.json
 # yarn.lock
 
-# Gmail API credentials (NEVER commit these!)
+# Credentials (never commit these)
 credentials.json
 token.json
 backend/app/credentials.json
 backend/app/token.json
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments (any location, not just backend/)
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variable file variants (.env already covered above)
+.env.*
+!.env.example
+
+# Generated secret key (backend/data/secret_key)
+backend/data/

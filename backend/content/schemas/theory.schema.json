@@ -1,0 +1,82 @@
+{
+  "$defs": {
+    "TheoryItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "c",
+            "cpp",
+            "python"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "model_answer": {
+          "title": "Model Answer",
+          "type": "string"
+        },
+        "key_points": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Key Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "language",
+        "difficulty",
+        "question",
+        "model_answer",
+        "key_points"
+      ],
+      "title": "TheoryItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "theory/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/TheoryItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "TheoryFile",
+  "type": "object"
+}

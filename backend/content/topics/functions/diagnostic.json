@@ -1,0 +1,307 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "functions",
+  "items": [
+    {
+      "id": "functions:1:python",
+      "concept_key": "functions:1",
+      "tier": 2,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "def f(x):",
+          "    return x + 1",
+          "print(f(2))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "functions:3:python",
+      "concept_key": "functions:3",
+      "tier": 2,
+      "kind": "fill_blank",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "def square(x):",
+          "    return ____",
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    print(square(n))",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "x * x",
+        "tests": [
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "4"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "25"
+            ]
+          },
+          {
+            "stdin": [
+              "-3"
+            ],
+            "expected_stdout": [
+              "9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "functions:4:python",
+      "concept_key": "functions:4",
+      "tier": 2,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important for a function to have a clear return value, and what happens if a function does not explicitly return anything in Python?"
+      },
+      "key": {
+        "rubric": [
+          "A function without an explicit return statement returns None by default in Python.",
+          "Using the return value of such a function in expressions can lead to unexpected behavior or errors.",
+          "Clear return values make functions predictable and reusable in larger programs."
+        ],
+        "model_answer": "In Python, if a function does not explicitly return a value, it automatically returns None. This can cause issues if the caller expects a different type, such as an integer, and tries to use the result in calculations. A clear return value ensures the function behaves predictably and can be safely composed with other code."
+      }
+    },
+    {
+      "id": "functions:1:c",
+      "concept_key": "functions:1",
+      "tier": 2,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int f(int x) {",
+          "    return x + 1;",
+          "}",
+          "",
+          "int main() {",
+          "    printf(\"%d\\n\", f(2));",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "functions:3:c",
+      "concept_key": "functions:3",
+      "tier": 2,
+      "kind": "fill_blank",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <stdio.h>",
+          "",
+          "int square(int x) {",
+          "    return ____;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    for (int i = 0; i < T; i++) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        printf(\"%d\\n\", square(n));",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "x * x",
+        "tests": [
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "4"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "25"
+            ]
+          },
+          {
+            "stdin": [
+              "-3"
+            ],
+            "expected_stdout": [
+              "9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "functions:4:c",
+      "concept_key": "functions:4",
+      "tier": 2,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important for a function to have a clear return value, and what happens if a function does not explicitly return anything in C?"
+      },
+      "key": {
+        "rubric": [
+          "A function without an explicit return statement has undefined behavior if its return value is used.",
+          "Using the return value of such a function in expressions can lead to unexpected behavior or errors.",
+          "Clear return values make functions predictable and reusable in larger programs."
+        ],
+        "model_answer": "In C, if a function does not explicitly return a value and the caller uses that value, the behavior is undefined. This can cause issues if the caller expects a specific type, such as an integer, and tries to use the result in calculations. A clear return value ensures the function behaves predictably and can be safely composed with other code."
+      }
+    },
+    {
+      "id": "functions:1:cpp",
+      "concept_key": "functions:1",
+      "tier": 2,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "",
+          "int f(int x) {",
+          "    return x + 1;",
+          "}",
+          "",
+          "int main() {",
+          "    std::cout << f(2) << std::endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "functions:3:cpp",
+      "concept_key": "functions:3",
+      "tier": 2,
+      "kind": "fill_blank",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <iostream>",
+          "",
+          "int square(int x) {",
+          "    return ____;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    for (int i = 0; i < T; i++) {",
+          "        int n;",
+          "        std::cin >> n;",
+          "        std::cout << square(n) << std::endl;",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "x * x",
+        "tests": [
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "4"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "25"
+            ]
+          },
+          {
+            "stdin": [
+              "-3"
+            ],
+            "expected_stdout": [
+              "9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "functions:4:cpp",
+      "concept_key": "functions:4",
+      "tier": 2,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important for a function to have a clear return value, and what happens if a function does not explicitly return anything in C++?"
+      },
+      "key": {
+        "rubric": [
+          "A function without an explicit return statement has undefined behavior if its return value is used.",
+          "Using the return value of such a function in expressions can lead to unexpected behavior or errors.",
+          "Clear return values make functions predictable and reusable in larger programs."
+        ],
+        "model_answer": "In C++, if a function does not explicitly return a value and the caller uses that value, the behavior is undefined. This can cause issues if the caller expects a specific type, such as an integer, and tries to use the result in calculations. A clear return value ensures the function behaves predictably and can be safely composed with other code."
+      }
+    }
+  ]
+}

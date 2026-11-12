@@ -1,0 +1,323 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "recursion",
+  "items": [
+    {
+      "id": "recursion:1:python",
+      "concept_key": "recursion:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "def f(n):",
+          "    if n == 0:",
+          "        return 0",
+          "    return f(n-1) + 1",
+          "print(f(3))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "recursion:3:python",
+      "concept_key": "recursion:3",
+      "tier": 4,
+      "kind": "fill_blank",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "def count_ways(n):",
+          "    if n <= 1:",
+          "        return 1",
+          "    return count_ways(n-1) + count_ways(____)",
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    print(count_ways(n))",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n-2",
+        "tests": [
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "recursion:4:python",
+      "concept_key": "recursion:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to have a base case in a recursive function, and what could happen if it is missing or incorrect?"
+      },
+      "key": {
+        "rubric": [
+          "The base case stops the recursion from continuing indefinitely.",
+          "Without a base case, the function will keep calling itself until the call stack overflows.",
+          "An incorrect base case may cause the function to return wrong results or terminate too early."
+        ],
+        "model_answer": "A base case is essential to stop the recursion; without it, the function calls itself infinitely, leading to a stack overflow error. If the base case is incorrect, the recursion may terminate at the wrong point, producing incorrect results or failing to solve the intended problem."
+      }
+    },
+    {
+      "id": "recursion:1:c",
+      "concept_key": "recursion:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int f(int n) {",
+          "    if (n == 0) {",
+          "        return 0;",
+          "    }",
+          "    return f(n-1) + 1;",
+          "}",
+          "",
+          "int main() {",
+          "    printf(\"%d\\n\", f(3));",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "recursion:3:c",
+      "concept_key": "recursion:3",
+      "tier": 4,
+      "kind": "fill_blank",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <stdio.h>",
+          "",
+          "int count_ways(int n) {",
+          "    if (n <= 1) {",
+          "        return 1;",
+          "    }",
+          "    return count_ways(n-1) + count_ways(____);",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        printf(\"%d\\n\", count_ways(n));",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n-2",
+        "tests": [
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "recursion:4:c",
+      "concept_key": "recursion:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to have a base case in a recursive function, and what could happen if it is missing or incorrect?"
+      },
+      "key": {
+        "rubric": [
+          "The base case stops the recursion from continuing indefinitely.",
+          "Without a base case, the function will keep calling itself until the call stack overflows.",
+          "An incorrect base case may cause the function to return wrong results or terminate too early."
+        ],
+        "model_answer": "A base case is essential to stop the recursion; without it, the function calls itself infinitely, leading to a stack overflow error. If the base case is incorrect, the recursion may terminate at the wrong point, producing incorrect results or failing to solve the intended problem."
+      }
+    },
+    {
+      "id": "recursion:1:cpp",
+      "concept_key": "recursion:1",
+      "tier": 4,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "",
+          "int f(int n) {",
+          "    if (n == 0) {",
+          "        return 0;",
+          "    }",
+          "    return f(n-1) + 1;",
+          "}",
+          "",
+          "int main() {",
+          "    std::cout << f(3) << std::endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3"
+        ]
+      }
+    },
+    {
+      "id": "recursion:3:cpp",
+      "concept_key": "recursion:3",
+      "tier": 4,
+      "kind": "fill_blank",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <iostream>",
+          "",
+          "int count_ways(int n) {",
+          "    if (n <= 1) {",
+          "        return 1;",
+          "    }",
+          "    return count_ways(n-1) + count_ways(____);",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    while (T--) {",
+          "        int n;",
+          "        std::cin >> n;",
+          "        std::cout << count_ways(n) << std::endl;",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n-2",
+        "tests": [
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "recursion:4:cpp",
+      "concept_key": "recursion:4",
+      "tier": 4,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to have a base case in a recursive function, and what could happen if it is missing or incorrect?"
+      },
+      "key": {
+        "rubric": [
+          "The base case stops the recursion from continuing indefinitely.",
+          "Without a base case, the function will keep calling itself until the call stack overflows.",
+          "An incorrect base case may cause the function to return wrong results or terminate too early."
+        ],
+        "model_answer": "A base case is essential to stop the recursion; without it, the function calls itself infinitely, leading to a stack overflow error. If the base case is incorrect, the recursion may terminate at the wrong point, producing incorrect results or failing to solve the intended problem."
+      }
+    }
+  ]
+}

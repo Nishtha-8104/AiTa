@@ -1,0 +1,846 @@
+{
+  "schema": "mcq/v1",
+  "topic": "functions",
+  "items": [
+    {
+      "id": "mcq-c-functions-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int square(int x) {",
+        "    return x * x;",
+        "}",
+        "",
+        "int main(void) {",
+        "    printf(\"%d\\n\", square(3) + square(2));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "25",
+          "misconception": null
+        },
+        {
+          "text": "13",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "36",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "square(3) is 9 and square(2) is 4, and their sum is 13.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-functions-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int twice(int x) {",
+        "    return 2 * x;",
+        "}",
+        "",
+        "int add3(int x) {",
+        "    return x + 3;",
+        "}",
+        "",
+        "int main(void) {",
+        "    printf(\"%d %d\\n\", twice(add3(1)), add3(twice(1)));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8 5",
+          "misconception": null
+        },
+        {
+          "text": "5 8",
+          "misconception": null
+        },
+        {
+          "text": "8 8",
+          "misconception": null
+        },
+        {
+          "text": "5 5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "The inner call runs first: twice(add3(1)) is twice(4) = 8, and add3(twice(1)) is add3(2) = 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-functions-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "void add_one(int x) {",
+        "    x = x + 1;",
+        "}",
+        "",
+        "int main(void) {",
+        "    int n = 5;",
+        "    add_one(n);",
+        "    printf(\"%d\\n\", n);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "C passes a copy of n into x; changing the copy leaves n unchanged.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-functions-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "void add_one(int *x) {",
+        "    *x = *x + 1;",
+        "}",
+        "",
+        "int main(void) {",
+        "    int n = 5;",
+        "    add_one(&n);",
+        "    printf(\"%d\\n\", n);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "The address of n",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The function receives the address of n, so *x = *x + 1 changes n itself.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-functions-5",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int counter(void) {",
+        "    static int count = 0;",
+        "    count++;",
+        "    return count;",
+        "}",
+        "",
+        "int main(void) {",
+        "    counter();",
+        "    counter();",
+        "    printf(\"%d\\n\", counter());",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "A static local variable keeps its value between calls, so the third call raises it to 3.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-functions-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "void fill(int a[], int n) {",
+        "    for (int i = 0; i < n; i++) {",
+        "        a[i] = i * i;",
+        "    }",
+        "}",
+        "",
+        "int main(void) {",
+        "    int a[4] = {9, 9, 9, 9};",
+        "    fill(a, 3);",
+        "    printf(\"%d %d\\n\", a[2], a[3]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9 9",
+          "misconception": null
+        },
+        {
+          "text": "4 16",
+          "misconception": "wrong_loop_bound"
+        },
+        {
+          "text": "2 3",
+          "misconception": null
+        },
+        {
+          "text": "4 9",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "An array is passed as a pointer, so fill changes the caller's array, but only indexes 0 to 2; a[3] keeps 9.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int area(int w, int h = 2) {",
+        "    return w * h;",
+        "}",
+        "",
+        "int main() {",
+        "    cout << area(3) << \" \" << area(3, 4) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6 12",
+          "misconception": null
+        },
+        {
+          "text": "3 12",
+          "misconception": null
+        },
+        {
+          "text": "6 6",
+          "misconception": null
+        },
+        {
+          "text": "12 12",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "area(3) uses the default h = 2; area(3, 4) passes 4 for h.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "bool isEven(int n) {",
+        "    return n % 2 == 0;",
+        "}",
+        "",
+        "int main() {",
+        "    cout << isEven(4) << isEven(7) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "truefalse",
+          "misconception": null
+        },
+        {
+          "text": "01",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        },
+        {
+          "text": "11",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "cout prints true as 1 and false as 0; 4 is even and 7 is not.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "void swapVals(int &a, int &b) {",
+        "    int t = a;",
+        "    a = b;",
+        "    b = t;",
+        "}",
+        "",
+        "int main() {",
+        "    int x = 1, y = 2;",
+        "    swapVals(x, y);",
+        "    cout << x << \" \" << y << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "2 1",
+          "misconception": null
+        },
+        {
+          "text": "2 2",
+          "misconception": null
+        },
+        {
+          "text": "1 1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The parameters are references (&), so the function swaps x and y themselves.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "void shout(string s) {",
+        "    s += \"!\";",
+        "}",
+        "",
+        "int main() {",
+        "    string w = \"hi\";",
+        "    shout(w);",
+        "    cout << w << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "hi!",
+          "misconception": null
+        },
+        {
+          "text": "!",
+          "misconception": null
+        },
+        {
+          "text": "hi",
+          "misconception": null
+        },
+        {
+          "text": "hi!!",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "s is a copy of w because the parameter is not a reference, so w is unchanged.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int f(int x) {",
+        "    return x + 1;",
+        "}",
+        "",
+        "double f(double x) {",
+        "    return x * 2;",
+        "}",
+        "",
+        "int main() {",
+        "    cout << f(3) << \" \" << f(3.0) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4 4",
+          "misconception": null
+        },
+        {
+          "text": "6 6",
+          "misconception": null
+        },
+        {
+          "text": "4 6",
+          "misconception": null
+        },
+        {
+          "text": "6 4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The compiler picks the overload that matches the argument's type: 3 is an int and 3.0 is a double.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-functions-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int f(int x) {",
+        "    cout << x << \" \";",
+        "    return x * 2;",
+        "}",
+        "",
+        "int main() {",
+        "    int r = f(f(1));",
+        "    cout << r << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2 1 4",
+          "misconception": null
+        },
+        {
+          "text": "1 2 4",
+          "misconception": null
+        },
+        {
+          "text": "1 2",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The inner f(1) runs first and prints 1, returning 2; the outer f(2) prints 2 and returns 4, which is printed last.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def f(x=2):",
+        "    return x * 3",
+        "",
+        "print(f(), f(4))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "6 12",
+          "misconception": null
+        },
+        {
+          "text": "2 4",
+          "misconception": null
+        },
+        {
+          "text": "6 6",
+          "misconception": null
+        },
+        {
+          "text": "None 12",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "f() uses the default x = 2, and f(4) uses 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def double(x):",
+        "    print(x * 2, end=\" \")",
+        "",
+        "result = double(4)",
+        "print(result)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8 8",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "8 None",
+          "misconception": null
+        },
+        {
+          "text": "None",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "double prints 8 but returns nothing, so result is None.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def add(item, items=[]):",
+        "    items.append(item)",
+        "    return items",
+        "",
+        "add(1)",
+        "print(add(2))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[2]",
+          "misconception": null
+        },
+        {
+          "text": "[1, 2]",
+          "misconception": null
+        },
+        {
+          "text": "[1]",
+          "misconception": null
+        },
+        {
+          "text": "[2, 1]",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The default list is created once, when the function is defined, so both calls append to the same list.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-functions-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What is the difference between a function returning a value and a function printing it?"
+      ],
+      "options": [
+        {
+          "text": "There is no difference; both give the value to the caller",
+          "misconception": "return_vs_print"
+        },
+        {
+          "text": "Returning hands the value back to the calling code so it can be used further; printing only shows it on the screen",
+          "misconception": null
+        },
+        {
+          "text": "Printing stores the value in a variable; returning shows it on the screen",
+          "misconception": null
+        },
+        {
+          "text": "Returning ends the whole program; printing does not",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Only a returned value can be stored, compared or passed on by the caller; printed text is just output.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-functions-2",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "A caller's variable n holds 5 and is passed to a function by value, so the function gets its own copy in a parameter x. The function sets x to 100. What is n after the call?"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "100",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "It cannot be known",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Passing by value copies the value; changing the copy never touches the caller's variable.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-functions-3",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What is the main reason to split a program into functions?"
+      ],
+      "options": [
+        {
+          "text": "Each function runs at the same time as the others, so the program is faster",
+          "misconception": null
+        },
+        {
+          "text": "A program with functions does not need to be compiled or interpreted",
+          "misconception": null
+        },
+        {
+          "text": "To give one task a name so it can be reused, read and tested on its own",
+          "misconception": null
+        },
+        {
+          "text": "Variables cannot exist outside a function",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Functions let you write a task once, call it wherever it is needed, and check it separately.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "x = 10",
+        "",
+        "def change():",
+        "    x = 5",
+        "    return x",
+        "",
+        "y = change()",
+        "print(x, y)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5 5",
+          "misconception": null
+        },
+        {
+          "text": "10 5",
+          "misconception": null
+        },
+        {
+          "text": "10 10",
+          "misconception": null
+        },
+        {
+          "text": "5 10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The x inside change is a new local variable, so the outer x stays 10 while the function returns 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def first_even(nums):",
+        "    for n in nums:",
+        "        if n % 2 == 0:",
+        "            return n",
+        "    return -1",
+        "",
+        "print(first_even([3, 7, 8, 4]), first_even([1, 5]))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4 -1",
+          "misconception": null
+        },
+        {
+          "text": "8 None",
+          "misconception": null
+        },
+        {
+          "text": "8 -1",
+          "misconception": null
+        },
+        {
+          "text": "8 4 -1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "return stops the function at the first even number, 8, and the second list has no even number so the loop ends and -1 is returned.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-functions-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "def update(nums, k):",
+        "    nums.append(k)",
+        "    k = k + 1",
+        "    nums = [0]",
+        "    return k",
+        "",
+        "a = [1]",
+        "b = 5",
+        "c = update(a, b)",
+        "print(a, b, c)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "[0] 6 6",
+          "misconception": null
+        },
+        {
+          "text": "[1] 5 6",
+          "misconception": null
+        },
+        {
+          "text": "[0] 5 6",
+          "misconception": null
+        },
+        {
+          "text": "[1, 5] 5 6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "append changes the caller's list, but giving k or nums a new value only changes the function's local names, so b stays 5 and a keeps [1, 5].",
+      "verify_code": []
+    }
+  ]
+}

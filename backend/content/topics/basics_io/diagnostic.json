@@ -1,0 +1,524 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "basics_io",
+  "items": [
+    {
+      "id": "basics_io:1:python",
+      "concept_key": "basics_io:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "x = 5",
+          "y = 3",
+          "print(x + y)",
+          "print(x * y)",
+          "print(x - y)",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "8",
+          "15",
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "basics_io:2:python",
+      "concept_key": "basics_io:2",
+      "tier": 1,
+      "kind": "find_bug",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read two whole numbers a and b, one per line, and print a divided by b as a whole number, dropping any remainder.",
+        "code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    a = int(input())",
+          "    b = int(input())",
+          "    print(a / b)",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    a = int(input())",
+          "    b = int(input())",
+          "    print(a // b)",
+          ""
+        ],
+        "change_from": "print(a // b)",
+        "change_to": "print(a / b)",
+        "tests": [
+          {
+            "stdin": [
+              "5",
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "7",
+              "3"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "1",
+              "2"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ],
+        "bug_line": 5
+      }
+    },
+    {
+      "id": "basics_io:3:python",
+      "concept_key": "basics_io:3",
+      "tier": 1,
+      "kind": "fill_blank",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    if ____:",
+          "        print(\"Even\")",
+          "    else:",
+          "        print(\"Odd\")",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n % 2 == 0",
+        "tests": [
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          },
+          {
+            "stdin": [
+              "7"
+            ],
+            "expected_stdout": [
+              "Odd"
+            ]
+          },
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "basics_io:4:python",
+      "concept_key": "basics_io:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use integer division (//) instead of regular division (/) when calculating how many whole items fit into a container, such as determining how many full boxes can be packed from a number of items?"
+      },
+      "key": {
+        "rubric": [
+          "Using / returns a float, which may not represent the whole number of items correctly.",
+          "Integer division // truncates toward negative infinity, giving the exact count of whole units.",
+          "Using / could lead to incorrect results when comparing or printing whole counts due to decimal places.",
+          "For positive numbers, // gives the floor of the division, which matches the intuitive meaning of \"how many times does it fit completely\"."
+        ],
+        "model_answer": "Using / returns a float, which may include fractional parts that don't represent whole items, while // performs integer division and gives the exact count of whole units that fit. This avoids incorrect results when the output must be a whole number, such as counting full boxes. For positive numbers, // gives the floor of the division, which matches the intuitive meaning of how many times the divisor fits completely into the dividend."
+      }
+    },
+    {
+      "id": "basics_io:1:c",
+      "concept_key": "basics_io:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int x = 5;",
+          "    int y = 3;",
+          "    printf(\"%d\\n\", x + y);",
+          "    printf(\"%d\\n\", x * y);",
+          "    printf(\"%d\\n\", x - y);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "8",
+          "15",
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "basics_io:2:c",
+      "concept_key": "basics_io:2",
+      "tier": 1,
+      "kind": "find_bug",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read two whole numbers a and b, one per line, and print a divided by b as a whole number, dropping any remainder.",
+        "code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    for (int _ = 0; _ < T; _++) {",
+          "        int a, b;",
+          "        scanf(\"%d\", &a);",
+          "        scanf(\"%d\", &b);",
+          "        printf(\"%f\\n\", a / (float)b);",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    for (int _ = 0; _ < T; _++) {",
+          "        int a, b;",
+          "        scanf(\"%d\", &a);",
+          "        scanf(\"%d\", &b);",
+          "        printf(\"%d\\n\", a / b);",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "change_from": "printf(\"%d\\n\", a / b);",
+        "change_to": "printf(\"%f\\n\", a / (float)b);",
+        "tests": [
+          {
+            "stdin": [
+              "5",
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "7",
+              "3"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "1",
+              "2"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ],
+        "bug_line": 9
+      }
+    },
+    {
+      "id": "basics_io:3:c",
+      "concept_key": "basics_io:3",
+      "tier": 1,
+      "kind": "fill_blank",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <stdio.h>",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    for (int _ = 0; _ < T; _++) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        if (____) {",
+          "            printf(\"Even\\n\");",
+          "        } else {",
+          "            printf(\"Odd\\n\");",
+          "        }",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n % 2 == 0",
+        "tests": [
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          },
+          {
+            "stdin": [
+              "7"
+            ],
+            "expected_stdout": [
+              "Odd"
+            ]
+          },
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "basics_io:4:c",
+      "concept_key": "basics_io:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use integer division (/) instead of regular division when calculating how many whole items fit into a container, such as determining how many full boxes can be packed from a number of items?"
+      },
+      "key": {
+        "rubric": [
+          "Using regular division with integers in C performs integer division when both operands are integers, but if one operand is float, it returns a float that may not represent the whole number correctly.",
+          "Integer division truncates toward zero for positive numbers, giving the exact count of whole units.",
+          "Using float division could lead to incorrect results when comparing or printing whole counts due to decimal places.",
+          "For positive numbers, integer division gives the floor of the division, which matches the intuitive meaning of \"how many times does it fit completely\"."
+        ],
+        "model_answer": "In C, when both operands of / are integers, it performs integer division and truncates toward zero, giving the exact count of whole units. If float division is used, it returns a float with fractional parts that don't represent whole items, leading to incorrect results when the output must be a whole number. For positive numbers, integer division gives the floor of the division, matching the intuitive meaning of how many times the divisor fits completely into the dividend."
+      }
+    },
+    {
+      "id": "basics_io:1:cpp",
+      "concept_key": "basics_io:1",
+      "tier": 1,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "int main() {",
+          "    int x = 5;",
+          "    int y = 3;",
+          "    std::cout << x + y << '\\n';",
+          "    std::cout << x * y << '\\n';",
+          "    std::cout << x - y << '\\n';",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "8",
+          "15",
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "basics_io:3:cpp",
+      "concept_key": "basics_io:3",
+      "tier": 1,
+      "kind": "fill_blank",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <iostream>",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    for (int _ = 0; _ < T; _++) {",
+          "        int n;",
+          "        std::cin >> n;",
+          "        if (____) {",
+          "            std::cout << \"Even\\n\";",
+          "        } else {",
+          "            std::cout << \"Odd\\n\";",
+          "        }",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "n % 2 == 0",
+        "tests": [
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          },
+          {
+            "stdin": [
+              "7"
+            ],
+            "expected_stdout": [
+              "Odd"
+            ]
+          },
+          {
+            "stdin": [
+              "0"
+            ],
+            "expected_stdout": [
+              "Even"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "basics_io:2:cpp",
+      "concept_key": "basics_io:2",
+      "tier": 1,
+      "kind": "find_bug",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read two whole numbers a and b, one per line, and print a divided by b as a whole number, dropping any remainder.",
+        "code": [
+          "#include <iostream>",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    for (int i = 0; i < T; i++) {",
+          "        int a, b;",
+          "        std::cin >> a >> b;",
+          "        std::cout << (a / (float)b) << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "#include <iostream>",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    for (int i = 0; i < T; i++) {",
+          "        int a, b;",
+          "        std::cin >> a >> b;",
+          "        std::cout << (a / b) << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "change_from": "std::cout << (a / b) << '\\n';",
+        "change_to": "std::cout << (a / (float)b) << '\\n';",
+        "tests": [
+          {
+            "stdin": [
+              "5",
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "7",
+              "3"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "1",
+              "2"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          }
+        ],
+        "bug_line": 8
+      }
+    },
+    {
+      "id": "basics_io:4:cpp",
+      "concept_key": "basics_io:4",
+      "tier": 1,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Why is it important to use integer division instead of regular division when calculating how many whole items fit into a container, such as determining how many full boxes can be packed from a number of items?"
+      },
+      "key": {
+        "rubric": [
+          "Using / with mixed types returns a float, which may not represent the whole number of items correctly.",
+          "Integer division truncates toward zero for positive numbers, giving the exact count of whole units.",
+          "Using float division could lead to incorrect results when comparing or printing whole counts due to decimal places.",
+          "For positive numbers, integer division gives the floor of the division, which matches the intuitive meaning of \"how many times does it fit completely\"."
+        ],
+        "model_answer": "In C++, when both operands of / are integers, it performs integer division and truncates toward zero, giving the exact count of whole units. If float division is used (e.g., with float or double operands), it returns a float with fractional parts that don't represent whole items, leading to incorrect results when the output must be a whole number. For positive numbers, integer division gives the floor of the division, matching the intuitive meaning of how many times the divisor fits completely into the dividend."
+      }
+    }
+  ]
+}

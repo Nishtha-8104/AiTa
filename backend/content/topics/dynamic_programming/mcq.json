@@ -1,0 +1,871 @@
+{
+  "schema": "mcq/v1",
+  "topic": "dynamic_programming",
+  "items": [
+    {
+      "id": "mcq-c-dynamic_programming-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int f[6];",
+        "    f[0] = 0;",
+        "    f[1] = 1;",
+        "    for (int i = 2; i < 6; i++) {",
+        "        f[i] = f[i - 1] + f[i - 2];",
+        "    }",
+        "    printf(\"%d\\n\", f[5]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The table fills in as 0, 1, 1, 2, 3, 5, each entry built from the two before it.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-dynamic_programming-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int a[] = {3, 1, 4, 1};",
+        "    int pre[5] = {0};",
+        "    for (int i = 0; i < 4; i++) {",
+        "        pre[i + 1] = pre[i] + a[i];",
+        "    }",
+        "    printf(\"%d\\n\", pre[4] - pre[1]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "pre[k] holds the sum of the first k values, so pre[4] - pre[1] is the sum of a[1] to a[3]: 1 + 4 + 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-dynamic_programming-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int dp[5] = {1};",
+        "    for (int i = 1; i < 5; i++) {",
+        "        dp[i] = dp[i - 1] * 2;",
+        "    }",
+        "    printf(\"%d\\n\", dp[4]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "8",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "32",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "0",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "16",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "dp[0] is 1 and every entry doubles the previous one: 1, 2, 4, 8, 16.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-dynamic_programming-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "ways[i][j] counts the paths from the top-left corner of a grid, moving only right or down. What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int ways[3][3];",
+        "    for (int i = 0; i < 3; i++) {",
+        "        for (int j = 0; j < 3; j++) {",
+        "            if (i == 0 || j == 0) {",
+        "                ways[i][j] = 1;",
+        "            } else {",
+        "                ways[i][j] = ways[i - 1][j] + ways[i][j - 1];",
+        "            }",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", ways[2][2]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Each cell adds the paths arriving from above and from the left; the table's last row is 1, 3, 6.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-dynamic_programming-5",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int memo[10];",
+        "int calls = 0;",
+        "",
+        "int fib(int n) {",
+        "    calls++;",
+        "    if (n < 2) {",
+        "        return n;",
+        "    }",
+        "    if (memo[n]) {",
+        "        return memo[n];",
+        "    }",
+        "    memo[n] = fib(n - 1) + fib(n - 2);",
+        "    return memo[n];",
+        "}",
+        "",
+        "int main(void) {",
+        "    fib(6);",
+        "    printf(\"%d\\n\", calls);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "25",
+          "misconception": null
+        },
+        {
+          "text": "11",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The first chain fib(6) down to fib(2) makes 5 calls and fib(2) calls fib(1) and fib(0); after that each second call (fib(1), then fib(2), fib(3), fib(4)) is answered at once, giving 5 + 2 + 4 = 11. Without the memo it would be 25.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-dynamic_programming-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "ways[s] counts the ways to make the sum s from coins of value 1 and 2, ignoring order. What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    int coins[] = {1, 2};",
+        "    int ways[5] = {1, 0, 0, 0, 0};",
+        "    for (int c = 0; c < 2; c++) {",
+        "        for (int s = coins[c]; s <= 4; s++) {",
+        "            ways[s] += ways[s - coins[c]];",
+        "        }",
+        "    }",
+        "    printf(\"%d\\n\", ways[4]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "The ways to make 4 are 1+1+1+1, 1+1+2 and 2+2; handling one coin type at a time avoids counting reorderings twice.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> dp(5, 0);",
+        "    dp[0] = 1;",
+        "    for (int i = 1; i < 5; i++) {",
+        "        dp[i] = dp[i - 1] + i;",
+        "    }",
+        "    cout << dp[4] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "10",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "11",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "15",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The values go 1, 2, 4, 7, 11: each adds its index to the entry before.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "w[i] counts the ways to climb i steps taking 1 or 2 at a time. What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<long long> w(6);",
+        "    w[0] = 1;",
+        "    w[1] = 1;",
+        "    for (int i = 2; i <= 5; i++) {",
+        "        w[i] = w[i - 1] + w[i - 2];",
+        "    }",
+        "    cout << w[5] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "13",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "The last move is either 1 step or 2, so w[i] = w[i - 1] + w[i - 2]: 1, 1, 2, 3, 5, 8.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {-1, 3, -2, 4, -5};",
+        "    int cur = v[0], best = v[0];",
+        "    for (int i = 1; i < (int) v.size(); i++) {",
+        "        cur = max(v[i], cur + v[i]);",
+        "        best = max(best, cur);",
+        "    }",
+        "    cout << best << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "-1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "cur is the best sum of a block ending here; the block 3, -2, 4 gives the largest total, 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "dp[i] is the length of the longest increasing run of values, not necessarily adjacent, that ends at index i. What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    vector<int> v = {3, 1, 4, 1, 5};",
+        "    int n = v.size();",
+        "    vector<int> dp(n, 1);",
+        "    for (int i = 0; i < n; i++) {",
+        "        for (int j = 0; j < i; j++) {",
+        "            if (v[j] < v[i]) {",
+        "                dp[i] = max(dp[i], dp[j] + 1);",
+        "            }",
+        "        }",
+        "    }",
+        "    cout << *max_element(dp.begin(), dp.end()) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "dp works out to 1, 1, 2, 1, 3; for example 3, 4, 5 is an increasing run of length 3.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "dp[i][j] is the cheapest path sum from the top-left corner to (i, j), moving only right or down. What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int grid[2][2] = {{1, 3}, {2, 1}};",
+        "    int dp[2][2];",
+        "    dp[0][0] = grid[0][0];",
+        "    dp[0][1] = dp[0][0] + grid[0][1];",
+        "    dp[1][0] = dp[0][0] + grid[1][0];",
+        "    dp[1][1] = grid[1][1] + min(dp[0][1], dp[1][0]);",
+        "    cout << dp[1][1] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "3",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Reaching (1, 1) through (1, 0) costs 1 + 2 + 1 = 4, cheaper than through (0, 1), which costs 5.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-dynamic_programming-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <algorithm>",
+        "#include <iostream>",
+        "#include <vector>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    int weight[] = {1, 3, 4};",
+        "    int value[] = {15, 20, 30};",
+        "    int capacity = 4;",
+        "    vector<int> best(capacity + 1, 0);",
+        "    for (int k = 0; k < 3; k++) {",
+        "        for (int c = capacity; c >= weight[k]; c--) {",
+        "            best[c] = max(best[c], best[c - weight[k]] + value[k]);",
+        "        }",
+        "    }",
+        "    cout << best[capacity] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "30",
+          "misconception": null
+        },
+        {
+          "text": "65",
+          "misconception": null
+        },
+        {
+          "text": "50",
+          "misconception": null
+        },
+        {
+          "text": "35",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "This is the 0/1 knapsack: the items of weight 1 and 3 fit together for value 35, more than the single item of weight 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "dp = [0, 1]",
+        "for i in range(2, 7):",
+        "    dp.append(dp[-1] + dp[-2])",
+        "print(dp[6])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "13",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "6",
+          "misconception": null
+        },
+        {
+          "text": "8",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "The list grows 0, 1, 1, 2, 3, 5, 8, and index 6 holds 8.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "memo = {}",
+        "",
+        "def f(n):",
+        "    if n in memo:",
+        "        return memo[n]",
+        "    if n <= 2:",
+        "        return 1",
+        "    memo[n] = f(n - 1) + f(n - 2)",
+        "    return memo[n]",
+        "",
+        "print(f(10), len(memo))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "55 10",
+          "misconception": null
+        },
+        {
+          "text": "89 8",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "55 8",
+          "misconception": null
+        },
+        {
+          "text": "34 8",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "f(10) is 55, and only the values n = 3 to 10 are stored, since n <= 2 returns before storing.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "grid = [[1] * 3 for _ in range(3)]",
+        "for i in range(1, 3):",
+        "    for j in range(1, 3):",
+        "        grid[i][j] = grid[i - 1][j] + grid[i][j - 1]",
+        "print(grid[2][2])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        },
+        {
+          "text": "6",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Each cell adds the cell above and the cell to the left, giving the rows 1 1 1, 1 2 3 and 1 3 6.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-dynamic_programming-1",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Which pair of properties makes a problem a good fit for dynamic programming?"
+      ],
+      "options": [
+        {
+          "text": "The input is sorted and has no duplicates",
+          "misconception": null
+        },
+        {
+          "text": "The same smaller subproblems come up again and again, and the best answer can be built from the best answers to those subproblems",
+          "misconception": null
+        },
+        {
+          "text": "The problem has exactly one possible answer",
+          "misconception": null
+        },
+        {
+          "text": "The input is small enough to try every possibility",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "These are overlapping subproblems and optimal substructure; DP solves each subproblem once and reuses the answer.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-dynamic_programming-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What does memoisation do in a recursive solution?"
+      ],
+      "options": [
+        {
+          "text": "It writes each result to the screen",
+          "misconception": null
+        },
+        {
+          "text": "It removes the base case so the recursion is faster",
+          "misconception": "missing_base_case"
+        },
+        {
+          "text": "It stores each subproblem's result the first time it is computed, so later calls reuse it instead of recomputing",
+          "misconception": null
+        },
+        {
+          "text": "It sorts the input before the recursion starts",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Remembering results turns an exponential number of repeated calls into one computation per subproblem.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-dynamic_programming-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "Coins of value 1, 3 and 4 are available. A greedy method always takes the largest coin that still fits. Why does it fail to find the fewest coins for the amount 6?"
+      ],
+      "options": [
+        {
+          "text": "It takes 4 + 1 + 1, three coins, but 3 + 3 needs only two",
+          "misconception": null
+        },
+        {
+          "text": "It cannot make 6 at all",
+          "misconception": null
+        },
+        {
+          "text": "It takes six 1-coins",
+          "misconception": null
+        },
+        {
+          "text": "It does not fail; greedy is always optimal for coins",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Taking the biggest coin first is not always best, so DP tries every last coin and keeps the cheapest result.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "ways[i] counts the ways to cover a strip of length i with tiles of length 2 and 3. What does this program print?",
+        "```python",
+        "ways = [1, 0, 1]",
+        "for i in range(3, 8):",
+        "    ways.append(ways[i - 2] + ways[i - 3])",
+        "print(ways[7])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": "wrong_initial_value"
+        },
+        {
+          "text": "5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "The list grows 1, 0, 1, 1, 1, 2, 2, 3, so a strip of length 7 has 3 tilings: 2+2+3, 2+3+2 and 3+2+2.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "best(i) is the largest sum you can pick from vals[i:] without taking two neighbours. What does this program print?",
+        "```python",
+        "memo = {}",
+        "",
+        "def best(i, vals):",
+        "    if i >= len(vals):",
+        "        return 0",
+        "    if i in memo:",
+        "        return memo[i]",
+        "    memo[i] = max(best(i + 1, vals), vals[i] + best(i + 2, vals))",
+        "    return memo[i]",
+        "",
+        "print(best(0, [4, 1, 2, 7, 5]), len(memo))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "11 7",
+          "misconception": null
+        },
+        {
+          "text": "19 5",
+          "misconception": null
+        },
+        {
+          "text": "11 5",
+          "misconception": null
+        },
+        {
+          "text": "8 5",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "Working back from the end gives best values 5, 7, 7, 8, 11, and only i = 0 to 4 are stored because calls with i past the end return before saving.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-dynamic_programming-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "weight = [2, 3]",
+        "value = [3, 4]",
+        "cap = 6",
+        "best = [0] * (cap + 1)",
+        "for k in range(2):",
+        "    for c in range(weight[k], cap + 1):",
+        "        best[c] = max(best[c], best[c - weight[k]] + value[k])",
+        "print(best[cap])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "7",
+          "misconception": null
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "12",
+          "misconception": null
+        },
+        {
+          "text": "9",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Because c runs upward, best[c - weight[k]] may already include item k, so an item can be used again and three items of weight 2 give 9.",
+      "verify_code": []
+    }
+  ]
+}

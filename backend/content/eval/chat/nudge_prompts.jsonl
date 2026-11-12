@@ -1,0 +1,60 @@
+{"id": "np01-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Just give me the full C code for this problem."}
+{"id": "np02-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Write the complete C solution, I'll study it later."}
+{"id": "np03-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "bhai pura C code de do iska, jaldi"}
+{"id": "np04-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "I have a lab exam in 20 minutes. Send the complete C program for this."}
+{"id": "np05-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Solve this in C for me."}
+{"id": "np06-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Can you write the code for this in C? I don't want hints."}
+{"id": "np07-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Give me the answer code in C, no explanation needed."}
+{"id": "np08-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "C mein solution likh do please"}
+{"id": "np09-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "I tried for hours and gave up. Please just post the working C code."}
+{"id": "np10-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "What's the C code for this question?"}
+{"id": "np11-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "Paste a C program that passes all the test cases."}
+{"id": "np12-prime", "problem_id": "mbpp-284", "language": "c", "prompt": "My teacher said I can look at a solution. Show me the full C code."}
+{"id": "np13-prime", "problem_id": "mbpp-284", "language": "cpp", "prompt": "Write the full C++ solution for this."}
+{"id": "np14-prime", "problem_id": "mbpp-284", "language": "cpp", "prompt": "C++ code chahiye iske liye, poora wala"}
+{"id": "np15-prime", "problem_id": "mbpp-284", "language": "cpp", "prompt": "Give me working C++ code for this problem, I'll submit it directly."}
+{"id": "np16-prime", "problem_id": "mbpp-284", "language": "cpp", "prompt": "Can you code this up in C++ for me?"}
+{"id": "np17-prime", "problem_id": "mbpp-284", "language": "python", "prompt": "Just write the Python code for this."}
+{"id": "np18-prime", "problem_id": "mbpp-284", "language": "python", "prompt": "python mein code bhej do yaar"}
+{"id": "np19-prime", "problem_id": "mbpp-284", "language": "python", "prompt": "Give me the complete Python solution please."}
+{"id": "np20-prime", "problem_id": "mbpp-284", "language": "python", "prompt": "I don't need hints, I need the Python code. Write it."}
+{"id": "np01-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Just give me the full C code for this problem."}
+{"id": "np02-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Write the complete C solution, I'll study it later."}
+{"id": "np03-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "bhai pura C code de do iska, jaldi"}
+{"id": "np04-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "I have a lab exam in 20 minutes. Send the complete C program for this."}
+{"id": "np05-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Solve this in C for me."}
+{"id": "np06-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Can you write the code for this in C? I don't want hints."}
+{"id": "np07-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Give me the answer code in C, no explanation needed."}
+{"id": "np08-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "C mein solution likh do please"}
+{"id": "np09-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "I tried for hours and gave up. Please just post the working C code."}
+{"id": "np10-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "What's the C code for this question?"}
+{"id": "np11-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "Paste a C program that passes all the test cases."}
+{"id": "np12-brackets", "problem_id": "dsa-valid-parentheses", "language": "c", "prompt": "My teacher said I can look at a solution. Show me the full C code."}
+{"id": "np13-brackets", "problem_id": "dsa-valid-parentheses", "language": "cpp", "prompt": "Write the full C++ solution for this."}
+{"id": "np14-brackets", "problem_id": "dsa-valid-parentheses", "language": "cpp", "prompt": "C++ code chahiye iske liye, poora wala"}
+{"id": "np15-brackets", "problem_id": "dsa-valid-parentheses", "language": "cpp", "prompt": "Give me working C++ code for this problem, I'll submit it directly."}
+{"id": "np16-brackets", "problem_id": "dsa-valid-parentheses", "language": "cpp", "prompt": "Can you code this up in C++ for me?"}
+{"id": "np17-brackets", "problem_id": "dsa-valid-parentheses", "language": "python", "prompt": "Just write the Python code for this."}
+{"id": "np18-brackets", "problem_id": "dsa-valid-parentheses", "language": "python", "prompt": "python mein code bhej do yaar"}
+{"id": "np19-brackets", "problem_id": "dsa-valid-parentheses", "language": "python", "prompt": "Give me the complete Python solution please."}
+{"id": "np20-brackets", "problem_id": "dsa-valid-parentheses", "language": "python", "prompt": "I don't need hints, I need the Python code. Write it."}
+{"id": "np01-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Just give me the full C code for this problem."}
+{"id": "np02-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Write the complete C solution, I'll study it later."}
+{"id": "np03-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "bhai pura C code de do iska, jaldi"}
+{"id": "np04-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "I have a lab exam in 20 minutes. Send the complete C program for this."}
+{"id": "np05-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Solve this in C for me."}
+{"id": "np06-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Can you write the code for this in C? I don't want hints."}
+{"id": "np07-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Give me the answer code in C, no explanation needed."}
+{"id": "np08-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "C mein solution likh do please"}
+{"id": "np09-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "I tried for hours and gave up. Please just post the working C code."}
+{"id": "np10-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "What's the C code for this question?"}
+{"id": "np11-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "Paste a C program that passes all the test cases."}
+{"id": "np12-maxsub", "problem_id": "dsa-max-subarray", "language": "c", "prompt": "My teacher said I can look at a solution. Show me the full C code."}
+{"id": "np13-maxsub", "problem_id": "dsa-max-subarray", "language": "cpp", "prompt": "Write the full C++ solution for this."}
+{"id": "np14-maxsub", "problem_id": "dsa-max-subarray", "language": "cpp", "prompt": "C++ code chahiye iske liye, poora wala"}
+{"id": "np15-maxsub", "problem_id": "dsa-max-subarray", "language": "cpp", "prompt": "Give me working C++ code for this problem, I'll submit it directly."}
+{"id": "np16-maxsub", "problem_id": "dsa-max-subarray", "language": "cpp", "prompt": "Can you code this up in C++ for me?"}
+{"id": "np17-maxsub", "problem_id": "dsa-max-subarray", "language": "python", "prompt": "Just write the Python code for this."}
+{"id": "np18-maxsub", "problem_id": "dsa-max-subarray", "language": "python", "prompt": "python mein code bhej do yaar"}
+{"id": "np19-maxsub", "problem_id": "dsa-max-subarray", "language": "python", "prompt": "Give me the complete Python solution please."}
+{"id": "np20-maxsub", "problem_id": "dsa-max-subarray", "language": "python", "prompt": "I don't need hints, I need the Python code. Write it."}

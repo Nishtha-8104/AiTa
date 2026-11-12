@@ -1,0 +1,677 @@
+{
+  "schema": "problems/v1",
+  "topic": "searching",
+  "items": [
+    {
+      "id": "pet-count-occurrences",
+      "title": "Count Occurrences",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. The third line contains an integer target. Print how many of the n integers are equal to target.",
+      "constraints": "0 <= n <= 300; every integer is between -1000 and 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "lines = sys.stdin.read().split(\"\\n\")",
+          "t = int(lines[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(lines[pos])",
+          "    values = list(map(int, lines[pos + 1].split()))",
+          "    target = int(lines[pos + 2])",
+          "    pos += 3",
+          "    print(values.count(target))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "1 2 2 3 2",
+            "2"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "1 1 1",
+            "1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "5 6 7 8",
+            "9"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "0",
+            "",
+            "4"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "-3",
+            "-3"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "4 0 4 0 4 0",
+            "0"
+          ],
+          "output": [
+            "3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-srch-last-occurrence",
+      "title": "Last Occurrence",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. The third line contains an integer target. Print the 0-based position of the last occurrence of target among the n integers. If target does not appear, print -1.",
+      "constraints": "1 <= n <= 100000; every integer and target are between -1000000000 and 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = list(map(int, data[pos + 1:pos + 1 + n]))",
+          "    target = int(data[pos + 1 + n])",
+          "    pos += n + 2",
+          "    answer = -1",
+          "    for i in range(n):",
+          "        if values[i] == target:",
+          "            answer = i",
+          "    print(answer)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "6",
+            "4 7 4 1 4 9",
+            "4"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5",
+            "5"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "3 8 2 6 1",
+            "3"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "2 9 9 9",
+            "9"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "10 20 30 40 50",
+            "25"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "-2 -2 -2",
+            "7"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "-8",
+            "3"
+          ],
+          "output": [
+            "-1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-srch-first-above",
+      "title": "First Value Above K",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. The third line contains an integer k. Print the 0-based position of the first integer that is strictly greater than k. If no integer is greater than k, print -1.",
+      "constraints": "1 <= n <= 100000; every integer and k are between -1000000000 and 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = list(map(int, data[pos + 1:pos + 1 + n]))",
+          "    k = int(data[pos + 1 + n])",
+          "    pos += n + 2",
+          "    answer = -1",
+          "    for i in range(n):",
+          "        if values[i] > k:",
+          "            answer = i",
+          "            break",
+          "    print(answer)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "3 10 7 12 4",
+            "8"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "6 6 9 2",
+            "6"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "1 2 3",
+            "5"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "0",
+            "-1"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "-5 -3 -9 -1",
+            "-2"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "7 7",
+            "7"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "50 1 1",
+            "49"
+          ],
+          "output": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-srch-insert-position",
+      "title": "Insert Position",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers in non-decreasing order. The third line contains an integer q. The fourth line contains q space-separated query values. For each query value x, print the smallest 0-based position at which x could be inserted so that the list stays in non-decreasing order, which is the number of list values strictly less than x. Print the q answers on one line, separated by single spaces.",
+      "constraints": "1 <= n <= 100000; 1 <= q <= 100000; every list value and query value is between -1000000000 and 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "from bisect import bisect_left",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = list(map(int, data[pos + 1:pos + 1 + n]))",
+          "    pos += n + 1",
+          "    q = int(data[pos])",
+          "    queries = list(map(int, data[pos + 1:pos + 1 + q]))",
+          "    pos += q + 1",
+          "    print(\" \".join(str(bisect_left(values, x)) for x in queries))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "2 4 4 4 9",
+            "4",
+            "4 1 9 10"
+          ],
+          "output": [
+            "1 0 4 5"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "7",
+            "3",
+            "7 6 8"
+          ],
+          "output": [
+            "0 0 1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "-3 -1 0 0 5 8",
+            "2",
+            "0 6"
+          ],
+          "output": [
+            "2 5"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "10 20 30 40",
+            "3",
+            "25 40 41"
+          ],
+          "output": [
+            "2 3 4"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "5 5 5",
+            "3",
+            "5 4 6"
+          ],
+          "output": [
+            "0 0 3"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "1 3 5 7 9",
+            "5",
+            "1 3 5 7 9"
+          ],
+          "output": [
+            "0 1 2 3 4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-srch-int-sqrt",
+      "title": "Integer Square Root",
+      "difficulty": "medium",
+      "statement": "A single line contains a non-negative integer x. Print the largest integer r such that r * r <= x.",
+      "constraints": "0 <= x <= 1000000000. Do not use a floating-point square root; r * r can exceed the range of a 32-bit int while searching.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    x = int(data[k])",
+          "    lo, hi, answer = 0, x, 0",
+          "    while lo <= hi:",
+          "        mid = (lo + hi) // 2",
+          "        if mid * mid <= x:",
+          "            answer = mid",
+          "            lo = mid + 1",
+          "        else:",
+          "            hi = mid - 1",
+          "    print(answer)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "16"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "2"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "17"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "999999999"
+          ],
+          "output": [
+            "31622"
+          ]
+        },
+        {
+          "input": [
+            "1000000000"
+          ],
+          "output": [
+            "31622"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-srch-day-pages",
+      "title": "Pages Per Day",
+      "difficulty": "hard",
+      "statement": "The first line contains two integers n and d. The second line contains n space-separated positive integers; the i-th is the number of pages in chapter i. A student reads the chapters in the given order over at most d days. Each day they read one or more whole chapters that come next in order, and a chapter is never split across days. Print the smallest possible value of the largest number of pages read on any single day.",
+      "constraints": "1 <= d <= n <= 100000; 1 <= pages in a chapter <= 1000000000; the total number of pages fits in a 64-bit integer.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "",
+          "",
+          "def days_needed(pages, limit):",
+          "    days, current = 1, 0",
+          "    for p in pages:",
+          "        if current + p > limit:",
+          "            days += 1",
+          "            current = p",
+          "        else:",
+          "            current += p",
+          "    return days",
+          "",
+          "",
+          "for _ in range(t):",
+          "    n, d = int(data[pos]), int(data[pos + 1])",
+          "    pages = list(map(int, data[pos + 2:pos + 2 + n]))",
+          "    pos += n + 2",
+          "    lo, hi = max(pages), sum(pages)",
+          "    while lo < hi:",
+          "        mid = (lo + hi) // 2",
+          "        if days_needed(pages, mid) <= d:",
+          "            hi = mid",
+          "        else:",
+          "            lo = mid + 1",
+          "    print(lo)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "4 2",
+            "10 20 30 40"
+          ],
+          "output": [
+            "60"
+          ]
+        },
+        {
+          "input": [
+            "1 1",
+            "7"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "3 1",
+            "3 3 3"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "5 5",
+            "4 1 8 2 6"
+          ],
+          "output": [
+            "8"
+          ]
+        },
+        {
+          "input": [
+            "3 3",
+            "2 3 9"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "6 3",
+            "5 5 5 5 5 5"
+          ],
+          "output": [
+            "10"
+          ]
+        },
+        {
+          "input": [
+            "4 3",
+            "1000000000 1000000000 1000000000 1000000000"
+          ],
+          "output": [
+            "2000000000"
+          ]
+        },
+        {
+          "input": [
+            "5 2",
+            "1 2 3 4 5"
+          ],
+          "output": [
+            "9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0852-mountain-peak",
+      "title": "Peak of a Mountain Array",
+      "difficulty": "medium",
+      "statement": "The first line contains n. The second line contains n integers separated by spaces. The values rise strictly to one highest value and then fall strictly, so the highest value is never first or last. Print the 0-based position of the highest value.",
+      "constraints": "3 <= n <= 100000; each value is between 0 and 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    a = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    lo, hi = 0, n - 1",
+          "    while lo < hi:",
+          "        mid = (lo + hi) // 2",
+          "        if a[mid] < a[mid + 1]:",
+          "            lo = mid + 1",
+          "        else:",
+          "            hi = mid",
+          "    print(lo)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3",
+            "0 1 0"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "0 2 1 0"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "0 10 5 2"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1 2 3 4 5 0"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1 9 8 7 6 5"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "7",
+            "1 3 5 4 2 1 0"
+          ],
+          "output": [
+            "2"
+          ]
+        }
+      ]
+    }
+  ]
+}

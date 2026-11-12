@@ -1,0 +1,469 @@
+{
+  "schema": "problems/v1",
+  "topic": "basics_io",
+  "items": [
+    {
+      "id": "pet-split-seconds",
+      "title": "Seconds to Hours and Minutes",
+      "difficulty": "easy",
+      "statement": "A single line contains a non-negative integer s, a number of seconds. Print it as whole hours, minutes and seconds, separated by single spaces, where the minutes and seconds are each less than 60.",
+      "constraints": "0 <= s <= 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    s = int(data[k])",
+          "    print(s // 3600, s % 3600 // 60, s % 60)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3661"
+          ],
+          "output": [
+            "1 1 1"
+          ]
+        },
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "0 0 0"
+          ]
+        },
+        {
+          "input": [
+            "59"
+          ],
+          "output": [
+            "0 0 59"
+          ]
+        },
+        {
+          "input": [
+            "3600"
+          ],
+          "output": [
+            "1 0 0"
+          ]
+        },
+        {
+          "input": [
+            "86399"
+          ],
+          "output": [
+            "23 59 59"
+          ]
+        },
+        {
+          "input": [
+            "100000"
+          ],
+          "output": [
+            "27 46 40"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-reverse-three",
+      "title": "Reverse a Three-Digit Number",
+      "difficulty": "easy",
+      "statement": "A single line contains a three-digit integer n. Print the number you get by writing its digits in reverse order. Leading zeros are dropped, so 120 becomes 21.",
+      "constraints": "100 <= n <= 999.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    n = int(data[k])",
+          "    print(n % 10 * 100 + n // 10 % 10 * 10 + n // 100)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "123"
+          ],
+          "output": [
+            "321"
+          ]
+        },
+        {
+          "input": [
+            "120"
+          ],
+          "output": [
+            "21"
+          ]
+        },
+        {
+          "input": [
+            "100"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "999"
+          ],
+          "output": [
+            "999"
+          ]
+        },
+        {
+          "input": [
+            "505"
+          ],
+          "output": [
+            "505"
+          ]
+        },
+        {
+          "input": [
+            "908"
+          ],
+          "output": [
+            "809"
+          ]
+        },
+        {
+          "input": [
+            "110"
+          ],
+          "output": [
+            "11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-benches-needed",
+      "title": "Benches Needed",
+      "difficulty": "easy",
+      "statement": "A single line contains two integers n and k: n students must sit on benches, and each bench seats at most k students. Print the smallest number of benches needed so that every student gets a seat.",
+      "constraints": "0 <= n <= 1000000; 1 <= k <= 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for i in range(t):",
+          "    n = int(data[1 + 2 * i])",
+          "    k = int(data[2 + 2 * i])",
+          "    print((n + k - 1) // k)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "10 3"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "12 3"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "0 5"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "1 1000"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "1000000 1"
+          ],
+          "output": [
+            "1000000"
+          ]
+        },
+        {
+          "input": [
+            "7 7"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "999999 1000"
+          ],
+          "output": [
+            "1000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-average-temperature",
+      "title": "Average Temperature",
+      "difficulty": "easy",
+      "statement": "A single line contains three integers a, b and c: the temperatures, in degrees Celsius, recorded in the morning, the afternoon and the night. Print their average with exactly 2 digits after the decimal point.",
+      "constraints": "-50 <= a, b, c <= 50.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for i in range(t):",
+          "    a, b, c = (int(x) for x in data[1 + 3 * i:4 + 3 * i])",
+          "    print(f\"{(a + b + c) / 3:.2f}\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "30 31 33"
+          ],
+          "output": [
+            "31.33"
+          ]
+        },
+        {
+          "input": [
+            "20 20 20"
+          ],
+          "output": [
+            "20.00"
+          ]
+        },
+        {
+          "input": [
+            "0 0 1"
+          ],
+          "output": [
+            "0.33"
+          ]
+        },
+        {
+          "input": [
+            "-5 -5 -4"
+          ],
+          "output": [
+            "-4.67"
+          ]
+        },
+        {
+          "input": [
+            "50 50 49"
+          ],
+          "output": [
+            "49.67"
+          ]
+        },
+        {
+          "input": [
+            "-1 0 0"
+          ],
+          "output": [
+            "-0.33"
+          ]
+        },
+        {
+          "input": [
+            "0 0 0"
+          ],
+          "output": [
+            "0.00"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-show-duration",
+      "title": "Show Duration",
+      "difficulty": "medium",
+      "statement": "A single line contains four integers sh, sm, eh and em: a show starts at sh hours sm minutes and ends at eh hours em minutes, on a 24-hour clock. If the end time is earlier than the start time, the show ran past midnight and ended the next day. If both times are the same, the show lasted 0 minutes. Print how long the show lasted as whole hours and minutes, separated by a single space, where the minutes are less than 60.",
+      "constraints": "0 <= sh, eh <= 23; 0 <= sm, em <= 59. Every show lasts less than 24 hours.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for i in range(t):",
+          "    sh, sm, eh, em = (int(x) for x in data[1 + 4 * i:5 + 4 * i])",
+          "    d = (eh * 60 + em - (sh * 60 + sm)) % 1440",
+          "    print(d // 60, d % 60)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "18 30 21 0"
+          ],
+          "output": [
+            "2 30"
+          ]
+        },
+        {
+          "input": [
+            "23 15 1 5"
+          ],
+          "output": [
+            "1 50"
+          ]
+        },
+        {
+          "input": [
+            "9 0 9 0"
+          ],
+          "output": [
+            "0 0"
+          ]
+        },
+        {
+          "input": [
+            "0 0 23 59"
+          ],
+          "output": [
+            "23 59"
+          ]
+        },
+        {
+          "input": [
+            "23 59 0 0"
+          ],
+          "output": [
+            "0 1"
+          ]
+        },
+        {
+          "input": [
+            "10 45 10 44"
+          ],
+          "output": [
+            "23 59"
+          ]
+        },
+        {
+          "input": [
+            "7 5 7 20"
+          ],
+          "output": [
+            "0 15"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-bill-total",
+      "title": "Bill Total",
+      "difficulty": "medium",
+      "statement": "A single line contains three integers r, p and q: one item costs r rupees and p paise, and a customer buys q of them. 100 paise make 1 rupee. Print the total cost in the form R.PP, where R is the number of whole rupees and PP is the remaining paise written with exactly two digits (so 5 paise is written as 05).",
+      "constraints": "0 <= r <= 10000; 0 <= p <= 99; 1 <= q <= 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for i in range(t):",
+          "    r, p, q = (int(x) for x in data[1 + 3 * i:4 + 3 * i])",
+          "    total = (r * 100 + p) * q",
+          "    print(f\"{total // 100}.{total % 100:02d}\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "12 50 2"
+          ],
+          "output": [
+            "25.00"
+          ]
+        },
+        {
+          "input": [
+            "0 5 1"
+          ],
+          "output": [
+            "0.05"
+          ]
+        },
+        {
+          "input": [
+            "3 35 3"
+          ],
+          "output": [
+            "10.05"
+          ]
+        },
+        {
+          "input": [
+            "0 99 1000"
+          ],
+          "output": [
+            "990.00"
+          ]
+        },
+        {
+          "input": [
+            "10000 99 1000"
+          ],
+          "output": [
+            "10000990.00"
+          ]
+        },
+        {
+          "input": [
+            "7 0 4"
+          ],
+          "output": [
+            "28.00"
+          ]
+        },
+        {
+          "input": [
+            "1 1 1"
+          ],
+          "output": [
+            "1.01"
+          ]
+        }
+      ]
+    }
+  ]
+}

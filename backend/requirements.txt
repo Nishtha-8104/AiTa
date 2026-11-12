@@ -1,0 +1,41 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.19.2
+pydantic==2.13.5
+pydantic-settings==2.5.2
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.12
+python-dotenv==1.0.1
+httpx==0.28.1
+
+# LLM + agent pipeline. Pinned exactly: LangChain's agent API changed shape in 1.0,
+# so an unpinned upgrade silently changes how the graph is built.
+langchain-core==1.6.2
+# NVIDIA NIM is OpenAI-compatible; langchain-nvidia-ai-endpoints mangles
+# structured output, so talk to it through the OpenAI client instead.
+langchain-openai==1.6.2
+# Direct, not transitive: app/core/llm.py imports OpenAIError itself, and
+# langchain-openai's own range spans two majors of it.
+openai==3.13.0
+langgraph==1.2.11
+# create_agent + middleware for the chatbot. 1.4.2+ needs a newer langchain-core.
+langchain==1.4.1
+
+# Code quality metrics for Python and C++ in one library.
+lizard==1.24.0
+
+# Book RAG. The +cpu torch build from the PyTorch index keeps CUDA (several GB) out of
+# the image; sentence-transformers would otherwise pull the default CUDA wheel.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.1+cpu
+sentence-transformers==6.1.0
+transformers==5.19.0
+huggingface-hub==1.33.0
+pgvector==0.5.1
+beautifulsoup4==4.15.0
+pypdf==6.20.0
+
+ruff==0.7.4
+pytest==9.1.1

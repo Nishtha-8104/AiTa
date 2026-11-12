@@ -1,0 +1,833 @@
+{
+  "schema": "problems/v1",
+  "topic": "conditionals",
+  "items": [
+    {
+      "id": "pet-max-of-three",
+      "title": "Largest of Three",
+      "difficulty": "easy",
+      "statement": "A single line contains three integers a, b and c separated by spaces. Print the largest of them.",
+      "constraints": "Each integer is between -1000 and 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "lines = sys.stdin.read().split(\"\\n\")",
+          "t = int(lines[0])",
+          "for k in range(1, t + 1):",
+          "    a, b, c = map(int, lines[k].split())",
+          "    print(max(a, b, c))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "1 2 3"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "3 2 1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "2 3 1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "5 5 2"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "-1 -5 -3"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "7 7 7"
+          ],
+          "output": [
+            "7"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-leap-year",
+      "title": "Leap Year",
+      "difficulty": "easy",
+      "statement": "A single line contains a year y. Print YES if y is a leap year and NO otherwise. A year is a leap year if it divides by 4, except that a year dividing by 100 is a leap year only when it also divides by 400.",
+      "constraints": "1 <= y <= 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    y = int(data[k])",
+          "    leap = (y % 4 == 0 and y % 100 != 0) or y % 400 == 0",
+          "    print(\"YES\" if leap else \"NO\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "2024"
+          ],
+          "output": [
+            "YES"
+          ]
+        },
+        {
+          "input": [
+            "2023"
+          ],
+          "output": [
+            "NO"
+          ]
+        },
+        {
+          "input": [
+            "1900"
+          ],
+          "output": [
+            "NO"
+          ]
+        },
+        {
+          "input": [
+            "2000"
+          ],
+          "output": [
+            "YES"
+          ]
+        },
+        {
+          "input": [
+            "2100"
+          ],
+          "output": [
+            "NO"
+          ]
+        },
+        {
+          "input": [
+            "1600"
+          ],
+          "output": [
+            "YES"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-letter-grade",
+      "title": "Letter Grade",
+      "difficulty": "easy",
+      "statement": "A single line contains an integer score. Print A for a score of 90 or more, B for 80 to 89, C for 70 to 79, D for 60 to 69, and F for anything below 60.",
+      "constraints": "0 <= score <= 100.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    score = int(data[k])",
+          "    if score >= 90:",
+          "        print(\"A\")",
+          "    elif score >= 80:",
+          "        print(\"B\")",
+          "    elif score >= 70:",
+          "        print(\"C\")",
+          "    elif score >= 60:",
+          "        print(\"D\")",
+          "    else:",
+          "        print(\"F\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "95"
+          ],
+          "output": [
+            "A"
+          ]
+        },
+        {
+          "input": [
+            "90"
+          ],
+          "output": [
+            "A"
+          ]
+        },
+        {
+          "input": [
+            "80"
+          ],
+          "output": [
+            "B"
+          ]
+        },
+        {
+          "input": [
+            "75"
+          ],
+          "output": [
+            "C"
+          ]
+        },
+        {
+          "input": [
+            "60"
+          ],
+          "output": [
+            "D"
+          ]
+        },
+        {
+          "input": [
+            "59"
+          ],
+          "output": [
+            "F"
+          ]
+        },
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "F"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-ticket-price",
+      "title": "Museum Ticket Price",
+      "difficulty": "easy",
+      "statement": "A single line contains two integers: a visitor's age and s, which is 1 if the visitor is a student and 0 if not. A museum ticket costs 0 for children under 5, 100 for ages 5 to 17, 200 for ages 18 to 59, and 120 for ages 60 and above. Students aged 18 to 25 pay 150 instead of 200. Print the ticket price.",
+      "constraints": "0 <= age <= 120. s is 0 or 1.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    age, s = int(data[pos]), int(data[pos + 1])",
+          "    pos += 2",
+          "    if age < 5:",
+          "        price = 0",
+          "    elif age < 18:",
+          "        price = 100",
+          "    elif age < 60:",
+          "        price = 150 if s == 1 and age <= 25 else 200",
+          "    else:",
+          "        price = 120",
+          "    print(price)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3 0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4 1"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "5 0"
+          ],
+          "output": [
+            "100"
+          ]
+        },
+        {
+          "input": [
+            "17 1"
+          ],
+          "output": [
+            "100"
+          ]
+        },
+        {
+          "input": [
+            "18 0"
+          ],
+          "output": [
+            "200"
+          ]
+        },
+        {
+          "input": [
+            "18 1"
+          ],
+          "output": [
+            "150"
+          ]
+        },
+        {
+          "input": [
+            "25 1"
+          ],
+          "output": [
+            "150"
+          ]
+        },
+        {
+          "input": [
+            "26 1"
+          ],
+          "output": [
+            "200"
+          ]
+        },
+        {
+          "input": [
+            "59 0"
+          ],
+          "output": [
+            "200"
+          ]
+        },
+        {
+          "input": [
+            "60 1"
+          ],
+          "output": [
+            "120"
+          ]
+        },
+        {
+          "input": [
+            "90 0"
+          ],
+          "output": [
+            "120"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-point-quadrant",
+      "title": "Point Quadrant",
+      "difficulty": "easy",
+      "statement": "A single line contains two integers x and y, the coordinates of a point. Print ORIGIN if the point is (0, 0), X-AXIS if it lies on the x-axis but is not the origin, and Y-AXIS if it lies on the y-axis but is not the origin. Otherwise print the quadrant it is in: Q1 when x > 0 and y > 0, Q2 when x < 0 and y > 0, Q3 when x < 0 and y < 0, and Q4 when x > 0 and y < 0.",
+      "constraints": "-1000000000 <= x, y <= 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    x, y = int(data[pos]), int(data[pos + 1])",
+          "    pos += 2",
+          "    if x == 0 and y == 0:",
+          "        print(\"ORIGIN\")",
+          "    elif y == 0:",
+          "        print(\"X-AXIS\")",
+          "    elif x == 0:",
+          "        print(\"Y-AXIS\")",
+          "    elif x > 0 and y > 0:",
+          "        print(\"Q1\")",
+          "    elif x < 0 and y > 0:",
+          "        print(\"Q2\")",
+          "    elif x < 0:",
+          "        print(\"Q3\")",
+          "    else:",
+          "        print(\"Q4\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3 4"
+          ],
+          "output": [
+            "Q1"
+          ]
+        },
+        {
+          "input": [
+            "-3 4"
+          ],
+          "output": [
+            "Q2"
+          ]
+        },
+        {
+          "input": [
+            "-3 -4"
+          ],
+          "output": [
+            "Q3"
+          ]
+        },
+        {
+          "input": [
+            "3 -4"
+          ],
+          "output": [
+            "Q4"
+          ]
+        },
+        {
+          "input": [
+            "0 0"
+          ],
+          "output": [
+            "ORIGIN"
+          ]
+        },
+        {
+          "input": [
+            "5 0"
+          ],
+          "output": [
+            "X-AXIS"
+          ]
+        },
+        {
+          "input": [
+            "-5 0"
+          ],
+          "output": [
+            "X-AXIS"
+          ]
+        },
+        {
+          "input": [
+            "0 7"
+          ],
+          "output": [
+            "Y-AXIS"
+          ]
+        },
+        {
+          "input": [
+            "0 -7"
+          ],
+          "output": [
+            "Y-AXIS"
+          ]
+        },
+        {
+          "input": [
+            "1000000000 -1000000000"
+          ],
+          "output": [
+            "Q4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-triangle-kind",
+      "title": "Triangle Type",
+      "difficulty": "medium",
+      "statement": "A single line contains three integers a, b and c, the lengths of three sticks. The sticks form a triangle only if every pair of sticks is longer in total than the third stick. Print INVALID if they do not form a triangle. Otherwise print EQUILATERAL if all three lengths are equal, ISOSCELES if exactly two are equal, and SCALENE if all three are different.",
+      "constraints": "1 <= a, b, c <= 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    a, b, c = int(data[pos]), int(data[pos + 1]), int(data[pos + 2])",
+          "    pos += 3",
+          "    if a + b <= c or a + c <= b or b + c <= a:",
+          "        print(\"INVALID\")",
+          "    elif a == b == c:",
+          "        print(\"EQUILATERAL\")",
+          "    elif a == b or b == c or a == c:",
+          "        print(\"ISOSCELES\")",
+          "    else:",
+          "        print(\"SCALENE\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3 4 5"
+          ],
+          "output": [
+            "SCALENE"
+          ]
+        },
+        {
+          "input": [
+            "5 5 5"
+          ],
+          "output": [
+            "EQUILATERAL"
+          ]
+        },
+        {
+          "input": [
+            "5 5 8"
+          ],
+          "output": [
+            "ISOSCELES"
+          ]
+        },
+        {
+          "input": [
+            "8 5 5"
+          ],
+          "output": [
+            "ISOSCELES"
+          ]
+        },
+        {
+          "input": [
+            "5 8 5"
+          ],
+          "output": [
+            "ISOSCELES"
+          ]
+        },
+        {
+          "input": [
+            "1 2 3"
+          ],
+          "output": [
+            "INVALID"
+          ]
+        },
+        {
+          "input": [
+            "1 10 2"
+          ],
+          "output": [
+            "INVALID"
+          ]
+        },
+        {
+          "input": [
+            "10 1 1"
+          ],
+          "output": [
+            "INVALID"
+          ]
+        },
+        {
+          "input": [
+            "2 2 4"
+          ],
+          "output": [
+            "INVALID"
+          ]
+        },
+        {
+          "input": [
+            "1000000 1000000 1"
+          ],
+          "output": [
+            "ISOSCELES"
+          ]
+        },
+        {
+          "input": [
+            "2 3 4"
+          ],
+          "output": [
+            "SCALENE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-electricity-bill",
+      "title": "Electricity Bill",
+      "difficulty": "medium",
+      "statement": "A single line contains u, the number of electricity units a house used. The bill is worked out in slabs: each of the first 100 units costs 3, each unit from 101 to 200 costs 5, and each unit above 200 costs 8. If this total is more than 5000, a surcharge of one tenth of the total (rounded down) is added to it. Print the final bill.",
+      "constraints": "0 <= u <= 1000000. The answer fits in a 32-bit integer.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    u = int(data[k])",
+          "    if u <= 100:",
+          "        bill = u * 3",
+          "    elif u <= 200:",
+          "        bill = 300 + (u - 100) * 5",
+          "    else:",
+          "        bill = 800 + (u - 200) * 8",
+          "    if bill > 5000:",
+          "        bill += bill // 10",
+          "    print(bill)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "100"
+          ],
+          "output": [
+            "300"
+          ]
+        },
+        {
+          "input": [
+            "101"
+          ],
+          "output": [
+            "305"
+          ]
+        },
+        {
+          "input": [
+            "150"
+          ],
+          "output": [
+            "550"
+          ]
+        },
+        {
+          "input": [
+            "200"
+          ],
+          "output": [
+            "800"
+          ]
+        },
+        {
+          "input": [
+            "201"
+          ],
+          "output": [
+            "808"
+          ]
+        },
+        {
+          "input": [
+            "725"
+          ],
+          "output": [
+            "5000"
+          ]
+        },
+        {
+          "input": [
+            "726"
+          ],
+          "output": [
+            "5508"
+          ]
+        },
+        {
+          "input": [
+            "1000"
+          ],
+          "output": [
+            "7920"
+          ]
+        },
+        {
+          "input": [
+            "1000000"
+          ],
+          "output": [
+            "8799120"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-next-date",
+      "title": "Next Date",
+      "difficulty": "hard",
+      "statement": "A single line contains a valid date as three integers d, m and y (day, month, year). Print the date of the next day in the same form: d, m and y separated by single spaces, with no leading zeros. April, June, September and November have 30 days; February has 29 days in a leap year and 28 otherwise; every other month has 31 days. A year is a leap year if it divides by 4, except that a year dividing by 100 is a leap year only when it also divides by 400.",
+      "constraints": "1 <= y <= 9998. The input is always a real date.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    d, m, y = int(data[pos]), int(data[pos + 1]), int(data[pos + 2])",
+          "    pos += 3",
+          "    leap = (y % 4 == 0 and y % 100 != 0) or y % 400 == 0",
+          "    if m == 2:",
+          "        days = 29 if leap else 28",
+          "    elif m in (4, 6, 9, 11):",
+          "        days = 30",
+          "    else:",
+          "        days = 31",
+          "    if d < days:",
+          "        d += 1",
+          "    elif m < 12:",
+          "        d, m = 1, m + 1",
+          "    else:",
+          "        d, m, y = 1, 1, y + 1",
+          "    print(d, m, y)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "15 6 2023"
+          ],
+          "output": [
+            "16 6 2023"
+          ]
+        },
+        {
+          "input": [
+            "30 6 2023"
+          ],
+          "output": [
+            "1 7 2023"
+          ]
+        },
+        {
+          "input": [
+            "30 1 2023"
+          ],
+          "output": [
+            "31 1 2023"
+          ]
+        },
+        {
+          "input": [
+            "31 1 2024"
+          ],
+          "output": [
+            "1 2 2024"
+          ]
+        },
+        {
+          "input": [
+            "30 11 2023"
+          ],
+          "output": [
+            "1 12 2023"
+          ]
+        },
+        {
+          "input": [
+            "28 2 2024"
+          ],
+          "output": [
+            "29 2 2024"
+          ]
+        },
+        {
+          "input": [
+            "29 2 2024"
+          ],
+          "output": [
+            "1 3 2024"
+          ]
+        },
+        {
+          "input": [
+            "28 2 2023"
+          ],
+          "output": [
+            "1 3 2023"
+          ]
+        },
+        {
+          "input": [
+            "28 2 1900"
+          ],
+          "output": [
+            "1 3 1900"
+          ]
+        },
+        {
+          "input": [
+            "28 2 2000"
+          ],
+          "output": [
+            "29 2 2000"
+          ]
+        },
+        {
+          "input": [
+            "31 12 2023"
+          ],
+          "output": [
+            "1 1 2024"
+          ]
+        }
+      ]
+    }
+  ]
+}

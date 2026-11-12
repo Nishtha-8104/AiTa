@@ -1,0 +1,794 @@
+{
+  "schema": "problems/v1",
+  "topic": "dynamic_programming",
+  "items": [
+    {
+      "id": "pet-climb-stairs",
+      "title": "Climbing Stairs",
+      "difficulty": "easy",
+      "statement": "A single line contains an integer n. A staircase has n steps and you climb it taking either 1 or 2 steps at a time. Print the number of different ways to reach the top.",
+      "constraints": "1 <= n <= 45.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    n = int(data[k])",
+          "    a, b = 1, 1",
+          "    for _ in range(n - 1):",
+          "        a, b = b, a + b",
+          "    print(b)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "3"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "5"
+          ],
+          "output": [
+            "8"
+          ]
+        },
+        {
+          "input": [
+            "10"
+          ],
+          "output": [
+            "89"
+          ]
+        },
+        {
+          "input": [
+            "45"
+          ],
+          "output": [
+            "1836311903"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-min-coins",
+      "title": "Fewest Coins",
+      "difficulty": "medium",
+      "statement": "A single line contains an amount n. Coins of value 1, 3 and 4 are available, as many of each as needed. Print the smallest number of coins whose values add up to exactly n.",
+      "constraints": "0 <= n <= 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    n = int(data[k])",
+          "    best = [0] + [n + 1] * n",
+          "    for amount in range(1, n + 1):",
+          "        for coin in (1, 3, 4):",
+          "            if coin <= amount:",
+          "                best[amount] = min(best[amount], best[amount - coin] + 1)",
+          "    print(best[n])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "6"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "7"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "10"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "1000"
+          ],
+          "output": [
+            "250"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-dp-tile-strip",
+      "title": "Tile a Strip",
+      "difficulty": "easy",
+      "statement": "A single line contains an integer n. A strip of length n must be covered exactly, with no gaps and no overlaps, by tiles of length 2 and tiles of length 3 placed end to end. Two tilings are different if the sequence of tile lengths from left to right is different. Print the number of different tilings modulo 1000000007.",
+      "constraints": "1 <= n <= 100000. Print the count modulo 1000000007; it is 0 when no tiling exists.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "MOD = 1000000007",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    n = int(data[k])",
+          "    ways = [0] * (n + 3)",
+          "    ways[0] = 1",
+          "    ways[2] = 1",
+          "    for i in range(3, n + 1):",
+          "        ways[i] = (ways[i - 2] + ways[i - 3]) % MOD",
+          "    print(ways[n])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "2"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "3"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "8"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "12"
+          ],
+          "output": [
+            "12"
+          ]
+        },
+        {
+          "input": [
+            "100000"
+          ],
+          "output": [
+            "327940636"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-dp-stone-jumps",
+      "title": "Cheapest Stone Path",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n, the number of stones in a row. The second line contains n integers, the cost of standing on each stone from left to right. You start on the first stone and must finish on the last one, and each move takes you forward by exactly one or exactly two stones. You pay the cost of every stone you stand on, including the first and the last. Print the smallest total cost.",
+      "constraints": "1 <= n <= 100000; each cost is between 0 and 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    cost = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    best = [0] * n",
+          "    best[0] = cost[0]",
+          "    if n > 1:",
+          "        best[1] = cost[0] + cost[1]",
+          "    for i in range(2, n):",
+          "        best[i] = cost[i] + min(best[i - 1], best[i - 2])",
+          "    print(best[n - 1])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "1 100 1 1 1"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "7"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "3 4"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "10 1 10 1 10 1"
+          ],
+          "output": [
+            "13"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "0 0 0 0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "7",
+            "5 2 8 3 9 4 6"
+          ],
+          "output": [
+            "20"
+          ]
+        },
+        {
+          "input": [
+            "40",
+            "10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000 10000"
+          ],
+          "output": [
+            "210000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-dp-no-adjacent",
+      "title": "Max Sum Without Neighbours",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n. The second line contains n integers. Choose some of these numbers, possibly none of them, so that no two chosen numbers stand next to each other in the list. Print the largest possible sum of the chosen numbers; choosing nothing gives a sum of 0.",
+      "constraints": "1 <= n <= 100000; each number is between -1000000000 and 1000000000, so the answer needs a 64-bit integer (long long in C).",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    before_prev, prev = 0, 0",
+          "    for x in values:",
+          "        before_prev, prev = prev, max(prev, before_prev + x)",
+          "    print(prev)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "3 2 7 10 1"
+          ],
+          "output": [
+            "13"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "-3"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "-1 -2 -3 -4"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "4 4 4 4 4 4"
+          ],
+          "output": [
+            "12"
+          ]
+        },
+        {
+          "input": [
+            "7",
+            "2 -1 5 -3 8 6 -2"
+          ],
+          "output": [
+            "15"
+          ]
+        },
+        {
+          "input": [
+            "100",
+            "1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000 1000000000"
+          ],
+          "output": [
+            "50000000000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-dp-blocked-paths",
+      "title": "Paths Around Blocks",
+      "difficulty": "medium",
+      "statement": "The first line contains two integers r and c. Each of the next r lines contains a string of exactly c characters with no spaces, where '.' is an open cell and '#' is a blocked cell. A robot starts in the top-left cell and wants to reach the bottom-right cell. At each step it moves one cell to the right or one cell down, and it may never stand on a blocked cell. Print the number of different routes modulo 1000000007.",
+      "constraints": "1 <= r, c <= 100. Print 0 if the start or the end cell is blocked or no route exists.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "MOD = 1000000007",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    r, c = int(data[pos]), int(data[pos + 1])",
+          "    grid = data[pos + 2:pos + 2 + r]",
+          "    pos += 2 + r",
+          "    ways = [[0] * c for _ in range(r)]",
+          "    for i in range(r):",
+          "        for j in range(c):",
+          "            if grid[i][j] == '#':",
+          "                continue",
+          "            if i == 0 and j == 0:",
+          "                ways[i][j] = 1",
+          "                continue",
+          "            up = ways[i - 1][j] if i > 0 else 0",
+          "            left = ways[i][j - 1] if j > 0 else 0",
+          "            ways[i][j] = (up + left) % MOD",
+          "    print(ways[r - 1][c - 1])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3 3",
+            "...",
+            ".#.",
+            "..."
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "1 1",
+            "."
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "1 1",
+            "#"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "2 2",
+            "..",
+            ".."
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "3 3",
+            "#..",
+            "...",
+            "..."
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "2 3",
+            "...",
+            "..#"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "3 4",
+            ".#..",
+            "....",
+            "...."
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "3 5",
+            "..#..",
+            ".....",
+            "#...."
+          ],
+          "output": [
+            "8"
+          ]
+        },
+        {
+          "input": [
+            "25 25",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            ".........................",
+            "........................."
+          ],
+          "output": [
+            "603457371"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-dp-knapsack-small",
+      "title": "Small Knapsack",
+      "difficulty": "hard",
+      "statement": "The first line contains two integers n and W, the number of items and the capacity of a bag. Each of the next n lines contains two integers w and v, the weight and the value of one item. Each item can be packed at most once, and the total weight packed must not exceed W. Print the largest total value that can be packed.",
+      "constraints": "1 <= n <= 100; 1 <= W <= 10000; 1 <= w <= 10000; 0 <= v <= 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n, cap = int(data[pos]), int(data[pos + 1])",
+          "    pos += 2",
+          "    best = [0] * (cap + 1)",
+          "    for _ in range(n):",
+          "        w, v = int(data[pos]), int(data[pos + 1])",
+          "        pos += 2",
+          "        for room in range(cap, w - 1, -1):",
+          "            best[room] = max(best[room], best[room - w] + v)",
+          "    print(best[cap])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "1 5",
+            "5 10"
+          ],
+          "output": [
+            "10"
+          ]
+        },
+        {
+          "input": [
+            "1 4",
+            "5 10"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "3 5",
+            "2 6",
+            "3 10",
+            "4 12"
+          ],
+          "output": [
+            "16"
+          ]
+        },
+        {
+          "input": [
+            "4 7",
+            "1 1",
+            "3 4",
+            "4 5",
+            "5 7"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "4 10",
+            "5 10",
+            "4 40",
+            "6 30",
+            "3 50"
+          ],
+          "output": [
+            "90"
+          ]
+        },
+        {
+          "input": [
+            "3 6",
+            "2 3",
+            "2 3",
+            "2 3"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "5 3",
+            "4 100",
+            "5 100",
+            "6 100",
+            "7 100",
+            "8 100"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "20 10000",
+            "997 1200",
+            "1234 1500",
+            "2500 3100",
+            "3333 4000",
+            "4000 5200",
+            "1500 1700",
+            "800 1000",
+            "2100 2600",
+            "3600 4500",
+            "4100 5000",
+            "1800 2300",
+            "2700 3300",
+            "950 1150",
+            "1600 2050",
+            "3000 3650",
+            "2200 2750",
+            "5000 6100",
+            "1100 1400",
+            "2900 3550",
+            "4500 5600"
+          ],
+          "output": [
+            "12750"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0062-unique-paths",
+      "title": "Unique Paths",
+      "difficulty": "medium",
+      "statement": "A single line contains two integers m and n, the number of rows and columns of a grid. A robot starts in the top-left cell and can only move one cell right or one cell down at a time. Print the number of different paths that end in the bottom-right cell.",
+      "constraints": "1 <= m, n <= 16.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    m, n = int(data[pos]), int(data[pos + 1])",
+          "    pos += 2",
+          "    row = [1] * n",
+          "    for _ in range(1, m):",
+          "        for j in range(1, n):",
+          "            row[j] += row[j - 1]",
+          "    print(row[-1])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3 7"
+          ],
+          "output": [
+            "28"
+          ]
+        },
+        {
+          "input": [
+            "3 2"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "1 1"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "1 10"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "10 1"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "2 2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "16 16"
+          ],
+          "output": [
+            "155117520"
+          ]
+        }
+      ]
+    }
+  ]
+}

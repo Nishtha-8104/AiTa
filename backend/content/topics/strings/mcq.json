@@ -1,0 +1,773 @@
+{
+  "schema": "mcq/v1",
+  "topic": "strings",
+  "items": [
+    {
+      "id": "mcq-c-strings-1",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"hello\";",
+        "    printf(\"%c%c\\n\", s[0], s[4]);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "hl",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "ho",
+          "misconception": null
+        },
+        {
+          "text": "he",
+          "misconception": null
+        },
+        {
+          "text": "h0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "s[0] is the first character h and s[4] is the fifth character o.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-strings-2",
+      "language": "c",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "",
+        "int main(void) {",
+        "    printf(\"%d\\n\", (int) strlen(\"code\"));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "strlen counts the characters before the terminating '\\0', so \"code\" has length 4.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-strings-3",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[10] = \"cat\";",
+        "    printf(\"%d\\n\", (int) sizeof(s));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "4",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "8",
+          "misconception": null
+        },
+        {
+          "text": "10",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "sizeof gives the size of the whole array, 10 chars, no matter how long the text stored in it is.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-strings-4",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"abc\";",
+        "    s[1] = 'X';",
+        "    printf(\"%s\\n\", s);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "aXc",
+          "misconception": null
+        },
+        {
+          "text": "Xbc",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "abX",
+          "misconception": null
+        },
+        {
+          "text": "abc",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "s is a char array, so its characters can be changed; index 1 is the middle character.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-strings-5",
+      "language": "c",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "",
+        "int main(void) {",
+        "    char a[] = \"apple\";",
+        "    char b[] = \"apply\";",
+        "    printf(\"%d\\n\", strcmp(a, b) < 0);",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "0",
+          "misconception": null
+        },
+        {
+          "text": "-1",
+          "misconception": null
+        },
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "5",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "strcmp compares character by character; at the first difference 'e' comes before 'y', so the result is negative and the comparison < 0 is true (1).",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-c-strings-6",
+      "language": "c",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```c",
+        "#include <stdio.h>",
+        "#include <string.h>",
+        "",
+        "int main(void) {",
+        "    char s[] = \"hello\";",
+        "    s[2] = '\\0';",
+        "    printf(\"%s %d\\n\", s, (int) strlen(s));",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "hello 5",
+          "misconception": null
+        },
+        {
+          "text": "helo 4",
+          "misconception": null
+        },
+        {
+          "text": "hel 3",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "he 2",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "A C string ends at the first '\\0', so after s[2] = '\\0' only \"he\" is seen.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-1",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"hello\";",
+        "    cout << s.length() << \" \" << s[1] << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "5 h",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "5 e",
+          "misconception": null
+        },
+        {
+          "text": "6 e",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "4 e",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "length() is the number of characters, 5, and s[1] is the second character.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-2",
+      "language": "cpp",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string a = \"good\";",
+        "    string b = \"bye\";",
+        "    cout << a + \" \" + b << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "goodbye",
+          "misconception": null
+        },
+        {
+          "text": "good + bye",
+          "misconception": null
+        },
+        {
+          "text": "good bye",
+          "misconception": null
+        },
+        {
+          "text": "bye good",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "+ joins strings in order, including the \" \" in the middle.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-3",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"banana\";",
+        "    cout << s.find(\"an\") << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1",
+          "misconception": null
+        },
+        {
+          "text": "2",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "3",
+          "misconception": null
+        },
+        {
+          "text": "0",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "find returns the index where the first match starts; \"an\" first appears at index 1.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-4",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"programming\";",
+        "    cout << s.substr(3, 4) << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "gra",
+          "misconception": null
+        },
+        {
+          "text": "ogra",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "gram",
+          "misconception": null
+        },
+        {
+          "text": "gramm",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "substr(3, 4) starts at index 3 and takes 4 characters: g, r, a, m.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-5",
+      "language": "cpp",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"abc\";",
+        "    s += 'd';",
+        "    s[0] = 'z';",
+        "    cout << s << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "zbc",
+          "misconception": null
+        },
+        {
+          "text": "zbcd",
+          "misconception": null
+        },
+        {
+          "text": "abcd",
+          "misconception": null
+        },
+        {
+          "text": "zabcd",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "+= adds d to the end, and s[0] = 'z' replaces the first character.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-cpp-strings-6",
+      "language": "cpp",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```cpp",
+        "#include <iostream>",
+        "#include <string>",
+        "using namespace std;",
+        "",
+        "int main() {",
+        "    string s = \"level\";",
+        "    int count = 0;",
+        "    for (char c : s) {",
+        "        if (c == 'e') {",
+        "            count++;",
+        "        }",
+        "    }",
+        "    cout << count << s.back() << endl;",
+        "    return 0;",
+        "}",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "1l",
+          "misconception": null
+        },
+        {
+          "text": "2e",
+          "misconception": null
+        },
+        {
+          "text": "2l",
+          "misconception": null
+        },
+        {
+          "text": "3l",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "\"level\" contains two e characters, and back() is its last character, l.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-1",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"Python\"",
+        "print(s[0], s[-1], len(s))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "P n 6",
+          "misconception": null
+        },
+        {
+          "text": "P o 6",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "P n 5",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "y n 6",
+          "misconception": "off_by_one"
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "s[0] is the first character, s[-1] the last, and the word has six characters.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-2",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"hello\"",
+        "s.upper()",
+        "print(s)",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "HELLO",
+          "misconception": null
+        },
+        {
+          "text": "Hello",
+          "misconception": null
+        },
+        {
+          "text": "None",
+          "misconception": null
+        },
+        {
+          "text": "hello",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "Strings cannot be changed in place; upper() returns a new string, and here that result is thrown away.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-3",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "print(\"-\".join(\"abc\"[::-1]))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "a-b-c",
+          "misconception": null
+        },
+        {
+          "text": "c-b-a",
+          "misconception": null
+        },
+        {
+          "text": "cba",
+          "misconception": null
+        },
+        {
+          "text": "-c-b-a-",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "[::-1] reverses the string to \"cba\", and join puts \"-\" between its characters.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-strings-1",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "A program compares the strings Apple and apple character by character, exactly as given. Are they equal?"
+      ],
+      "options": [
+        {
+          "text": "Yes, because they spell the same word",
+          "misconception": null
+        },
+        {
+          "text": "Yes, because comparing strings ignores upper and lower case",
+          "misconception": null
+        },
+        {
+          "text": "No, because an uppercase letter and its lowercase form are different characters",
+          "misconception": null
+        },
+        {
+          "text": "It depends on how long the strings are",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "'A' and 'a' have different character codes, so an exact comparison treats them as different.",
+      "verify_code": []
+    },
+    {
+      "id": "concept-strings-2",
+      "language": "any",
+      "difficulty": "easy",
+      "stem": [
+        "What does it mean to concatenate two strings?"
+      ],
+      "options": [
+        {
+          "text": "Join them, one after the other, into one longer string",
+          "misconception": null
+        },
+        {
+          "text": "Compare them to see which comes first alphabetically",
+          "misconception": null
+        },
+        {
+          "text": "Find where the second string appears inside the first",
+          "misconception": null
+        },
+        {
+          "text": "Swap their contents",
+          "misconception": null
+        }
+      ],
+      "answer_index": 0,
+      "explanation": "Concatenating \"ab\" and \"cd\" gives \"abcd\".",
+      "verify_code": []
+    },
+    {
+      "id": "concept-strings-3",
+      "language": "any",
+      "difficulty": "medium",
+      "stem": [
+        "A program must count the vowels in a sentence. Which approach works?"
+      ],
+      "options": [
+        {
+          "text": "Compare the whole sentence once with the text \"aeiou\"",
+          "misconception": null
+        },
+        {
+          "text": "Look at each character in turn and add 1 to a counter whenever it is a vowel",
+          "misconception": null
+        },
+        {
+          "text": "Divide the length of the sentence by 5",
+          "misconception": null
+        },
+        {
+          "text": "Count only the first and last characters",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "Counting means visiting every character once with a loop and keeping a running total.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-4",
+      "language": "python",
+      "difficulty": "easy",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"notebook\"",
+        "print(s[:4], s[4:])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "not ebook",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "note book",
+          "misconception": null
+        },
+        {
+          "text": "noteb ook",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "notebook",
+          "misconception": null
+        }
+      ],
+      "answer_index": 1,
+      "explanation": "s[:4] takes indices 0 to 3, \"note\", and s[4:] takes the rest, \"book\", and print puts a space between them.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-5",
+      "language": "python",
+      "difficulty": "medium",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"banana\"",
+        "print(s.count(\"a\"), \"nan\" in s, s.find(\"z\"))",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "3 True None",
+          "misconception": null
+        },
+        {
+          "text": "3 False -1",
+          "misconception": null
+        },
+        {
+          "text": "3 True -1",
+          "misconception": null
+        },
+        {
+          "text": "2 True -1",
+          "misconception": null
+        }
+      ],
+      "answer_index": 2,
+      "explanation": "\"banana\" has three a's, \"nan\" appears inside it, and find returns -1 when the text is not found.",
+      "verify_code": []
+    },
+    {
+      "id": "mcq-python-strings-6",
+      "language": "python",
+      "difficulty": "hard",
+      "stem": [
+        "What does this program print?",
+        "```python",
+        "s = \"programming\"",
+        "print(s[2:8:3], s[-3:])",
+        "```"
+      ],
+      "options": [
+        {
+          "text": "oam ing",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "oa ng",
+          "misconception": "off_by_one"
+        },
+        {
+          "text": "ogm ing",
+          "misconception": null
+        },
+        {
+          "text": "oa ing",
+          "misconception": null
+        }
+      ],
+      "answer_index": 3,
+      "explanation": "s[2:8:3] takes indices 2 and 5, \"oa\", because the stop index 8 is excluded, and s[-3:] is the last three characters, \"ing\".",
+      "verify_code": []
+    }
+  ]
+}

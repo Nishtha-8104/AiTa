@@ -1,0 +1,37 @@
+# Offline chat evals only (scripts/eval/chat/); never part of the app image.
+# Install on top of requirements.txt, from backend/, in two steps:
+#
+#   pip install -r scripts/eval/requirements-eval.txt
+#   pip install --no-deps ragas==0.4.3 instructor==1.17.0 langchain-community==0.4.1
+#
+# The second step skips resolution on purpose: instructor pins jiter<0.15 (openai 3.x needs
+# jiter>=0.16) and langchain-community asks for pydantic-settings>=2.10.1 (the app holds
+# 2.5.2). `pip check` reports both; the RAGAS code paths the evals use run fine with them.
+# langchain-community stays at 0.4.1: ragas imports its vertexai modules, gone in 0.4.2.
+
+# Held at the app's pins so this file never moves them.
+openai==3.13.0
+langchain==1.4.1
+langchain-core==1.6.2
+langchain-openai==1.6.2
+pydantic==2.13.5
+pydantic-settings==2.5.2
+
+# Dependencies of ragas, instructor and langchain-community that the app lacks.
+datasets==5.1.0
+diskcache==5.6.3
+appdirs==1.4.4
+nest-asyncio==1.6.0
+scikit-network==0.33.5
+rich==14.3.4
+docstring-parser==0.18.0
+langchain-classic==1.0.8
+httpx-sse==0.4.3
+dataclasses-json==0.6.7
+tiktoken>=0.7
+typer>=0.9
+tenacity>=8.2.3
+aiohttp>=3.14.3
+jinja2>=3.1.4
+pillow>=10.4.0
+networkx>=3.0

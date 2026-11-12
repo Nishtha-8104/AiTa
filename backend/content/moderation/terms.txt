@@ -1,0 +1,164 @@
+# Format: category:term  (whole-word, case-insensitive, literal; spaces match any whitespace or hyphen)
+# Categories: self_harm, slur, sexual, abuse. Checked in that order.
+# expletive: frustration swearing, allowed on its own; flagged as abuse only when aimed at someone
+# ("you <expletive>", "tu <expletive>", "<expletive> you/off").
+# Never add bare programming verbs (kill, die, hang, execute, abort, hit, shoot, crack, bang, dump).
+
+self_harm:kill myself
+self_harm:killing myself
+self_harm:want to die
+self_harm:wanna die
+self_harm:wish i was dead
+self_harm:wish i were dead
+self_harm:suicide
+self_harm:suicidal
+self_harm:end my life
+self_harm:ending my life
+self_harm:take my own life
+self_harm:self harm
+self_harm:selfharm
+self_harm:hurt myself
+self_harm:hurting myself
+self_harm:harm myself
+self_harm:harming myself
+self_harm:cut myself
+self_harm:cutting myself
+self_harm:hang myself
+self_harm:no reason to live
+self_harm:better off dead
+self_harm:khudkushi
+self_harm:aatmahatya
+self_harm:atmahatya
+self_harm:marna chahta
+self_harm:marna chahti
+self_harm:mar jaana chahta
+self_harm:mar jana chahta
+self_harm:mar jaana chahti
+self_harm:mar jana chahti
+
+slur:nigger
+slur:niggers
+slur:nigga
+slur:niggas
+slur:faggot
+slur:faggots
+slur:fag
+slur:fags
+slur:retard
+slur:retards
+slur:retarded
+slur:tranny
+slur:spic
+slur:kike
+slur:katua
+
+sexual:sexy
+sexual:sexting
+sexual:porn
+sexual:porno
+sexual:pornography
+sexual:nude
+sexual:nudes
+sexual:boobs
+sexual:tits
+sexual:penis
+sexual:vagina
+sexual:pussy
+sexual:blowjob
+sexual:handjob
+sexual:horny
+sexual:masturbate
+sexual:masturbating
+sexual:dildo
+sexual:rape
+sexual:chudai
+sexual:chodna
+sexual:chodu
+
+expletive:fuck
+expletive:fucks
+expletive:fucked
+expletive:fucking
+expletive:fuckin
+expletive:shit
+expletive:shitty
+expletive:bullshit
+expletive:crap
+expletive:crappy
+expletive:damn
+expletive:wtf
+expletive:ass
+expletive:bc
+expletive:bkl
+expletive:mkc
+expletive:chutiya
+expletive:chutiye
+expletive:chutia
+expletive:idiot
+expletive:moron
+expletive:loser
+expletive:stupid
+expletive:dumb
+
+abuse:fuck you
+abuse:fuck off
+abuse:screw you
+# Censored forms; runs of 3+ asterisks are already collapsed to one or two.
+abuse:f** you
+abuse:f**k you
+abuse:f*ck you
+abuse:f** off
+abuse:f**k off
+abuse:f*ck off
+
+abuse:fucker
+abuse:fuckers
+abuse:motherfucker
+abuse:stfu
+abuse:bitch
+abuse:bitches
+abuse:bastard
+abuse:asshole
+abuse:assholes
+abuse:dumbass
+abuse:jackass
+abuse:dickhead
+abuse:cunt
+abuse:twat
+abuse:wanker
+abuse:douchebag
+abuse:slut
+abuse:whore
+abuse:madarchod
+abuse:maderchod
+abuse:madarchodd
+abuse:behenchod
+abuse:behanchod
+abuse:bhenchod
+abuse:benchod
+abuse:bhosdike
+abuse:bhosadike
+abuse:bhosdi
+abuse:bhosda
+abuse:bsdk
+abuse:gandu
+abuse:gaand
+abuse:gaandu
+abuse:lauda
+abuse:lawda
+abuse:lavda
+abuse:lodu
+abuse:jhaat
+abuse:jhatu
+abuse:tatte
+abuse:randi
+abuse:randwa
+abuse:harami
+abuse:haramkhor
+abuse:kamina
+abuse:kamine
+abuse:kutiya
+abuse:bhadwa
+abuse:bhadwe
+abuse:teri maa ki chut
+abuse:teri maa ka bhosda

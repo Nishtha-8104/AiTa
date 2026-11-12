@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "ExplanationItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "enum": [
+            "c",
+            "cpp",
+            "python"
+          ],
+          "title": "Language",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "markdown": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Markdown",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "language",
+        "title",
+        "markdown"
+      ],
+      "title": "ExplanationItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "explanation/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ExplanationItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "ExplanationFile",
+  "type": "object"
+}

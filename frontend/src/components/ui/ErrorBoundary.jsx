@@ -17,15 +17,19 @@ export default class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="glass-card p-4 border-red-500/20 text-center">
-          <p className="text-red-400 text-sm font-display font-600 mb-1">Something went wrong rendering this section.</p>
-          <p className="text-white/30 text-xs font-mono">{String(this.state.error?.message || '')}</p>
-          <button
-            onClick={() => this.setState({ hasError: false, error: null })}
-            className="mt-3 px-3 py-1.5 bg-surface-700 hover:bg-surface-600 text-white/60 text-xs rounded-lg transition-colors"
-          >
-            Try again
-          </button>
+        <div className="flex min-h-[60dvh] items-center justify-center p-4">
+          <div className="tile w-full max-w-md p-6">
+            <p className="text-[15px] font-semibold text-ink">Something went wrong on this page.</p>
+            <p className="mt-1 text-sm text-ink-subtle">Try again. If it keeps happening, reload the page.</p>
+            <p className="mt-3 break-words font-mono text-xs text-ink-faint">{String(this.state.error?.message || '')}</p>
+            <button
+              type="button"
+              onClick={() => this.setState({ hasError: false, error: null })}
+              className="mt-5 h-10 rounded-full bg-ink px-4 text-sm font-medium text-canvas hover:bg-white"
+            >
+              Try again
+            </button>
+          </div>
         </div>
       )
     }

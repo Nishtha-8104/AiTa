@@ -1,0 +1,129 @@
+{
+  "$defs": {
+    "ProblemItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "difficulty": {
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "constraints": {
+          "title": "Constraints",
+          "type": "string"
+        },
+        "reference": {
+          "$ref": "#/$defs/Reference"
+        },
+        "tests": {
+          "items": {
+            "$ref": "#/$defs/Test"
+          },
+          "title": "Tests",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "difficulty",
+        "statement",
+        "constraints",
+        "reference",
+        "tests"
+      ],
+      "title": "ProblemItem",
+      "type": "object"
+    },
+    "Reference": {
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "const": "python",
+          "title": "Language",
+          "type": "string"
+        },
+        "code": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Code",
+          "type": "array"
+        }
+      },
+      "required": [
+        "language",
+        "code"
+      ],
+      "title": "Reference",
+      "type": "object"
+    },
+    "Test": {
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Input",
+          "type": "array"
+        },
+        "output": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Output",
+          "type": "array"
+        }
+      },
+      "required": [
+        "input",
+        "output"
+      ],
+      "title": "Test",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "problems/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ProblemItem"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "items"
+  ],
+  "title": "ProblemsFile",
+  "type": "object"
+}

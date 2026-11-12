@@ -1,0 +1,731 @@
+{
+  "schema": "problems/v1",
+  "topic": "functions",
+  "items": [
+    {
+      "id": "pet-gcd",
+      "title": "Greatest Common Divisor",
+      "difficulty": "easy",
+      "statement": "A single line contains two positive integers a and b. Print their greatest common divisor, the largest integer that divides both.",
+      "constraints": "1 <= a, b <= 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "from math import gcd",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(t):",
+          "    print(gcd(int(data[1 + 2 * k]), int(data[2 + 2 * k])))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "12 18"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "7 13"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "100 10"
+          ],
+          "output": [
+            "10"
+          ]
+        },
+        {
+          "input": [
+            "5 5"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "1 999"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "84 36"
+          ],
+          "output": [
+            "12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-power",
+      "title": "Power of a Number",
+      "difficulty": "easy",
+      "statement": "A single line contains two integers a and n. Print a raised to the power n.",
+      "constraints": "1 <= a <= 10; 0 <= n <= 15.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(t):",
+          "    print(int(data[1 + 2 * k]) ** int(data[2 + 2 * k]))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "2 10"
+          ],
+          "output": [
+            "1024"
+          ]
+        },
+        {
+          "input": [
+            "3 0"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "5 1"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "10 15"
+          ],
+          "output": [
+            "1000000000000000"
+          ]
+        },
+        {
+          "input": [
+            "1 15"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "7 3"
+          ],
+          "output": [
+            "343"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-count-primes",
+      "title": "Count Primes",
+      "difficulty": "medium",
+      "statement": "A single line contains an integer n. Print how many prime numbers are less than or equal to n.",
+      "constraints": "0 <= n <= 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def is_prime(m):",
+          "    if m < 2:",
+          "        return False",
+          "    d = 2",
+          "    while d * d <= m:",
+          "        if m % d == 0:",
+          "            return False",
+          "        d += 1",
+          "    return True",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    n = int(data[k])",
+          "    print(sum(1 for m in range(n + 1) if is_prime(m)))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "10"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "2"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "100"
+          ],
+          "output": [
+            "25"
+          ]
+        },
+        {
+          "input": [
+            "10000"
+          ],
+          "output": [
+            "1229"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-fn-digit-sum-winner",
+      "title": "Digit Sum Winner",
+      "difficulty": "easy",
+      "statement": "A single line contains two positive integers a and b. Add up the digits of each number. Print the number whose digits add up to more. If both digit sums are equal, print the smaller of the two numbers. Hint: write a function that returns the digit sum of a number, and call it once for a and once for b.",
+      "constraints": "1 <= a, b <= 1000000000000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def digit_sum(x):",
+          "    total = 0",
+          "    while x > 0:",
+          "        total += x % 10",
+          "        x //= 10",
+          "    return total",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(t):",
+          "    a = int(data[1 + 2 * k])",
+          "    b = int(data[2 + 2 * k])",
+          "    sa, sb = digit_sum(a), digit_sum(b)",
+          "    if sa > sb:",
+          "        print(a)",
+          "    elif sb > sa:",
+          "        print(b)",
+          "    else:",
+          "        print(min(a, b))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "123 99"
+          ],
+          "output": [
+            "99"
+          ]
+        },
+        {
+          "input": [
+            "55 19"
+          ],
+          "output": [
+            "19"
+          ]
+        },
+        {
+          "input": [
+            "1000000000000000000 9"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "7 7"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "999999999999999999 1"
+          ],
+          "output": [
+            "999999999999999999"
+          ]
+        },
+        {
+          "input": [
+            "40 13"
+          ],
+          "output": [
+            "13"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-fn-round-best",
+      "title": "Best Player Each Round",
+      "difficulty": "easy",
+      "statement": "Three players play n rounds of a game. The first line contains an integer n. Each of the next n lines contains three integers: the scores of the three players in that round. A score can be negative. For every round take the highest of its three scores, and print the sum of these highest scores over all rounds. Hint: write a function that returns the largest of three numbers.",
+      "constraints": "1 <= n <= 1000; -1000000000 <= each score <= 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def max_of_three(a, b, c):",
+          "    best = a",
+          "    if b > best:",
+          "        best = b",
+          "    if c > best:",
+          "        best = c",
+          "    return best",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "pos = 0",
+          "t = int(data[pos])",
+          "pos += 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    pos += 1",
+          "    total = 0",
+          "    for _ in range(n):",
+          "        a, b, c = int(data[pos]), int(data[pos + 1]), int(data[pos + 2])",
+          "        pos += 3",
+          "        total += max_of_three(a, b, c)",
+          "    print(total)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3",
+            "1 5 3",
+            "4 4 2",
+            "0 -1 -2"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "-5 -2 -9"
+          ],
+          "output": [
+            "-2"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "1000000000 999999999 -1000000000",
+            "1000000000 1000000000 1000000000"
+          ],
+          "output": [
+            "2000000000"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "-1 -1 -1",
+            "2 7 7",
+            "3 -8 1",
+            "-100 -50 -75"
+          ],
+          "output": [
+            "-41"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "0 0 0"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "-1000000000 -1000000000 -1000000000",
+            "-3 -7 -4"
+          ],
+          "output": [
+            "-1000000003"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-fn-divisor-classes",
+      "title": "Perfect, Abundant or Deficient",
+      "difficulty": "medium",
+      "statement": "The proper divisors of a number are all its positive divisors smaller than the number itself (the proper divisors of 12 are 1, 2, 3, 4 and 6). A number is perfect if its proper divisors add up to exactly the number, abundant if they add up to more, and deficient if they add up to less. The first line contains an integer n. The second line contains n positive integers. Print three integers separated by single spaces: how many of the n numbers are deficient, how many are perfect, and how many are abundant. Hint: write a function that returns the sum of the proper divisors of a number.",
+      "constraints": "1 <= n <= 100; 1 <= each number <= 10000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def proper_divisor_sum(x):",
+          "    return sum(d for d in range(1, x) if x % d == 0)",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "pos = 0",
+          "t = int(data[pos])",
+          "pos += 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    pos += 1",
+          "    counts = [0, 0, 0]",
+          "    for x in map(int, data[pos:pos + n]):",
+          "        s = proper_divisor_sum(x)",
+          "        if s < x:",
+          "            counts[0] += 1",
+          "        elif s == x:",
+          "            counts[1] += 1",
+          "        else:",
+          "            counts[2] += 1",
+          "    pos += n",
+          "    print(*counts)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "6 12 7 28 1"
+          ],
+          "output": [
+            "2 2 1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "1"
+          ],
+          "output": [
+            "1 0 0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "496 8128 945 2"
+          ],
+          "output": [
+            "1 2 1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "10000 9999 18 20 16 25"
+          ],
+          "output": [
+            "3 0 3"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "2 3 4"
+          ],
+          "output": [
+            "3 0 0"
+          ]
+        },
+        {
+          "input": [
+            "100",
+            "9901 9902 9903 9904 9905 9906 9907 9908 9909 9910 9911 9912 9913 9914 9915 9916 9917 9918 9919 9920 9921 9922 9923 9924 9925 9926 9927 9928 9929 9930 9931 9932 9933 9934 9935 9936 9937 9938 9939 9940 9941 9942 9943 9944 9945 9946 9947 9948 9949 9950 9951 9952 9953 9954 9955 9956 9957 9958 9959 9960 9961 9962 9963 9964 9965 9966 9967 9968 9969 9970 9971 9972 9973 9974 9975 9976 9977 9978 9979 9980 9981 9982 9983 9984 9985 9986 9987 9988 9989 9990 9991 9992 9993 9994 9995 9996 9997 9998 9999 10000"
+          ],
+          "output": [
+            "77 0 23"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-fn-nearest-prime",
+      "title": "Nearest Prime",
+      "difficulty": "medium",
+      "statement": "A single line contains a positive integer n. Print the prime number closest to n. If n itself is prime, print n. If two primes are equally close to n, print the smaller one. Hint: write a function that checks whether a number is prime, then call it on the numbers n, n - 1, n + 1, n - 2, n + 2 and so on.",
+      "constraints": "1 <= n <= 1000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def is_prime(m):",
+          "    if m < 2:",
+          "        return False",
+          "    d = 2",
+          "    while d * d <= m:",
+          "        if m % d == 0:",
+          "            return False",
+          "        d += 1",
+          "    return True",
+          "",
+          "",
+          "def nearest_prime(n):",
+          "    d = 0",
+          "    while True:",
+          "        if is_prime(n - d):",
+          "            return n - d",
+          "        if is_prime(n + d):",
+          "            return n + d",
+          "        d += 1",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    print(nearest_prime(int(data[k])))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "10"
+          ],
+          "output": [
+            "11"
+          ]
+        },
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "9"
+          ],
+          "output": [
+            "7"
+          ]
+        },
+        {
+          "input": [
+            "4"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "120"
+          ],
+          "output": [
+            "113"
+          ]
+        },
+        {
+          "input": [
+            "24"
+          ],
+          "output": [
+            "23"
+          ]
+        },
+        {
+          "input": [
+            "1000000"
+          ],
+          "output": [
+            "1000003"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-fn-triple-prime-kth",
+      "title": "K-th Triple Prime",
+      "difficulty": "hard",
+      "statement": "Call a number a triple prime if three numbers are all prime: the number itself, the number written with its digits in reverse order, and the sum of its digits. For example, 113 is a triple prime because 113, 311 and 1 + 1 + 3 = 5 are all prime. 13 is not, because 1 + 3 = 4 is not prime, and 23 is not, because 32 is not prime. The smallest triple primes are 2, 3, 5, 7, 11, 101, 113. A single line contains an integer k. Print the k-th smallest triple prime. Hint: write separate functions for checking a prime, reversing a number and adding up its digits, and reuse them.",
+      "constraints": "1 <= k <= 300.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "",
+          "def is_prime(m):",
+          "    if m < 2:",
+          "        return False",
+          "    d = 2",
+          "    while d * d <= m:",
+          "        if m % d == 0:",
+          "            return False",
+          "        d += 1",
+          "    return True",
+          "",
+          "",
+          "def reverse_number(x):",
+          "    r = 0",
+          "    while x > 0:",
+          "        r = r * 10 + x % 10",
+          "        x //= 10",
+          "    return r",
+          "",
+          "",
+          "def digit_sum(x):",
+          "    total = 0",
+          "    while x > 0:",
+          "        total += x % 10",
+          "        x //= 10",
+          "    return total",
+          "",
+          "",
+          "def is_triple_prime(x):",
+          "    return is_prime(x) and is_prime(reverse_number(x)) and is_prime(digit_sum(x))",
+          "",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "ks = [int(v) for v in data[1:1 + t]]",
+          "found = []",
+          "x = 1",
+          "while len(found) < max(ks):",
+          "    x += 1",
+          "    if is_triple_prime(x):",
+          "        found.append(x)",
+          "for k in ks:",
+          "    print(found[k - 1])",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "1"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "5"
+          ],
+          "output": [
+            "11"
+          ]
+        },
+        {
+          "input": [
+            "6"
+          ],
+          "output": [
+            "101"
+          ]
+        },
+        {
+          "input": [
+            "10"
+          ],
+          "output": [
+            "157"
+          ]
+        },
+        {
+          "input": [
+            "25"
+          ],
+          "output": [
+            "919"
+          ]
+        },
+        {
+          "input": [
+            "100"
+          ],
+          "output": [
+            "7817"
+          ]
+        },
+        {
+          "input": [
+            "300"
+          ],
+          "output": [
+            "19001"
+          ]
+        }
+      ]
+    }
+  ]
+}

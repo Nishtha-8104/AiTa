@@ -1,0 +1,529 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "stacks_queues",
+  "items": [
+    {
+      "id": "stacks_queues:1:python",
+      "concept_key": "stacks_queues:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "stack = []",
+          "stack.append(1)",
+          "stack.append(2)",
+          "stack.append(3)",
+          "print(stack.pop())",
+          "print(stack.pop())",
+          "print(stack.pop())",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3",
+          "2",
+          "1"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:2:python",
+      "concept_key": "stacks_queues:2",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "from collections import deque",
+          "q = deque()",
+          "q.append(10)",
+          "q.append(20)",
+          "q.append(30)",
+          "q.popleft()",
+          "q.append(40)",
+          "print(q.popleft())",
+          "print(q.popleft())",
+          "print(q.popleft())",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "20",
+          "30",
+          "40"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:3:python",
+      "concept_key": "stacks_queues:3",
+      "tier": 5,
+      "kind": "find_bug",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read n, push the numbers 0 to n - 1 onto a stack, then pop them all and print the popped numbers on one line, separated by spaces.",
+        "code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    stack = []",
+          "    for i in range(n):",
+          "        stack.append(i)",
+          "    result = []",
+          "    while stack:",
+          "        result.append(stack.pop(0))",
+          "    print(' '.join(map(str, result)))",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    stack = []",
+          "    for i in range(n):",
+          "        stack.append(i)",
+          "    result = []",
+          "    while stack:",
+          "        result.append(stack.pop())",
+          "    print(' '.join(map(str, result)))",
+          ""
+        ],
+        "change_from": "result.append(stack.pop())",
+        "change_to": "result.append(stack.pop(0))",
+        "tests": [
+          {
+            "stdin": [
+              "3"
+            ],
+            "expected_stdout": [
+              "2 1 0"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "3 2 1 0"
+            ]
+          }
+        ],
+        "bug_line": 9
+      }
+    },
+    {
+      "id": "stacks_queues:4:python",
+      "concept_key": "stacks_queues:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why a stack is suitable for checking balanced parentheses in an expression, and how its LIFO property ensures correctness."
+      },
+      "key": {
+        "rubric": [
+          "Stacks follow Last-In-First-Out (LIFO) order, so the most recently opened parenthesis must be the first to be closed.",
+          "When encountering a closing parenthesis, the top of the stack holds the matching opening parenthesis if the expression is balanced so far.",
+          "If the stack is empty when a closing parenthesis is read, or not empty after processing, the parentheses are unbalanced."
+        ],
+        "model_answer": "A stack is suitable because it enforces LIFO order, ensuring that the most recently opened parenthesis must be closed first. When a closing parenthesis is encountered, the top of the stack is checked for the matching opening type; if it matches, it is popped. If the stack is empty when a closing parenthesis appears or remains non-empty after processing, the parentheses are unbalanced. This correctly captures nesting structure."
+      }
+    },
+    {
+      "id": "stacks_queues:1:c",
+      "concept_key": "stacks_queues:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "#define MAX 100",
+          "int stack[MAX];",
+          "int top = -1;",
+          "int main() {",
+          "    stack[++top] = 1;",
+          "    stack[++top] = 2;",
+          "    stack[++top] = 3;",
+          "    printf(\"%d\\n\", stack[top--]);",
+          "    printf(\"%d\\n\", stack[top--]);",
+          "    printf(\"%d\\n\", stack[top--]);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3",
+          "2",
+          "1"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:2:c",
+      "concept_key": "stacks_queues:2",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "#define MAX 100",
+          "int queue[MAX];",
+          "int front = 0;",
+          "int rear = -1;",
+          "int main() {",
+          "    queue[++rear] = 10;",
+          "    queue[++rear] = 20;",
+          "    queue[++rear] = 30;",
+          "    front++;",
+          "    queue[++rear] = 40;",
+          "    printf(\"%d\\n\", queue[front++]);",
+          "    printf(\"%d\\n\", queue[front++]);",
+          "    printf(\"%d\\n\", queue[front++]);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "20",
+          "30",
+          "40"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:3:c",
+      "concept_key": "stacks_queues:3",
+      "tier": 5,
+      "kind": "find_bug",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read n, push the numbers 0 to n - 1 onto a stack, then pop them all and print the popped numbers on one line, separated by spaces.",
+        "code": [
+          "#include <stdio.h>",
+          "#define MAX 100",
+          "int stack[MAX];",
+          "int top = -1;",
+          "int result[MAX];",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        top = -1;",
+          "        for (int i = 0; i < n; i++) {",
+          "            stack[++top] = i;",
+          "        }",
+          "        int r = 0;",
+          "        while (top >= 0) {",
+          "            result[r++] = stack[0];",
+          "        }",
+          "        for (int i = 0; i < r; i++) {",
+          "            if (i > 0) printf(\" \");",
+          "            printf(\"%d\", result[i]);",
+          "        }",
+          "        printf(\"\\n\");",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "#include <stdio.h>",
+          "#define MAX 100",
+          "int stack[MAX];",
+          "int top = -1;",
+          "int result[MAX];",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        top = -1;",
+          "        for (int i = 0; i < n; i++) {",
+          "            stack[++top] = i;",
+          "        }",
+          "        int r = 0;",
+          "        while (top >= 0) {",
+          "            result[r++] = stack[top--];",
+          "        }",
+          "        for (int i = 0; i < r; i++) {",
+          "            if (i > 0) printf(\" \");",
+          "            printf(\"%d\", result[i]);",
+          "        }",
+          "        printf(\"\\n\");",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "change_from": "result[r++] = stack[top--];",
+        "change_to": "result[r++] = stack[0];",
+        "tests": [
+          {
+            "stdin": [
+              "3"
+            ],
+            "expected_stdout": [
+              "2 1 0"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "3 2 1 0"
+            ]
+          }
+        ],
+        "bug_line": 18
+      }
+    },
+    {
+      "id": "stacks_queues:4:c",
+      "concept_key": "stacks_queues:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why a stack is suitable for checking balanced parentheses in an expression, and how its LIFO property ensures correctness."
+      },
+      "key": {
+        "rubric": [
+          "Stacks follow Last-In-First-Out (LIFO) order, so the most recently opened parenthesis must be the first to be closed.",
+          "When encountering a closing parenthesis, the top of the stack holds the matching opening parenthesis if the expression is balanced so far.",
+          "If the stack is empty when a closing parenthesis is read, or not empty after processing, the parentheses are unbalanced."
+        ],
+        "model_answer": "A stack is suitable because it enforces LIFO order, ensuring that the most recently opened parenthesis must be closed first. When a closing parenthesis is encountered, the top of the stack is checked for the matching opening type; if it matches, it is popped. If the stack is empty when a closing parenthesis appears or remains non-empty after processing, the parentheses are unbalanced. This correctly captures nesting structure."
+      }
+    },
+    {
+      "id": "stacks_queues:1:cpp",
+      "concept_key": "stacks_queues:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <vector>",
+          "int main() {",
+          "    std::vector<int> stack;",
+          "    stack.push_back(1);",
+          "    stack.push_back(2);",
+          "    stack.push_back(3);",
+          "    std::cout << stack.back() << '\\n';",
+          "    stack.pop_back();",
+          "    std::cout << stack.back() << '\\n';",
+          "    stack.pop_back();",
+          "    std::cout << stack.back() << '\\n';",
+          "    stack.pop_back();",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "3",
+          "2",
+          "1"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:2:cpp",
+      "concept_key": "stacks_queues:2",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "#include <deque>",
+          "int main() {",
+          "    std::deque<int> q;",
+          "    q.push_back(10);",
+          "    q.push_back(20);",
+          "    q.push_back(30);",
+          "    q.pop_front();",
+          "    q.push_back(40);",
+          "    std::cout << q.front() << '\\n';",
+          "    q.pop_front();",
+          "    std::cout << q.front() << '\\n';",
+          "    q.pop_front();",
+          "    std::cout << q.front() << '\\n';",
+          "    q.pop_front();",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "20",
+          "30",
+          "40"
+        ]
+      }
+    },
+    {
+      "id": "stacks_queues:3:cpp",
+      "concept_key": "stacks_queues:3",
+      "tier": 5,
+      "kind": "find_bug",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read n, push the numbers 0 to n - 1 onto a stack, then pop them all and print the popped numbers on one line, separated by spaces.",
+        "code": [
+          "#include <iostream>",
+          "#include <vector>",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    while (T--) {",
+          "        int n;",
+          "        std::cin >> n;",
+          "        std::vector<int> stack;",
+          "        for (int i = 0; i < n; i++) {",
+          "            stack.push_back(i);",
+          "        }",
+          "        std::vector<int> result;",
+          "        while (!stack.empty()) {",
+          "            result.push_back(stack.front());",
+          "            stack.pop_back();",
+          "        }",
+          "        for (size_t i = 0; i < result.size(); i++) {",
+          "            if (i > 0) std::cout << ' ';",
+          "            std::cout << result[i];",
+          "        }",
+          "        std::cout << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "#include <iostream>",
+          "#include <vector>",
+          "int main() {",
+          "    int T;",
+          "    std::cin >> T;",
+          "    while (T--) {",
+          "        int n;",
+          "        std::cin >> n;",
+          "        std::vector<int> stack;",
+          "        for (int i = 0; i < n; i++) {",
+          "            stack.push_back(i);",
+          "        }",
+          "        std::vector<int> result;",
+          "        while (!stack.empty()) {",
+          "            result.push_back(stack.back());",
+          "            stack.pop_back();",
+          "        }",
+          "        for (size_t i = 0; i < result.size(); i++) {",
+          "            if (i > 0) std::cout << ' ';",
+          "            std::cout << result[i];",
+          "        }",
+          "        std::cout << '\\n';",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "change_from": "result.push_back(stack.back());",
+        "change_to": "result.push_back(stack.front());",
+        "tests": [
+          {
+            "stdin": [
+              "3"
+            ],
+            "expected_stdout": [
+              "2 1 0"
+            ]
+          },
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "0"
+            ]
+          },
+          {
+            "stdin": [
+              "4"
+            ],
+            "expected_stdout": [
+              "3 2 1 0"
+            ]
+          }
+        ],
+        "bug_line": 15
+      }
+    },
+    {
+      "id": "stacks_queues:4:cpp",
+      "concept_key": "stacks_queues:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why a stack is suitable for checking balanced parentheses in an expression, and how its LIFO property ensures correctness."
+      },
+      "key": {
+        "rubric": [
+          "Stacks follow Last-In-First-Out (LIFO) order, so the most recently opened parenthesis must be the first to be closed.",
+          "When encountering a closing parenthesis, the top of the stack holds the matching opening parenthesis if the expression is balanced so far.",
+          "If the stack is empty when a closing parenthesis is read, or not empty after processing, the parentheses are unbalanced."
+        ],
+        "model_answer": "A stack is suitable because it enforces LIFO order, ensuring that the most recently opened parenthesis must be closed first. When a closing parenthesis is encountered, the top of the stack is checked for the matching opening type; if it matches, it is popped. If the stack is empty when a closing parenthesis appears or remains non-empty after processing, the parentheses are unbalanced. This correctly captures nesting structure."
+      }
+    }
+  ]
+}

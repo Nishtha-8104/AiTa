@@ -1,0 +1,30 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "topic/v1",
+      "title": "Schema",
+      "type": "string"
+    },
+    "topic": {
+      "title": "Topic",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "order": {
+      "title": "Order",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "topic",
+    "title",
+    "order"
+  ],
+  "title": "TopicFile",
+  "type": "object"
+}

@@ -1,610 +1,276 @@
-# aiTA — AI Teaching Assistant
-
-An AI-powered personalized learning platform for programming students. aiTA combines four specialized AI agents into a continuous feedback loop — it watches how you learn, evaluates your code, synthesizes feedback, and recommends what to study next.
-
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-green.svg)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
----
-
-## 🌟 Features
-
-### 🤖 AI Agents
-- **Content Player Agent** — Interactive AI tutor with 5 modes: Walkthrough, Q&A, Quiz, Code Help, Brainstorm. Adaptive difficulty adjusts automatically based on comfort signals.
-- **Code Evaluation Agent** — Multi-dimensional code analysis: correctness, efficiency, security, style, documentation, and corrected code with explanations.
-- **Feedback Agent** — Synthesizes findings from code evaluations and learning sessions into personalized narrative feedback. Updates your learning profile in real time.
-- **Content Recommendation Agent** — Hybrid CF + CBF + RL + Groq LLM pipeline. Fetches real YouTube videos and ranks them with personalized explanations.
-
-### 🔐 Security & Authentication
-- **2-Step Login (OTP)** — Password check → bcrypt-hashed OTP sent via Gmail API → JWT tokens issued after OTP verification
-- **Gmail API OAuth2** — Secure email delivery using Google's infrastructure (works on all platforms including Render)
-- **Forgot Password** — Email OTP → verify → set new password. OTP bcrypt-hashed, single-use, 10-minute expiry
-- **JWT Authentication** — Access + refresh tokens with automatic token refresh
-
-### 📊 Personalization & Privacy
-- **Peer Comparison** — Anonymized rank, percentile ring, and metric benchmarks vs all consenting users
-- **Data Privacy Controls** — ChatGPT-style data consent toggle. Choose exactly what data is shared
-- **Dynamic Learner Profile** — Every agent reads from and writes to your profile for better personalization
-- **Gamification** — Points, levels, badges, and progress tracking
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | React 18 + Vite + Tailwind CSS |
-| **Backend** | FastAPI (Python 3.10+) |
-| **Database** | PostgreSQL + SQLAlchemy ORM |
-| **LLM** | Groq API (`llama-3.3-70b-versatile`, fallback `llama3-8b-8192`) |
-| **Video** | YouTube Data API v3 |
-| **Auth** | JWT (access + refresh) + bcrypt + OTP |
-| **Email** | Gmail API OAuth2 (HTTPS - works on Render) |
-| **HTTP Client** | Axios (frontend), httpx (backend) |
-| **Deployment** | Render (backend), Netlify (frontend) |
-
----
-
-## 📁 Project Structure
-
-```
-aiTA/
-├── backend/
-│   ├── .env                        # Environment variables
-│   └── app/
-│       ├── main.py                 # FastAPI app entry point
-│       ├── core/
-│       │   ├── config.py           # Settings (DB, JWT, Gmail API, API keys)
-│       │   ├── database.py         # SQLAlchemy engine + session
-│       │   ├── security.py         # JWT, bcrypt, OTP generate/hash/verify
-│       │   └── dependencies.py     # Auth dependencies + role checks
-│       ├── models/                 # SQLAlchemy ORM models
-│       │   ├── user.py             # User, LearningProfile, OTPRecord, UserSession
-│       │   ├── content_player.py
-│       │   ├── code_eval.py
-│       │   ├── feedback.py
-│       │   └── recommendation.py
-│       ├── schemas/                # Pydantic request/response schemas
-│       ├── api/                    # FastAPI routers
-│       │   ├── auth.py             # login, verify-otp, forgot-password, reset-password
-│       │   ├── users.py            # profile, consent, peer-comparison
-│       │   ├── content_player.py
-│       │   ├── code_eval.py
-│       │   ├── feedback.py
-│       │   └── recommendations.py
-│       ├── services/               # Business logic layer
-│       │   ├── auth_service.py     # Gmail API OAuth2 + SMTP fallback
-│       │   └── ...
-│       └── agents/                 # AI agent logic
-│           ├── content_player_agent.py
-│           ├── code_eval_agent.py
-│           ├── feedback_agent.py
-│           └── recommendation_agent.py
-└── frontend/
-    ├── index.html
-    └── src/
-        ├── App.jsx
-        ├── pages/                  # Route-level pages
-        │   ├── LoginPage.jsx       # 2-step login + forgot password
-        │   ├── RegisterPage.jsx    # 2-step registration with topic selection
-        │   ├── DashboardPage.jsx   # Stats, agents, peer comparison
-        │   ├── ProfilePage.jsx     # Profile, Learning, Security, Privacy tabs
-        │   ├── ContentPlayerPage.jsx
-        │   ├── CodeEvalPage.jsx
-        │   ├── FeedbackPage.jsx
-        │   └── RecommendationPage.jsx
-        ├── components/             # UI components per feature
-        ├── hooks/                  # Custom React hooks
-        └── utils/api.js            # Axios API client with auto token refresh
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Python 3.10+**
-- **Node.js 18+**
-- **PostgreSQL 14+**
-- **Groq API key** — [Get it here](https://console.groq.com)
-- **YouTube Data API v3 key** *(optional)* — [Get it here](https://console.cloud.google.com)
-- **Gmail API OAuth2** *(recommended for production)* — See [Gmail API Setup Guide](GMAIL_OAUTH_SETUP.md)
-
----
-
-### 1️⃣ Clone the Repository
-
-```bash
-git clone https://github.com/your-username/aiTA.git
-cd aiTA
-```
-
----
-
-### 2️⃣ Backend Setup
-
-#### Install Dependencies
-
-```bash
-cd backend
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS/Linux
-source venv/bin/activate
-
-pip install -r app/requirements.txt
-```
-
-#### Configure Environment Variables
-
-Create `backend/.env`:
-
-```env
-# PostgreSQL Database
-DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/aita_db
-
-# JWT Configuration
-SECRET_KEY=your_random_secret_key_here_use_long_string
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-REFRESH_TOKEN_EXPIRE_DAYS=7
-
-# Groq LLM API
-GROQ_API_KEY=gsk_your_groq_key_here
-
-# YouTube Data API (optional)
-YOUTUBE_API_KEY=your_youtube_api_key
-
-# Gmail API OAuth2 (recommended for production)
-# See GMAIL_OAUTH_SETUP.md for detailed setup instructions
-GMAIL_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GMAIL_CLIENT_SECRET=GOCSPX-your-client-secret
-GMAIL_REFRESH_TOKEN=1//your-refresh-token
-GMAIL_FROM_EMAIL=youremail@gmail.com
-
-# SMTP Fallback (for local development)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASSWORD=your_gmail_app_password
-
-# App Configuration
-APP_NAME=aiTA - AI Teaching Assistant
-APP_VERSION=1.0.0
-DEBUG=True
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
-```
-
-#### Create Database
-
-```sql
--- In psql or pgAdmin
-CREATE DATABASE aita_db;
-```
-
-#### Run Migrations
-
-```bash
-# Run all migration files
-psql -U postgres -d aita_db -f backend/app/setup_db.sql
-psql -U postgres -d aita_db -f backend/app/migration_otp.sql
-psql -U postgres -d aita_db -f backend/app/migration_content_player.sql
-psql -U postgres -d aita_db -f backend/app/migration_code_eval.sql
-psql -U postgres -d aita_db -f backend/app/migration_feedback.sql
-psql -U postgres -d aita_db -f backend/app/migration_recommendation.sql
-psql -U postgres -d aita_db -f backend/app/migration_updates.sql
-```
-
-Or run them all at once:
-
-```bash
-cd backend/app
-for file in setup_db.sql migration_*.sql; do
-  psql -U postgres -d aita_db -f "$file"
-done
-```
-
-#### Start Backend Server
-
-```bash
-cd backend/app
-uvicorn main:app --reload --port 8000
-```
-
-✅ API docs available at: `http://localhost:8000/docs`
-
----
-
-### 3️⃣ Frontend Setup
-
-#### Install Dependencies
-
-```bash
-cd frontend
-npm install
-```
-
-#### Start Development Server
-
-```bash
-npm run dev
-```
-
-✅ App runs at: `http://localhost:5173`
-
----
-
-## 📧 Email Configuration
-
-### Option 1: Gmail API OAuth2 (Recommended for Production)
-
-**Benefits:**
-- ✅ Works on Render (uses HTTPS, not SMTP ports)
-- ✅ Completely FREE - no limits
-- ✅ No domain required
-- ✅ Most reliable
-
-**Setup Time:** ~20 minutes
-
-**See detailed guide:** [GMAIL_OAUTH_SETUP.md](GMAIL_OAUTH_SETUP.md)
-
-**Quick Reference:** [GMAIL_QUICK_REFERENCE.md](GMAIL_QUICK_REFERENCE.md)
-
-### Option 2: SMTP (For Local Development)
-
-**Benefits:**
-- ✅ Quick setup (2 minutes)
-- ✅ Works locally
-
-**Limitations:**
-- ⚠️ May not work on Render (port 587 blocked)
-
-**Setup:** Just add SMTP credentials to `.env`
-
-### Development Mode (No Email)
-
-If neither Gmail API nor SMTP is configured, OTPs will print to console:
-
-```
-[DEV] OTP for user@example.com: 123456
-```
-
----
-
-## 🔑 Environment Variables Reference
-
-| Variable | Required | Description |
-|---|---|---|
-| **Database** | | |
-| `DATABASE_URL` | ✅ Yes | PostgreSQL connection string |
-| **JWT** | | |
-| `SECRET_KEY` | ✅ Yes | JWT signing secret (use a long random string) |
-| `ALGORITHM` | ✅ Yes | JWT algorithm (HS256) |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | ✅ Yes | Access token expiry (default: 60) |
-| `REFRESH_TOKEN_EXPIRE_DAYS` | ✅ Yes | Refresh token expiry (default: 7) |
-| **AI Services** | | |
-| `GROQ_API_KEY` | ✅ Yes | Groq API key for all LLM agents |
-| `YOUTUBE_API_KEY` | ⚠️ Optional | YouTube Data API v3 key for video recommendations |
-| **Email (Gmail API - Recommended)** | | |
-| `GMAIL_CLIENT_ID` | ⚠️ Optional | OAuth2 Client ID from Google Cloud Console |
-| `GMAIL_CLIENT_SECRET` | ⚠️ Optional | OAuth2 Client Secret |
-| `GMAIL_REFRESH_TOKEN` | ⚠️ Optional | OAuth2 Refresh Token from OAuth Playground |
-| `GMAIL_FROM_EMAIL` | ⚠️ Optional | Your Gmail address (sender) |
-| **Email (SMTP Fallback)** | | |
-| `SMTP_HOST` | ⚠️ Optional | SMTP server (default: smtp.gmail.com) |
-| `SMTP_PORT` | ⚠️ Optional | SMTP port (default: 587) |
-| `SMTP_USER` | ⚠️ Optional | Gmail address for OTP emails |
-| `SMTP_PASSWORD` | ⚠️ Optional | Gmail App Password |
-| **App** | | |
-| `APP_NAME` | ✅ Yes | Application name |
-| `DEBUG` | ✅ Yes | Debug mode (True/False) |
-| `ALLOWED_ORIGINS` | ✅ Yes | Comma-separated frontend origins for CORS |
-
----
-
-## 📡 API Overview
-
-### Authentication Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/v1/auth/register` | Register new user |
-| `POST` | `/api/v1/auth/login` | Step 1: Verify password, send OTP |
-| `POST` | `/api/v1/auth/verify-otp` | Step 2: Verify OTP, get JWT tokens |
-| `POST` | `/api/v1/auth/forgot-password` | Request password reset OTP |
-| `POST` | `/api/v1/auth/reset-password` | Reset password with OTP |
-| `POST` | `/api/v1/auth/refresh` | Refresh access token |
-| `POST` | `/api/v1/auth/logout` | Logout and invalidate session |
-
-### User Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/v1/users/profile` | Get user profile |
-| `PATCH` | `/api/v1/users/profile` | Update user profile |
-| `PATCH` | `/api/v1/users/consent` | Update data sharing consent |
-| `GET` | `/api/v1/users/peer-comparison` | Get peer comparison stats |
-| `POST` | `/api/v1/users/change-password` | Change password |
-
-### AI Agent Endpoints
-
-| Agent | Base Path | Key Endpoints |
-|---|---|---|
-| **Content Player** | `/api/v1/content-player` | Sessions, chat, problem generation |
-| **Code Evaluation** | `/api/v1/code-eval` | Submit code, get evaluation, history |
-| **Feedback** | `/api/v1/feedback` | Generate feedback, list, mark read |
-| **Recommendations** | `/api/v1/recommendations` | Get recommendations, log interactions |
-
-**Full interactive API docs:** `http://localhost:8000/docs`
-
----
-
-## 🔐 Authentication Flow
-
-### 2-Step Login with OTP
-
-```
-1. POST /auth/login { email, password }
-   ↓
-   ✓ Verify password
-   ✓ Generate 6-digit OTP
-   ✓ Bcrypt-hash OTP (raw OTP never stored)
-   ✓ Send OTP via Gmail API or SMTP
-   ↓
-   ← Return otp_token (10-min JWT)
-
-2. POST /auth/verify-otp { otp_token, otp }
-   ↓
-   ✓ Decode otp_token → get user_id
-   ✓ Verify OTP against bcrypt hash
-   ✓ Mark OTP as used (single-use)
-   ↓
-   ← Return access_token + refresh_token
-```
-
-### Forgot Password Flow
-
-```
-1. POST /auth/forgot-password { email }
-   ↓
-   ✓ Always returns 200 (never reveals if email exists)
-   ✓ If email found: generate OTP → hash → send
-   ↓
-   ← Return otp_token
-
-2. POST /auth/reset-password { otp_token, otp, new_password }
-   ↓
-   ✓ Verify OTP hash
-   ✓ Mark OTP as used
-   ✓ Hash new password → save
-   ↓
-   ← Return success
-```
-
----
-
-## 🤖 AI Agent Pipeline
-
-```
-User Activity
-     │
-     ▼
-┌─────────────────────────┐
-│ Content Player Agent    │ → Learns topics, detects mastery/confusion
-│ (Interactive Tutor)     │    Adaptive difficulty
-└─────────────────────────┘
-     │
-     ▼
-┌─────────────────────────┐
-│ Code Evaluation Agent   │ → Problem + code → 6-dimension analysis
-│ (Code Analyzer)         │    Correctness, efficiency, security, style
-└─────────────────────────┘
-     │
-     ▼
-┌─────────────────────────┐
-│ Feedback Agent          │ → Synthesizes eval + session data
-│ (Profile Updater)       │    Updates LearningProfile
-└─────────────────────────┘
-     │
-     ▼
-┌─────────────────────────┐
-│ Recommendation Agent    │ → YouTube + CF/CBF/RL + Groq ranking
-│ (Content Recommender)   │    Personalized video recommendations
-└─────────────────────────┘
-```
-
-Each agent writes signals back to the shared `LearningProfile`, making every subsequent agent smarter.
-
----
-
-## 📊 Peer Comparison & Privacy
-
-Users can opt in to anonymous data sharing from **Profile → Privacy tab**.
-
-### What's Shared (When Enabled):
-- ✅ Points, sessions, code scores, accuracy
-- ✅ Aggregated statistics only
-
-### What's NEVER Shared:
-- ❌ Name, email
-- ❌ Code submissions
-- ❌ Chat messages
-- ❌ Personal information
-
-### Features:
-- Percentile ring visualization
-- Anonymous rank among peers
-- Metric benchmarks vs platform average
-- Toggle on/off anytime
-
-```http
-PATCH /users/consent?consent=true   # Enable data sharing
-GET   /users/peer-comparison         # Get comparison stats
-```
-
----
-
-## 🗄️ Database Schema
-
-### Core Tables
-
-- **users** — User accounts, profiles, preferences
-- **learning_profiles** — Topic scores, strengths, weaknesses, recommendations
-- **user_sessions** — Active JWT sessions
-- **otp_records** — Bcrypt-hashed OTPs for 2FA
-
-### Agent Tables
-
-- **content_player_sessions** — Learning session metadata
-- **content_player_messages** — Chat history
-- **code_submissions** — User code submissions
-- **code_evaluations** — Multi-dimensional code analysis results
-- **feedback_reports** — Personalized feedback narratives
-- **content_catalog** — YouTube videos and metadata
-- **recommendations** — Personalized content recommendations
-
----
-
-## 🚀 Deployment
-
-### Backend (Render)
-
-1. **Create Web Service** on Render
-2. **Connect GitHub repository**
-3. **Configure:**
-   - Build Command: `pip install -r backend/app/requirements.txt`
-   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. **Add Environment Variables** (all from `.env`)
-5. **Deploy!**
-
-**Important:** Use Gmail API OAuth2 for email (SMTP ports may be blocked)
-
-### Frontend (Netlify)
-
-1. **Connect GitHub repository**
-2. **Configure:**
-   - Build Command: `npm run build`
-   - Publish Directory: `dist`
-3. **Add Environment Variables:**
-   - `VITE_API_URL=https://your-backend.onrender.com`
-4. **Deploy!**
-
----
-
-## 📚 Documentation
-
-### Setup Guides
-- [Gmail API OAuth2 Setup](GMAIL_OAUTH_SETUP.md) - Detailed step-by-step guide
-- [Gmail Quick Reference](GMAIL_QUICK_REFERENCE.md) - 20-minute quick setup
-- [Setup Checklist](SETUP_CHECKLIST.md) - Track your progress
-- [Email Setup Summary](EMAIL_SETUP_SUMMARY.md) - Overview of email options
-
-### Additional Docs
-- [SMTP Setup](SMTP_SETUP.md) - Alternative SMTP configuration
-- [API Documentation](http://localhost:8000/docs) - Interactive API docs
-
----
-
-## 🛠️ Development Notes
-
-### OTP in Development
-OTPs print to console if email is not configured:
-```
-[DEV] OTP for user@example.com: 123456
-```
-
-### YouTube API Fallback
-Recommendations work without YouTube API key; videos will have `url: null`
-
-### Groq LLM Fallback
-Primary model → `llama3-8b-8192` fallback → score-based ranking if both fail
-
-### Profile Topics
-Set topics in **Profile → Learning tab** before running Recommendation Agent
-
-### Peer Comparison
-Requires at least one other user with data sharing enabled
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how:
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open a Pull Request**
-
-### Contribution Guidelines
-- Follow existing code style
-- Add tests for new features
-- Update documentation
-- Keep commits atomic and well-described
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👥 Authors
-
-- **Your Name** - *Initial work* - [GitHub](https://github.com/your-username)
-
----
-
-## 🙏 Acknowledgments
-
-- **Groq** - For providing fast LLM inference
-- **YouTube Data API** - For video content
-- **FastAPI** - For the amazing Python web framework
-- **React** - For the powerful frontend library
-- **Google Cloud** - For Gmail API OAuth2
-
----
-
-## 📞 Support
-
-- **Documentation:** See guides in the repository
-- **Issues:** [GitHub Issues](https://github.com/your-username/aiTA/issues)
-- **Email:** your-email@example.com
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Mobile app (React Native)
-- [ ] More programming languages support
-- [ ] Real-time collaboration features
-- [ ] Advanced analytics dashboard
-- [ ] Integration with more video platforms
-- [ ] Offline mode support
-
----
-
 <div align="center">
 
-**Made with ❤️ by the aiTA Team**
+<img src="frontend/public/favicon.svg" width="88" alt="PET logo" />
 
-[⭐ Star us on GitHub](https://github.com/your-username/aiTA) | [🐛 Report Bug](https://github.com/your-username/aiTA/issues) | [✨ Request Feature](https://github.com/your-username/aiTA/issues)
+# PET
+
+**Programming Education Tool**
+
+Learn to code by thinking, not copying.
+
+![C](https://img.shields.io/badge/C-first--class-A8B9CC?logo=c&logoColor=white)
+![C++](https://img.shields.io/badge/C%2B%2B-supported-00599C?logo=cplusplus&logoColor=white)
+![Python](https://img.shields.io/badge/Python-supported-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-frontend-61DAFB?logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-pgvector-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)
+
+There is no hosted version. PET runs on your own computer: clone it, start it, and it is
+yours.
 
 </div>
+
+---
+
+## Quick start
+
+Needs [Docker](https://docs.docker.com/get-docker/) and Git.
+
+```bash
+git clone https://github.com/ChhabhayaManan/PET.git && cd PET && docker compose up -d --build
+```
+
+Open http://localhost:5173 and pick a model: paste your own API key (OpenAI, Anthropic,
+Gemini, Groq, OpenRouter or NVIDIA NIM), or run `ollama pull qwen2.5-coder:7b` and choose
+**Ollama** for a free model that stays on your computer.
+
+The first build takes a few minutes. Stop PET with `docker compose down`; your progress is
+kept.
+
+---
+
+## Demo
+
+[![PET demo](docs/figures/pet_home.png)](https://youtu.be/VIDEO_ID)
+
+Click the image to watch the demo.
+
+---
+
+## What PET is
+
+PET is a practice platform for students learning to program in C, C++ or Python. It covers
+12 topics, from basics and loops to recursion and dynamic programming. Students answer
+questions, fix broken code and write programs. PET grades each answer, tracks how well the
+student knows every topic, and picks what to practise next. When a student is stuck, it gives
+hints one step at a time instead of the answer. A tutor chat answers questions from real
+textbooks.
+
+## Why PET
+
+- **Copying is not learning.** A general chatbot hands a beginner the fixed program. The
+  student moves on without understanding the bug.
+- **Hints, not answers.** PET's help gets more specific only when the student keeps
+  failing, and it is checked so it never contains the fix.
+- **Grades come from running the code.** A program passes when it passes real tests, not
+  when an AI thinks it looks right.
+- **Practice follows the student.** Each student gets the next item from their own weakest
+  topic, in their own language.
+
+---
+
+## How a student learns with PET
+
+1. **Start.** The student picks an AI model, then a short diagnostic sets a starting level
+   for each topic.
+2. **Next item.** PET picks a multiple-choice question, a debugging task or a coding
+   problem from the weakest topic that is open.
+3. **Answer.** Code runs against tests in a sandbox. Multiple-choice answers are checked
+   against a key.
+4. **Level update.** The topic level moves with every graded answer.
+5. **Hints.** After a failed attempt, the student can ask for a hint. Each new hint is a
+   step more specific.
+6. **Feedback.** At the end of a session, a short report says what went well and what to
+   work on next.
+
+![PET framework](docs/figures/pet_framework.png)
+
+---
+
+## What makes it accurate and personal
+
+- **Verified grading.** Code is compiled and run in an isolated sandbox against test cases.
+  Generated tests are first checked against a reference solution. A run that cannot be
+  verified does not count towards the student's level.
+- **Transparent topic levels.** Each answer moves the level by a fixed rule:
+  `new = old + 0.3 × weight × (score − old)`. Coding counts most (1.0), debugging 0.8,
+  multiple choice and theory 0.5. Hints reduce the score (one hint ×0.9, up to ×0.5 at the
+  fourth). Every level can be recomputed by hand from the student's answers.
+- **Levels per language.** Knowing loops in Python says nothing about loops in C. Each
+  language has its own levels, and switching language starts a short re-check.
+- **A four-step hint ladder.** L1 shows the failing input, L2 names the idea, L3 gives the
+  steps, L4 points at the line. A guardrail runs any code inside a hint against the tests and
+  blocks the hint if it would solve the problem.
+- **Cited answers in chat.** The tutor answers from open textbooks and PET's own guides,
+  and shows the sources it used.
+- **Rewards for real progress only.** Points and badges come from verified results, never
+  from time spent or clicks.
+
+---
+
+## Agents
+
+| Agent | Type | What it does | Guardrail |
+|---|---|---|---|
+| Assessment | Rule-based, LLM on demand | Picks the next item from the weakest open topic; writes a new coding problem when the bank has none | |
+| Evaluation | LLM + sandbox | Runs the student's code against verified tests, scores it and explains the result | |
+| Profiling | Rule-based | Updates topic levels, points and the learner profile after every graded answer | |
+| Hint | Rule-based + LLM | Gives the next step of the hint ladder | Yes |
+| Feedback | LLM | Writes the end-of-session report from the student's real answers | Yes |
+| Content Player | LLM (ReAct) | The tutor chat: answers questions, searches the books, checks code, gives hints | Yes |
+
+<details>
+<summary><b>Assessment agent</b></summary>
+
+Reads the student's topic levels, chooses the weakest topic that is open, and picks an item at
+the right difficulty from the content bank. A topic opens once the topics it builds on
+reach 40%. If no saved coding problem fits, the LLM writes one, and it is
+only served once its tests are verified.
+
+</details>
+
+<details>
+<summary><b>Evaluation agent</b></summary>
+
+1. Reads the problem and the student's code.
+2. Makes sure the problem has tests that a reference solution passes.
+3. Runs the code in the sandbox against every test.
+4. Asks the LLM to explain what went wrong, in words, without code.
+5. Scores the run and attaches the first hint.
+
+Only verified runs change the student's level.
+
+</details>
+
+<details>
+<summary><b>Profiling agent</b></summary>
+
+Records each graded answer, updates the topic level with the rule above, awards points and
+badges for verified progress, and refreshes the learner profile that the other agents read.
+It uses no LLM, so every number it produces can be checked.
+
+</details>
+
+<details>
+<summary><b>Hint agent</b></summary>
+
+Four levels, each unlocked by another failed attempt:
+
+| Level | Shows |
+|---|---|
+| L1 | The input the program failed on |
+| L2 | The idea or concept involved |
+| L3 | The steps to get there |
+| L4 | The line to look at |
+
+L1 is built from the test result. L2 to L4 come from the LLM and pass the guardrail first: code
+in the hint is run against the tests, quoted solution lines are blocked, and a judge checks
+that the hint does not state the fix.
+
+</details>
+
+<details>
+<summary><b>Feedback agent</b></summary>
+
+Gathers the session's answers, finds patterns in the mistakes, and asks the LLM for a short
+report. The report is checked before it is saved so it does not leak a solution.
+
+</details>
+
+<details>
+<summary><b>Content Player (tutor chat)</b></summary>
+
+A ReAct agent with four tools: search the course books, read the student's own learning data,
+run the student's code, and give a hint. It never writes full programs for the student, and a
+moderation check keeps the conversation on learning.
+
+</details>
+
+<details>
+<summary><b>Onboarding</b></summary>
+
+New students go through a short setup: a few questions about themselves and their
+language, then an adaptive check of up to 12 items (predict the output, fill the blank, find
+the bug, write a short program, and a few theory questions). The results set the starting
+level on all 12 topics, and practice begins from the weakest open topic.
+
+</details>
+
+---
+
+## Choose your model
+
+PET asks for a model the first time it opens. You can change it later from the **Model**
+card in the sidebar. Bring your own key from a cloud provider, or run a free model on your
+own computer.
+
+**Cloud**
+
+![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM-76B900?logo=nvidia&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-API-412991?logo=openai&logoColor=white)
+![Anthropic](https://img.shields.io/badge/Anthropic-Claude-D97757?logo=anthropic&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?logo=googlegemini&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-API-F55036)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-API-6467F2?logo=openrouter&logoColor=white)
+
+**Local (runs on your computer, nothing leaves it)**
+
+![Ollama](https://img.shields.io/badge/Ollama-local-000000?logo=ollama&logoColor=white)
+![LM Studio](https://img.shields.io/badge/LM%20Studio-local-4B5563)
+![OpenAI compatible](https://img.shields.io/badge/Any-OpenAI--compatible-6B7280)
+
+- **Tested before use.** PET checks the connection, tool calling, structured output and
+  context window, and only saves a model that passes all four.
+- **Your key stays with you.** It is kept encrypted in your browser and never written to
+  PET's database.
+- **Clear errors.** If a key stops working (rejected, rate limit, out of credit), PET says
+  exactly why.
+
+Optional: to give every student the same model from the start, copy `.env.example` to
+`backend/.env`, fill in `DEFAULT_LLM_PROVIDER`, `DEFAULT_LLM_MODEL` and
+`DEFAULT_LLM_API_KEY`, and run `docker compose up -d` again.
+
+---
+
+## Tech stack
+
+| Part | Technology |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS, CodeMirror |
+| Backend | FastAPI, SQLAlchemy 2, Alembic |
+| Agents | LangGraph, LangChain |
+| Models | Any OpenAI-compatible provider through one gateway |
+| Search | PostgreSQL with pgvector, sentence-transformers |
+| Sandbox | Separate container, no network, read-only, limited CPU, memory and processes |
+
+---
+
+## Project structure
+
+```
+backend/
+  app/core/        config, database, LLM gateway and model choice
+  app/features/    one folder per feature: accounts, onboarding, practice, problems,
+                   grading, hints, learner_model, feedback, chat, gamification,
+                   model_settings
+  content/         questions, problems and lessons as JSON, one folder per topic
+  executor/        the code sandbox
+  scripts/         content loading and evaluation scripts
+frontend/src/
+  pages/           one file per screen
+  components/      interface pieces per feature
+docs/figures/      diagrams
+```
+
+---
+
+## Safety and privacy
+
+- Student code runs in a separate container with no network access, a read-only file
+  system, and limits on time, memory and processes.
+- The tutor chat has a moderation check and never writes full solutions.
+- Your model key is never written to PET's database.
+- PET has no login, so it only accepts connections from the computer it runs on.
+- Each AI call is logged with its purpose, provider, model and timing for quality checks.
+  Keys and student code are not part of that log.

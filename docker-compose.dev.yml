@@ -1,0 +1,73 @@
+# Development stack with a local Postgres on host port 5433.
+#   docker compose -f docker-compose.dev.yml up -d --build
+# Host venv / Alembic: DATABASE_URL=postgresql://pet:pet@localhost:5433/pet_db
+# docker-compose.yml is the self-hosting stack described in the README.
+name: pet
+services:
+  db:
+    image: pgvector/pgvector:pg18
+    environment:
+      - POSTGRES_USER=pet
+      - POSTGRES_PASSWORD=pet
+      - POSTGRES_DB=pet_db
+    ports:
+      # 5433: the native Windows Postgres already holds 5432.
+      - "5433:5432"
+    volumes:
+      - pet_pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pet -d pet_db"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  executor:
+    build: ./backend/executor
+    networks: [sandbox]
+    read_only: true
+    tmpfs:
+      # exec is required: compiled C++ binaries are written here and executed.
+      # Docker defaults tmpfs to noexec, which silently breaks every C++ submission.
+      - /tmp:rw,exec,nosuid,size=128m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 1g
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=postgresql://pet:pet@db:5432/pet_db
+      - EXECUTOR_URL=http://executor:8080
+      - HF_HOME=/hf-cache
+    volumes:
+      - hf_cache:/hf-cache
+    depends_on:
+      db:
+        condition: service_healthy
+      executor:
+        condition: service_started
+    networks: [default, sandbox]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+networks:
+  sandbox:
+    internal: true
+
+volumes:
+  pet_pgdata:
+  hf_cache:

@@ -1,0 +1,472 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "dynamic_programming",
+  "items": [
+    {
+      "id": "dynamic_programming:1:python",
+      "concept_key": "dynamic_programming:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "def fib(n):",
+          "    if n <= 1:",
+          "        return n",
+          "    a, b = 0, 1",
+          "    for _ in range(2, n + 1):",
+          "        a, b = b, a + b",
+          "    return b",
+          "",
+          "print(fib(0))",
+          "print(fib(1))",
+          "print(fib(5))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "0",
+          "1",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:2:python",
+      "concept_key": "dynamic_programming:2",
+      "tier": 5,
+      "kind": "fill_blank",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "def climb_stairs(n):",
+          "    if n <= 2:",
+          "        return n",
+          "    dp = [0] * (n + 1)",
+          "    dp[1] = 1",
+          "    dp[2] = 2",
+          "    for i in range(3, n + 1):",
+          "        dp[i] = dp[i-1] + dp[i-2]",
+          "    return ____",
+          "",
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    print(climb_stairs(n))",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "dp[n]",
+        "tests": [
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:3:python",
+      "concept_key": "dynamic_programming:3",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "def min_cost_climbing_stairs(cost):",
+          "    n = len(cost)",
+          "    dp = [0] * (n + 1)",
+          "    for i in range(2, n + 1):",
+          "        dp[i] = min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2])",
+          "    return dp[n]",
+          "",
+          "print(min_cost_climbing_stairs([10, 15, 20]))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "15"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:4:python",
+      "concept_key": "dynamic_programming:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why dynamic programming is effective for solving problems with overlapping subproblems, and how it avoids redundant computation."
+      },
+      "key": {
+        "rubric": [
+          "DP stores results of subproblems to avoid recomputation",
+          "It uses either memoization (top-down) or tabulation (bottom-up) to build solutions",
+          "This reduces time complexity from exponential to polynomial in many cases"
+        ],
+        "model_answer": "Dynamic programming is effective because it stores the results of overlapping subproblems so they are not recomputed multiple times. By using either memoization (caching results in recursion) or tabulation (filling a table iteratively), it ensures each subproblem is solved only once. This transforms algorithms with exponential time due to repeated work into efficient polynomial-time solutions."
+      }
+    },
+    {
+      "id": "dynamic_programming:1:c",
+      "concept_key": "dynamic_programming:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int fib(int n) {",
+          "    if (n <= 1) {",
+          "        return n;",
+          "    }",
+          "    int a = 0, b = 1;",
+          "    for (int i = 2; i <= n; i++) {",
+          "        int temp = a + b;",
+          "        a = b;",
+          "        b = temp;",
+          "    }",
+          "    return b;",
+          "}",
+          "",
+          "int main() {",
+          "    printf(\"%d\\n\", fib(0));",
+          "    printf(\"%d\\n\", fib(1));",
+          "    printf(\"%d\\n\", fib(5));",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "0",
+          "1",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:2:c",
+      "concept_key": "dynamic_programming:2",
+      "tier": 5,
+      "kind": "fill_blank",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <stdio.h>",
+          "",
+          "int climb_stairs(int n) {",
+          "    if (n <= 2) {",
+          "        return n;",
+          "    }",
+          "    int dp[100] = {0};",
+          "    dp[1] = 1;",
+          "    dp[2] = 2;",
+          "    for (int i = 3; i <= n; i++) {",
+          "        dp[i] = dp[i-1] + dp[i-2];",
+          "    }",
+          "    return ____;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    scanf(\"%d\", &T);",
+          "    while (T--) {",
+          "        int n;",
+          "        scanf(\"%d\", &n);",
+          "        printf(\"%d\\n\", climb_stairs(n));",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "dp[n]",
+        "tests": [
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:3:c",
+      "concept_key": "dynamic_programming:3",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int min(int a, int b) {",
+          "    return a < b ? a : b;",
+          "}",
+          "",
+          "int min_cost_climbing_stairs(int cost[], int n) {",
+          "    int dp[100] = {0};",
+          "    for (int i = 2; i <= n; i++) {",
+          "        int take_one = dp[i-1] + cost[i-1];",
+          "        int take_two = dp[i-2] + cost[i-2];",
+          "        dp[i] = min(take_one, take_two);",
+          "    }",
+          "    return dp[n];",
+          "}",
+          "",
+          "int main() {",
+          "    int cost[] = {10, 15, 20};",
+          "    int n = sizeof(cost) / sizeof(cost[0]);",
+          "    printf(\"%d\\n\", min_cost_climbing_stairs(cost, n));",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "15"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:4:c",
+      "concept_key": "dynamic_programming:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why dynamic programming is effective for solving problems with overlapping subproblems, and how it avoids redundant computation."
+      },
+      "key": {
+        "rubric": [
+          "DP stores results of subproblems to avoid recomputation",
+          "It uses either memoization (top-down) or tabulation (bottom-up) to build solutions",
+          "This reduces time complexity from exponential to polynomial in many cases"
+        ],
+        "model_answer": "Dynamic programming is effective because it stores the results of overlapping subproblems so they are not recomputed multiple times. By using either memoization (caching results in recursion) or tabulation (filling a table iteratively), it ensures each subproblem is solved only once. This transforms algorithms with exponential time due to repeated work into efficient polynomial-time solutions."
+      }
+    },
+    {
+      "id": "dynamic_programming:1:cpp",
+      "concept_key": "dynamic_programming:1",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "",
+          "int fib(int n) {",
+          "    if (n <= 1) {",
+          "        return n;",
+          "    }",
+          "    int a = 0, b = 1;",
+          "    for (int i = 2; i <= n; i++) {",
+          "        int temp = a + b;",
+          "        a = b;",
+          "        b = temp;",
+          "    }",
+          "    return b;",
+          "}",
+          "",
+          "int main() {",
+          "    cout << fib(0) << endl;",
+          "    cout << fib(1) << endl;",
+          "    cout << fib(5) << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "0",
+          "1",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:2:cpp",
+      "concept_key": "dynamic_programming:2",
+      "tier": 5,
+      "kind": "fill_blank",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code_with_blank": [
+          "#include <iostream>",
+          "using namespace std;",
+          "",
+          "int climb_stairs(int n) {",
+          "    if (n <= 2) {",
+          "        return n;",
+          "    }",
+          "    int dp[100] = {0};",
+          "    dp[1] = 1;",
+          "    dp[2] = 2;",
+          "    for (int i = 3; i <= n; i++) {",
+          "        dp[i] = dp[i-1] + dp[i-2];",
+          "    }",
+          "    return ____;",
+          "}",
+          "",
+          "int main() {",
+          "    int T;",
+          "    cin >> T;",
+          "    while (T--) {",
+          "        int n;",
+          "        cin >> n;",
+          "        cout << climb_stairs(n) << endl;",
+          "    }",
+          "    return 0;",
+          "}",
+          ""
+        ],
+        "blank_marker": "____"
+      },
+      "key": {
+        "answer": "dp[n]",
+        "tests": [
+          {
+            "stdin": [
+              "1"
+            ],
+            "expected_stdout": [
+              "1"
+            ]
+          },
+          {
+            "stdin": [
+              "2"
+            ],
+            "expected_stdout": [
+              "2"
+            ]
+          },
+          {
+            "stdin": [
+              "5"
+            ],
+            "expected_stdout": [
+              "8"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:3:cpp",
+      "concept_key": "dynamic_programming:3",
+      "tier": 5,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "",
+          "int min_cost_climbing_stairs(int cost[], int n) {",
+          "    int dp[100] = {0};",
+          "    for (int i = 2; i <= n; i++) {",
+          "        dp[i] = min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2]);",
+          "    }",
+          "    return dp[n];",
+          "}",
+          "",
+          "int main() {",
+          "    int cost[] = {10, 15, 20};",
+          "    int n = sizeof(cost) / sizeof(cost[0]);",
+          "    cout << min_cost_climbing_stairs(cost, n) << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "15"
+        ]
+      }
+    },
+    {
+      "id": "dynamic_programming:4:cpp",
+      "concept_key": "dynamic_programming:4",
+      "tier": 5,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why dynamic programming is effective for solving problems with overlapping subproblems, and how it avoids redundant computation."
+      },
+      "key": {
+        "rubric": [
+          "DP stores results of subproblems to avoid recomputation",
+          "It uses either memoization (top-down) or tabulation (bottom-up) to build solutions",
+          "This reduces time complexity from exponential to polynomial in many cases"
+        ],
+        "model_answer": "Dynamic programming is effective because it stores the results of overlapping subproblems so they are not recomputed multiple times. By using either memoization (caching results in recursion) or tabulation (filling a table iteratively), it ensures each subproblem is solved only once. This transforms algorithms with exponential time due to repeated work into efficient polynomial-time solutions."
+      }
+    }
+  ]
+}

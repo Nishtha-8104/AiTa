@@ -1,111 +1,91 @@
-import { useEffect, useState } from 'react'
-import { Shield, Zap, Star, BookOpen, Code2, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Code2, GitBranch, Zap } from 'lucide-react'
+import { palette } from '../../styles/palette'
 
 const DIMENSIONS = [
-  { key: 'correctness',   label: 'Correctness',   icon: CheckCircle2, color: 'bg-green-500',  text: 'text-green-400',  desc: 'Logic, output, edge cases' },
-  { key: 'quality',       label: 'Code Quality',  icon: Star,         color: 'bg-brand-500',  text: 'text-brand-400',  desc: 'Naming, structure, DRY' },
-  { key: 'efficiency',    label: 'Efficiency',    icon: Zap,          color: 'bg-yellow-500', text: 'text-yellow-400', desc: 'Time & space complexity' },
-  { key: 'security',      label: 'Security',      icon: Shield,       color: 'bg-red-500',    text: 'text-red-400',    desc: 'Injection, eval, vulnerabilities' },
-  { key: 'style',         label: 'Style',         icon: Code2,        color: 'bg-purple-500', text: 'text-purple-400', desc: 'Formatting, conventions' },
-  { key: 'documentation', label: 'Docs',          icon: BookOpen,     color: 'bg-pink-500',   text: 'text-pink-400',   desc: 'Comments, docstrings' },
+  { key: 'correctness', label: 'Correctness', icon: CheckCircle2, bar: 'bg-pop-mint', text: 'text-pop-mint', desc: 'Test cases actually passed', weight: '55%' },
+  { key: 'complexity',  label: 'Complexity',  icon: GitBranch,    bar: 'bg-pop-aqua', text: 'text-pop-aqua', desc: 'Branching, function length, parameters', weight: '20%' },
+  { key: 'efficiency',  label: 'Efficiency',  icon: Zap,          bar: 'bg-pop-sun',  text: 'text-pop-sun',  desc: 'Estimated time and memory use', weight: '15%' },
+  { key: 'style',       label: 'Style',       icon: Code2,        bar: 'bg-pop-pink', text: 'text-pop-pink', desc: 'Formatting, naming, conventions', weight: '10%' },
 ]
 
-function ScoreGauge({ score }) {
-  const [animated, setAnimated] = useState(0)
-  useEffect(() => {
-    const t = setTimeout(() => setAnimated(score), 100)
-    return () => clearTimeout(t)
-  }, [score])
+const UNVERIFIED_SHORT = {
+  no_problem_statement:      'no problem statement given',
+  language_not_executable:   'this language cannot be run yet',
+  executor_unavailable:      'the code runner was unreachable',
+  reference_unvalidated:     'no trustworthy reference solution',
+  insufficient_agreed_tests: 'too few test cases could be checked',
+  test_generation_failed:    'test cases could not be made',
+}
 
-  const color =
-    score >= 80 ? '#22c55e' :
-    score >= 60 ? '#f59e0b' :
-    score >= 40 ? '#f97316' : '#ef4444'
+function band(score) {
+  if (score >= 80) return { word: 'Excellent', color: palette.pop.mint }
+  if (score >= 60) return { word: 'Good', color: palette.pop.aqua }
+  if (score >= 40) return { word: 'Needs work', color: palette.pop.sun }
+  return { word: 'Keep going', color: palette.pop.coral }
+}
 
-  const radius      = 54
-  const circumf     = 2 * Math.PI * radius
-  const dashOffset  = circumf - (animated / 100) * circumf
-
+function Gauge({ score }) {
+  const r = 52
+  const c = 2 * Math.PI * r
+  const { word, color } = band(score)
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative w-36 h-36">
-        <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90">
-          {/* Track */}
-          <circle cx="60" cy="60" r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" />
-          {/* Progress */}
+      <div className="relative h-36 w-36">
+        <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden="true">
+          <circle cx="60" cy="60" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" />
           <circle
-            cx="60" cy="60" r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth="10"
-            strokeLinecap="round"
-            strokeDasharray={circumf}
-            strokeDashoffset={dashOffset}
-            style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)' }}
+            cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
+            strokeDasharray={c} strokeDashoffset={c - (score / 100) * c}
+            className="transition-[stroke-dashoffset] duration-1000 ease-out"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display font-800 text-3xl text-white">{score.toFixed(0)}</span>
-          <span className="text-white/30 text-xs font-mono">/ 100</span>
+          <span className="font-mono text-3xl font-semibold text-ink">{score.toFixed(0)}</span>
+          <span className="text-[11px] text-ink-subtle">of 100</span>
         </div>
       </div>
-      <div className="text-center">
-        <p className="font-display font-700 text-sm" style={{ color }}>
-          {score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : score >= 40 ? 'Needs Work' : 'Poor'}
-        </p>
-        <p className="text-white/30 text-xs">Overall Score</p>
-      </div>
+      <p className="text-sm font-semibold" style={{ color }}>{word}</p>
+      <p className="-mt-2 text-xs text-ink-subtle">Overall score</p>
     </div>
   )
 }
 
-function DimBar({ dim, score }) {
-  const [animated, setAnimated] = useState(0)
-  const Icon = dim.icon
-
-  useEffect(() => {
-    const t = setTimeout(() => setAnimated(score), 150)
-    return () => clearTimeout(t)
-  }, [score])
-
-  return (
-    <div className="group">
-      <div className="flex items-center justify-between mb-1.5">
-        <div className="flex items-center gap-2">
-          <Icon size={13} className={dim.text} />
-          <span className="text-white/60 text-xs font-display font-600">{dim.label}</span>
-        </div>
-        <span className={`text-xs font-mono font-600 ${dim.text}`}>{score.toFixed(0)}</span>
-      </div>
-      <div className="h-2 bg-surface-600/60 rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full ${dim.color} transition-all duration-1000 ease-out`}
-          style={{ width: `${animated}%`, opacity: 0.85 }}
-        />
-      </div>
-      <p className="text-white/20 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">{dim.desc}</p>
-    </div>
-  )
-}
-
-export default function ScoreRadar({ scores }) {
+export default function ScoreRadar({ scores, unverifiedReason }) {
   if (!scores) return null
-
   return (
-    <div className="glass-card p-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row items-center gap-8">
-        {/* Gauge */}
-        <div className="shrink-0">
-          <ScoreGauge score={scores.overall || 0} />
-        </div>
-
-        {/* Dimension bars */}
-        <div className="flex-1 w-full space-y-3">
-          {DIMENSIONS.map(dim => (
-            <DimBar key={dim.key} dim={dim} score={scores[dim.key] || 0} />
-          ))}
-        </div>
+    <div className="space-y-5">
+      <div className="flex flex-col items-center gap-6 sm:flex-row">
+        <Gauge score={scores.overall || 0} />
+        <ul className="w-full flex-1 space-y-4">
+          {DIMENSIONS.map(dim => {
+            const score = scores[dim.key] ?? null
+            const Icon = dim.icon
+            const missing = score == null
+            return (
+              <li key={dim.key}>
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className={`flex items-center gap-2 ${missing ? 'text-ink-faint' : 'text-ink-muted'}`}>
+                    <Icon size={14} className={missing ? '' : dim.text} /> {dim.label}
+                    <span className="font-mono text-[10px] text-ink-faint">{dim.weight}</span>
+                  </span>
+                  <span className={`font-mono text-xs ${missing ? 'text-ink-faint' : dim.text}`}>{missing ? 'not checked' : score.toFixed(0)}</span>
+                </div>
+                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                  {!missing && <div className={`h-full rounded-full ${dim.bar} transition-[width] duration-1000 ease-out`} style={{ width: `${score}%` }} />}
+                </div>
+                <p className="mt-1 text-[11px] text-ink-faint">
+                  {missing ? (UNVERIFIED_SHORT[unverifiedReason] || 'could not be measured this time') : dim.desc}
+                </p>
+              </li>
+            )
+          })}
+        </ul>
       </div>
+      {scores.correctness == null && (
+        <p className="border-t border-line pt-4 text-xs leading-relaxed text-ink-subtle">
+          Correctness could not be measured, so the overall score uses the other three parts only. It is not padded with a guess.
+        </p>
+      )}
     </div>
   )
 }

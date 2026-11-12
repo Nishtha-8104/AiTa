@@ -1,0 +1,528 @@
+{
+  "schema": "problems/v1",
+  "topic": "strings",
+  "items": [
+    {
+      "id": "pet-fix-name-case",
+      "title": "Fix Name Case",
+      "difficulty": "easy",
+      "statement": "A single line contains a name written as one word of English letters, where some letters are uppercase and some are lowercase. Print the name with its first letter in uppercase and every other letter in lowercase.",
+      "constraints": "The name has between 1 and 1000 letters, each from a to z or A to Z, with no spaces.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    name = data[k]",
+          "    print(name[0].upper() + name[1:].lower())",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "rAHUL"
+          ],
+          "output": [
+            "Rahul"
+          ]
+        },
+        {
+          "input": [
+            "a"
+          ],
+          "output": [
+            "A"
+          ]
+        },
+        {
+          "input": [
+            "Z"
+          ],
+          "output": [
+            "Z"
+          ]
+        },
+        {
+          "input": [
+            "AAAA"
+          ],
+          "output": [
+            "Aaaa"
+          ]
+        },
+        {
+          "input": [
+            "jAZZ"
+          ],
+          "output": [
+            "Jazz"
+          ]
+        },
+        {
+          "input": [
+            "Priya"
+          ],
+          "output": [
+            "Priya"
+          ]
+        },
+        {
+          "input": [
+            "zOYA"
+          ],
+          "output": [
+            "Zoya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-run-length-code",
+      "title": "Run-Length Code",
+      "difficulty": "medium",
+      "statement": "A single line contains a word of lowercase letters. Split the word into groups of equal letters that stand next to each other, making every group as long as possible. Replace each group by its letter followed by the number of letters in that group, and print the resulting compressed word. For example, aaabcc becomes a3b1c2.",
+      "constraints": "The word has between 1 and 1000 lowercase letters (a to z), with no spaces.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    word = data[k]",
+          "    parts = []",
+          "    i = 0",
+          "    while i < len(word):",
+          "        j = i",
+          "        while j < len(word) and word[j] == word[i]:",
+          "            j += 1",
+          "        parts.append(word[i] + str(j - i))",
+          "        i = j",
+          "    print(\"\".join(parts))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "aaabcc"
+          ],
+          "output": [
+            "a3b1c2"
+          ]
+        },
+        {
+          "input": [
+            "z"
+          ],
+          "output": [
+            "z1"
+          ]
+        },
+        {
+          "input": [
+            "kkkkkkkkkkkk"
+          ],
+          "output": [
+            "k12"
+          ]
+        },
+        {
+          "input": [
+            "abc"
+          ],
+          "output": [
+            "a1b1c1"
+          ]
+        },
+        {
+          "input": [
+            "abba"
+          ],
+          "output": [
+            "a1b2a1"
+          ]
+        },
+        {
+          "input": [
+            "mississippi"
+          ],
+          "output": [
+            "m1i1s2i1s2i1p2i1"
+          ]
+        },
+        {
+          "input": [
+            "aabbbbbbbbbbz"
+          ],
+          "output": [
+            "a2b10z1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0014-common-prefix",
+      "title": "Longest Common Prefix",
+      "difficulty": "easy",
+      "statement": "The first line contains n, the number of words. Each of the next n lines contains one word of lowercase letters. Print the longest prefix that every word starts with. If the words share no prefix, print the word NONE instead.",
+      "constraints": "1 <= n <= 200; each word has between 1 and 200 letters, each from a to z.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    words = data[pos + 1:pos + 1 + n]",
+          "    pos += 1 + n",
+          "    prefix = words[0]",
+          "    for w in words[1:]:",
+          "        while not w.startswith(prefix):",
+          "            prefix = prefix[:-1]",
+          "    print(prefix if prefix else \"NONE\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3",
+            "flower",
+            "flow",
+            "flight"
+          ],
+          "output": [
+            "fl"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "dog",
+            "racecar",
+            "car"
+          ],
+          "output": [
+            "NONE"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "a"
+          ],
+          "output": [
+            "a"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "same",
+            "same"
+          ],
+          "output": [
+            "same"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "ab",
+            "a",
+            "abc"
+          ],
+          "output": [
+            "a"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "abc",
+            "xbc"
+          ],
+          "output": [
+            "NONE"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "pre",
+            "pre",
+            "prefix",
+            "press"
+          ],
+          "output": [
+            "pre"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0058-last-word",
+      "title": "Length of Last Word",
+      "difficulty": "easy",
+      "statement": "A single line contains words made of English letters, separated by one or more spaces. The line may also start or end with spaces. Print the number of letters in the last word.",
+      "constraints": "The line has between 1 and 10000 characters and contains at least one word.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "lines = sys.stdin.read().split(\"\\n\")",
+          "t = int(lines[0])",
+          "for k in range(1, t + 1):",
+          "    print(len(lines[k].split()[-1]))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "Hello World"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "   fly me   to   the moon  "
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "a"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "luffy is still joyboy"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "word   "
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "  single"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "Ab cD EfGh"
+          ],
+          "output": [
+            "4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0387-first-unique",
+      "title": "First Unique Character",
+      "difficulty": "easy",
+      "statement": "A single line contains a word of lowercase letters. Print the 0-based position of the first letter that appears exactly once in the word. If every letter repeats, print -1.",
+      "constraints": "The word has between 1 and 100000 letters, each from a to z.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "from collections import Counter",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    s = data[k]",
+          "    counts = Counter(s)",
+          "    answer = -1",
+          "    for i, ch in enumerate(s):",
+          "        if counts[ch] == 1:",
+          "            answer = i",
+          "            break",
+          "    print(answer)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "leetcode"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "loveleetcode"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "aabb"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "z"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "aaaa"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "abcabcd"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "xxyz"
+          ],
+          "output": [
+            "2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0003-longest-substring",
+      "title": "Longest Substring Without Repeats",
+      "difficulty": "medium",
+      "statement": "A single line contains a string with no spaces. Print the length of the longest stretch of consecutive characters in which no character appears twice.",
+      "constraints": "The string has between 1 and 50000 characters: letters, digits and symbols, but no spaces.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    s = data[k]",
+          "    last = {}",
+          "    start = best = 0",
+          "    for i, ch in enumerate(s):",
+          "        if ch in last and last[ch] >= start:",
+          "            start = last[ch] + 1",
+          "        last[ch] = i",
+          "        best = max(best, i - start + 1)",
+          "    print(best)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "abcabcbb"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "bbbbb"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "pwwkew"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "a"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "abcdef"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "dvdf"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "abba"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "a1!a1!b"
+          ],
+          "output": [
+            "4"
+          ]
+        }
+      ]
+    }
+  ]
+}

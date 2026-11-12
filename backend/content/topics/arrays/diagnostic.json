@@ -1,0 +1,293 @@
+{
+  "schema": "diagnostic/v1",
+  "topic": "arrays",
+  "items": [
+    {
+      "id": "arrays:1:python",
+      "concept_key": "arrays:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "arr = [1, 2, 3, 4, 5]",
+          "print(arr[0])",
+          "print(arr[-1])",
+          "print(len(arr))",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "5",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "arrays:2:python",
+      "concept_key": "arrays:2",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "arr = [10, 20, 30]",
+          "arr[1] = arr[0] + arr[2]",
+          "print(arr[1])",
+          "print(arr)",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "40",
+          "[10, 40, 30]"
+        ]
+      }
+    },
+    {
+      "id": "arrays:3:python",
+      "concept_key": "arrays:3",
+      "tier": 3,
+      "kind": "find_bug",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "statement": "Read n, then n numbers on one line, and print their sum.",
+        "code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    arr = list(map(int, input().split()))",
+          "    total = 0",
+          "    for i in range(n):",
+          "        total = arr[i]",
+          "    print(total)",
+          ""
+        ]
+      },
+      "key": {
+        "fixed_code": [
+          "T = int(input())",
+          "for _ in range(T):",
+          "    n = int(input())",
+          "    arr = list(map(int, input().split()))",
+          "    total = 0",
+          "    for i in range(n):",
+          "        total += arr[i]",
+          "    print(total)",
+          ""
+        ],
+        "change_from": "total += arr[i]",
+        "change_to": "total = arr[i]",
+        "tests": [
+          {
+            "stdin": [
+              "3",
+              "1 2 3"
+            ],
+            "expected_stdout": [
+              "6"
+            ]
+          },
+          {
+            "stdin": [
+              "1",
+              "5"
+            ],
+            "expected_stdout": [
+              "5"
+            ]
+          },
+          {
+            "stdin": [
+              "2",
+              "10 20"
+            ],
+            "expected_stdout": [
+              "30"
+            ]
+          }
+        ],
+        "bug_line": 7
+      }
+    },
+    {
+      "id": "arrays:4:python",
+      "concept_key": "arrays:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "python",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why using a negative index like arr[-1] in Python gives the last element of a list, and how this differs from accessing an index that is out of bounds."
+      },
+      "key": {
+        "rubric": [
+          "Negative indices count from the end, with -1 being the last element.",
+          "Accessing an index beyond the list length (positive or negative) raises an IndexError.",
+          "This behavior is specific to Python and not universal across languages."
+        ],
+        "model_answer": "In Python, negative indices count backward from the end of the list, so arr[-1] refers to the last element, arr[-2] to the second last, and so on. If you use an index that is beyond the bounds of the list — whether too large positive or too negative (e.g., arr[5] for a 3-element list or arr[-4]) — it raises an IndexError. This negative indexing feature is a convenience in Python and not available in all programming languages."
+      }
+    },
+    {
+      "id": "arrays:1:c",
+      "concept_key": "arrays:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int main() {",
+          "    int arr[] = {1, 2, 3, 4, 5};",
+          "    printf(\"%d\\n\", arr[0]);",
+          "    printf(\"%d\\n\", arr[4]);",
+          "    printf(\"%d\\n\", 5);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "5",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "arrays:2:c",
+      "concept_key": "arrays:2",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <stdio.h>",
+          "",
+          "int main() {",
+          "    int arr[] = {10, 20, 30};",
+          "    arr[1] = arr[0] + arr[2];",
+          "    printf(\"%d\\n\", arr[1]);",
+          "    printf(\"[%d, %d, %d]\\n\", arr[0], arr[1], arr[2]);",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "40",
+          "[10, 40, 30]"
+        ]
+      }
+    },
+    {
+      "id": "arrays:4:c",
+      "concept_key": "arrays:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "c",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why C does not support negative indices for arrays, and what happens when you access an index that is out of bounds."
+      },
+      "key": {
+        "rubric": [
+          "C arrays do not support negative indices; arr[-1] accesses memory before the array start.",
+          "Accessing an index out of bounds (negative or too large) causes undefined behavior.",
+          "Unlike Python, C provides no automatic bounds checking or negative indexing."
+        ],
+        "model_answer": "In C, array indices start at 0 and must be non-negative; a negative index like arr[-1] accesses memory located before the array's first element, which is invalid. Accessing any index outside the valid range [0, n-1] results in undefined behavior, meaning the program may crash, produce incorrect results, or appear to work incorrectly. C does not perform bounds checking, so programmers must ensure indices are valid manually."
+      }
+    },
+    {
+      "id": "arrays:1:cpp",
+      "concept_key": "arrays:1",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "easy",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "",
+          "int main() {",
+          "    int arr[] = {1, 2, 3, 4, 5};",
+          "    cout << arr[0] << endl;",
+          "    cout << arr[4] << endl;",
+          "    cout << 5 << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "1",
+          "5",
+          "5"
+        ]
+      }
+    },
+    {
+      "id": "arrays:2:cpp",
+      "concept_key": "arrays:2",
+      "tier": 3,
+      "kind": "predict_output",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "code": [
+          "#include <iostream>",
+          "using namespace std;",
+          "",
+          "int main() {",
+          "    int arr[] = {10, 20, 30};",
+          "    arr[1] = arr[0] + arr[2];",
+          "    cout << arr[1] << endl;",
+          "    cout << \"[\" << arr[0] << \", \" << arr[1] << \", \" << arr[2] << \"]\" << endl;",
+          "    return 0;",
+          "}",
+          ""
+        ]
+      },
+      "key": {
+        "expected_output": [
+          "40",
+          "[10, 40, 30]"
+        ]
+      }
+    },
+    {
+      "id": "arrays:4:cpp",
+      "concept_key": "arrays:4",
+      "tier": 3,
+      "kind": "theory",
+      "language": "cpp",
+      "difficulty": "medium",
+      "body": {
+        "question": "Explain why C++ does not support negative indices for arrays, and what happens when you access an index that is out of bounds."
+      },
+      "key": {
+        "rubric": [
+          "C++ arrays do not support negative indices; arr[-1] accesses memory before the array start.",
+          "Accessing an index out of bounds (negative or too large) causes undefined behavior.",
+          "Unlike Python, C++ provides no automatic bounds checking for built-in arrays (though std::vector with at() does)."
+        ],
+        "model_answer": "In C++, array indices start at 0 and must be non-negative; a negative index like arr[-1] accesses memory located before the array's first element, which is invalid. Accessing any index outside the valid range [0, n-1] results in undefined behavior, meaning the program may crash, produce incorrect results, or appear to work incorrectly. C++ does not perform bounds checking on built-in array access via operator[], so programmers must ensure indices are valid manually or use safer alternatives like std::vector::at()."
+      }
+    }
+  ]
+}

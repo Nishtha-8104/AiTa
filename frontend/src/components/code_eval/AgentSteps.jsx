@@ -1,62 +1,54 @@
-import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronDown, CircleCheck, CircleX } from 'lucide-react'
+import BusyNote from '../ui/BusyNote'
+
+// The backend runs the whole check in one call, so there is no live progress to
+// stream. These approximate the real stages by elapsed time.
+const STAGES = [
+  { after: 0, text: 'Reading the problem…' },
+  { after: 3, text: 'Checking your code…' },
+  { after: 8, text: 'Getting test cases ready…' },
+  { after: 18, text: 'Running your code against the tests…' },
+  { after: 30, text: 'Writing your feedback…' },
+  { after: 60, text: 'Taking longer than usual. Please keep this page open…' },
+]
 
 export default function AgentSteps({ steps = [], evaluating }) {
-  if (steps.length === 0 && !evaluating) return null
+  const [open, setOpen] = useState(false)
+  if (evaluating) return <BusyNote active steps={STAGES} note="This usually takes 20 to 60 seconds." />
+  if (steps.length === 0) return null
 
-  // Show fake progress steps while evaluating (before real ones come in)
-  const displaySteps = steps.length > 0 ? steps : evaluating ? [
-    '🔍 Step 1: Running static analysis engine...',
-    '📊 Step 2: Calculating dimension scores...',
-    '🤖 Step 3: Calling Groq (llama-3.3-70b) for deep analysis...',
-    '⚙️  Step 4: Blending static + LLM scores...',
-    '💾 Step 5: Persisting evaluation results...',
-  ] : []
+  const lines = steps.map(step =>
+    typeof step === 'string' ? step
+      : step && typeof step === 'object' ? (step.msg || step.message || JSON.stringify(step))
+      : String(step ?? ''))
 
   return (
-    <div className="glass-card border-brand-500/15 overflow-hidden animate-fade-in">
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-white/[0.06]">
-        {evaluating
-          ? <Loader2 size={14} className="text-brand-400 animate-spin" />
-          : <CheckCircle2 size={14} className="text-green-400" />}
-        <p className="font-display font-600 text-sm text-white">
-          {evaluating ? 'Agent Running...' : 'Agent Thought Log'}
-        </p>
-        {evaluating && (
-          <div className="ml-auto flex gap-1">
-            {[0,1,2].map(i => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"
-                style={{ animationDelay: `${i*200}ms` }} />
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="px-5 py-4 space-y-2.5 max-h-52 overflow-y-auto">
-        {displaySteps.map((step, i) => {
-          const str = typeof step === 'string' ? step
-            : typeof step === 'object' && step !== null ? (step.msg || step.message || JSON.stringify(step))
-            : String(step ?? '')
-          const isDone  = str.startsWith('✅')
-          const isError = str.startsWith('❌')
-          const isLast  = i === displaySteps.length - 1 && evaluating
-          return (
-            <div key={i} className="flex items-start gap-2.5 animate-slide-up"
-              style={{ animationDelay: `${i * 50}ms`, animationFillMode: 'both' }}>
-              <div className="shrink-0 mt-0.5">
-                {isLast
-                  ? <Loader2 size={13} className="text-brand-400 animate-spin" />
-                  : isError
-                    ? <XCircle size={13} className="text-red-400" />
-                    : isDone
-                      ? <CheckCircle2 size={13} className="text-green-400" />
-                      : <div className="w-3 h-3 rounded-full border border-white/20" />}
-              </div>
-              <p className={`text-xs font-mono leading-relaxed ${
-                isError ? 'text-red-300' : isDone ? 'text-green-300' : 'text-white/50'
-              }`}>{str}</p>
-            </div>
-          )
-        })}
-      </div>
+    <div className="rounded-[20px] border border-line bg-tile-2">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+        className="flex h-11 w-full items-center justify-between gap-3 px-4 text-left text-sm text-ink-muted hover:text-ink"
+      >
+        What we checked ({lines.length} steps)
+        <ChevronDown size={15} className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul className="max-h-56 space-y-2 overflow-y-auto border-t border-line px-4 py-3">
+          {lines.map((line, i) => {
+            const failed = /fail|unavailable|cannot/i.test(line)
+            return (
+              <li key={i} className="flex items-start gap-2 text-xs leading-relaxed">
+                {failed
+                  ? <CircleX size={14} className="mt-px shrink-0 text-pop-coral" />
+                  : <CircleCheck size={14} className="mt-px shrink-0 text-pop-mint" />}
+                <span className={failed ? 'text-pop-coral' : 'text-ink-subtle'}>{line.replace(/^[^\w(]+/u, '')}</span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

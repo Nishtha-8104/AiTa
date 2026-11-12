@@ -1,0 +1,642 @@
+{
+  "schema": "problems/v1",
+  "topic": "hashing_sets",
+  "items": [
+    {
+      "id": "pet-first-repeat",
+      "title": "First Repeated Number",
+      "difficulty": "easy",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. Read them from left to right and print the first integer that you meet for the second time. If no integer appears twice, print -1.",
+      "constraints": "1 <= n <= 1000; each integer is between 1 and 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    seen = set()",
+          "    answer = -1",
+          "    for x in values:",
+          "        if x in seen:",
+          "            answer = x",
+          "            break",
+          "        seen.add(x)",
+          "    print(answer)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "3 1 4 1 3"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "7"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "2 2 2 2"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1 2 3 4 5 6"
+          ],
+          "output": [
+            "-1"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1000 5 9 5 1000 9"
+          ],
+          "output": [
+            "5"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "8 3 8 3"
+          ],
+          "output": [
+            "8"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "1 1000 1000"
+          ],
+          "output": [
+            "1000"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-pair-sum-count",
+      "title": "Count Pairs With Sum K",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. The third line contains an integer k. Print how many pairs of positions i < j there are whose two integers add up to exactly k.",
+      "constraints": "1 <= n <= 1000; each integer is between 0 and 1000; 0 <= k <= 2000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    k = int(data[pos + 1 + n])",
+          "    pos += 2 + n",
+          "    count = {}",
+          "    pairs = 0",
+          "    for x in values:",
+          "        pairs += count.get(k - x, 0)",
+          "        count[x] = count.get(x, 0) + 1",
+          "    print(pairs)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "1 5 3 3 4",
+            "6"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "4",
+            "8"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "2 2 2 2",
+            "4"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "0 0 1000",
+            "1000"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "1 2 3",
+            "100"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1000 1000 0 999 1 500",
+            "2000"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "0 0 0 0 0",
+            "0"
+          ],
+          "output": [
+            "10"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "7 7 7",
+            "14"
+          ],
+          "output": [
+            "3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-distinct-rank",
+      "title": "Rank Among Distinct Values",
+      "difficulty": "medium",
+      "statement": "The first line contains an integer n. The second line contains n space-separated integers. For each integer, in the order given, print how many different values in the list are smaller than it. Print the n answers on one line, separated by single spaces.",
+      "constraints": "1 <= n <= 1000; each integer is between 1 and 1000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    rank = {}",
+          "    for i, v in enumerate(sorted(set(values))):",
+          "        rank[v] = i",
+          "    print(\" \".join(str(rank[v]) for v in values))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "5",
+            "40 10 40 20 10"
+          ],
+          "output": [
+            "2 0 2 1 0"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "7 7 7 7"
+          ],
+          "output": [
+            "0 0 0 0"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "5 4 3 2 1"
+          ],
+          "output": [
+            "4 3 2 1 0"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1000 1 500 1 1000 2"
+          ],
+          "output": [
+            "3 0 2 0 3 1"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "999 1000 998"
+          ],
+          "output": [
+            "1 2 0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pet-balanced-days",
+      "title": "Longest Balanced Stretch",
+      "difficulty": "hard",
+      "statement": "A single line contains a string made only of the letters R and D, one letter for each day: R means a rainy day and D means a dry day. Print the length of the longest run of consecutive days that has exactly as many rainy days as dry days. If there is no such run, print 0.",
+      "constraints": "The string has between 1 and 100000 letters and contains no spaces.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "for k in range(1, t + 1):",
+          "    s = data[k]",
+          "    first = {0: -1}",
+          "    balance = 0",
+          "    best = 0",
+          "    for i, ch in enumerate(s):",
+          "        balance += 1 if ch == \"R\" else -1",
+          "        if balance in first:",
+          "            best = max(best, i - first[balance])",
+          "        else:",
+          "            first[balance] = i",
+          "    print(best)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "RRRDRDD"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "R"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "RD"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "DDDD"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "RDRDRD"
+          ],
+          "output": [
+            "6"
+          ]
+        },
+        {
+          "input": [
+            "RRRRDRRR"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "RRRDDRRR"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "DDRDRRRD"
+          ],
+          "output": [
+            "8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0217-contains-duplicate",
+      "title": "Contains Duplicate",
+      "difficulty": "easy",
+      "statement": "The first line contains n. The second line contains n integers separated by spaces. Print YES if any value appears at least twice, and NO if every value is different.",
+      "constraints": "1 <= n <= 100000; each value is between -1000000000 and 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    a = data[pos + 1:pos + 1 + n]",
+          "    pos += 1 + n",
+          "    print(\"YES\" if len(set(int(x) for x in a)) < n else \"NO\")",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "4",
+            "1 2 3 1"
+          ],
+          "output": [
+            "YES"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "1 2 3 4"
+          ],
+          "output": [
+            "NO"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5"
+          ],
+          "output": [
+            "NO"
+          ]
+        },
+        {
+          "input": [
+            "10",
+            "1 1 1 3 3 4 3 2 4 2"
+          ],
+          "output": [
+            "YES"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "-1 1 -1"
+          ],
+          "output": [
+            "YES"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "1000000000 -1000000000"
+          ],
+          "output": [
+            "NO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0268-missing-number",
+      "title": "Missing Number",
+      "difficulty": "easy",
+      "statement": "The first line contains n. The second line contains n different integers, each between 0 and n, separated by spaces. Exactly one number from 0 to n is missing. Print it.",
+      "constraints": "1 <= n <= 100000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    a = [int(x) for x in data[pos + 1:pos + 1 + n]]",
+          "    pos += 1 + n",
+          "    print(n * (n + 1) // 2 - sum(a))",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "3",
+            "3 0 1"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "2",
+            "0 1"
+          ],
+          "output": [
+            "2"
+          ]
+        },
+        {
+          "input": [
+            "9",
+            "9 6 4 2 3 5 7 0 1"
+          ],
+          "output": [
+            "8"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "0"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "1"
+          ],
+          "output": [
+            "0"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "5 4 3 2 1"
+          ],
+          "output": [
+            "0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lc-0128-longest-consecutive",
+      "title": "Longest Consecutive Sequence",
+      "difficulty": "medium",
+      "statement": "The first line contains n. The second line contains n integers separated by spaces, in any order. Print the length of the longest run of consecutive whole numbers, such as 4 5 6 7, that all appear in the list. A value that appears more than once counts once.",
+      "constraints": "1 <= n <= 100000; each value is between -1000000000 and 1000000000.",
+      "reference": {
+        "language": "python",
+        "code": [
+          "import sys",
+          "",
+          "data = sys.stdin.read().split()",
+          "t = int(data[0])",
+          "pos = 1",
+          "for _ in range(t):",
+          "    n = int(data[pos])",
+          "    values = set(int(x) for x in data[pos + 1:pos + 1 + n])",
+          "    pos += 1 + n",
+          "    best = 0",
+          "    for v in values:",
+          "        if v - 1 not in values:",
+          "            length = 1",
+          "            while v + length in values:",
+          "                length += 1",
+          "            best = max(best, length)",
+          "    print(best)",
+          ""
+        ]
+      },
+      "tests": [
+        {
+          "input": [
+            "6",
+            "100 4 200 1 3 2"
+          ],
+          "output": [
+            "4"
+          ]
+        },
+        {
+          "input": [
+            "10",
+            "0 3 7 2 5 8 4 6 0 1"
+          ],
+          "output": [
+            "9"
+          ]
+        },
+        {
+          "input": [
+            "1",
+            "5"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "4",
+            "2 2 2 2"
+          ],
+          "output": [
+            "1"
+          ]
+        },
+        {
+          "input": [
+            "5",
+            "-1 -3 -2 10 11"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "6",
+            "1 2 0 1 5 6"
+          ],
+          "output": [
+            "3"
+          ]
+        },
+        {
+          "input": [
+            "3",
+            "10 30 20"
+          ],
+          "output": [
+            "1"
+          ]
+        }
+      ]
+    }
+  ]
+}
